@@ -1,21 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from .models import Member
+from .models import Player
 
 def players(request):
-    mymembers = Member.objects.all().values()
+    players = Player.objects.all().values()
     template = loader.get_template('all_members.html')
     context = {
-        'mymembers': mymembers,
+        'players': players
     }
     return (HttpResponse(template.render(context, request)))
 
 def details(request, id):
-    mymember = Member.objects.get(id=id)
+    player = Player.objects.get(id=id)
     template = loader.get_template('details.html')
     context = {
-            'mymember': mymember,
+            'player': player,
     }
     return (HttpResponse(template.render(context, request)))
 
