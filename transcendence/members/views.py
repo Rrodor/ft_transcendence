@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from .models import Player
+from .forms import RegistrationForm
 
 def players(request):
     players = Player.objects.all().values()
@@ -29,3 +30,16 @@ def testing(request):
 		'fruits': ['Apple', 'Banana', 'Cherry'],
 	}
 	return HttpResponse(template.render(context, request))
+
+
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirigez l'utilisateur vers une page de confirmation ou une autre page
+            return redirect('main/')
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'register.html', {'form': form})

@@ -11,7 +11,7 @@ class Member(models.Model):
 # Create your models here.
 
 class Player(models.Model):
-	email = models.CharField(max_length=255)
+	email = models.EmailField(unique=True)
 	name = models.CharField(max_length=255, default='user')
 	password = models.CharField(max_length=255)
 	joined_date = models.DateField(null=True)
