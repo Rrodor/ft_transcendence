@@ -1,0 +1,12 @@
+{% extends "master.html" %}
+
+{% block title %}
+	Details about {{ player.email }}
+{% endblock %}
+
+{% block content %}
+	<div class="mycard">
+		<h1>{{ player.username }}</h1>
+		<p>email: {{ player.email }}</p>
+	</div>
+{% endblock %}

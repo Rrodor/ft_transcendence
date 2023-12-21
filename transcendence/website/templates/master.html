@@ -1,0 +1,19 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/players">Players</a>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

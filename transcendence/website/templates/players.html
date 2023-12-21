@@ -1,0 +1,17 @@
+{% extends "master.html" %}
+
+{% block title %}
+  ft_transcendence - List of all players
+{% endblock %}
+
+
+{% block content %}
+	<div class="mycard">
+		<h1>Players</h1>
+		<ul>
+			{% for x in all_users %}
+				<li onclick="window.location = 'details/{{ x.id }}'">{{ x.username }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+{% endblock %}

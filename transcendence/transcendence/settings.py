@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!@)u(du1+73n(-)!(fese1fz8z4rrgs$m6tbap&gr9q&r78ul1'
+SECRET_KEY = 'django-insecure-n)7grw*b8o%m_&8o^33q*h)s--a0#%ev%j##v^*t-=$0&z!%4q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'members'
+	'website'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'whitenoise.middleware.WhiteNoiseMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'transcendence.urls'
@@ -79,23 +78,18 @@ WSGI_APPLICATION = 'transcendence.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
-
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': 'postgres',
+		'NAME': 'trans',
 		'USER': 'postgres',
 		'PASSWORD': 'docker',
 		'HOST': '82.66.141.48',
-		'PORT': '7392',
+		'PORT': '5432',
 	}
 }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -124,7 +118,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'productionfiles'
 
 STATICFILES_DIRS = [
-	BASE_DIR / 'static',
+	BASE_DIR / 'static'
 ]
 
 # Default primary key field type
