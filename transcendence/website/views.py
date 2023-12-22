@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
-from django.contrib.auth.models import User
+from .models import User
 from django.contrib.auth import login, authenticate, logout
 from .forms import UserForm
 from django.contrib import messages
@@ -41,7 +41,7 @@ def register(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'Account created successfully')
-                return redirect('main')  # Redirigez vers la page appropriée
+                return redirect('main')
             else:
                 messages.error(request, 'Error in user authentication')
         else:
@@ -58,9 +58,10 @@ def login_view(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('passsword')
             user = authenticate(username=username, password=password)
-            user = form.get_user()
-            login(request, user)
-            # Rediriger vers une page de succès/après connexion
+            if user is not None:
+                 login(request, user)
+            else:
+                 messages.error(request, 'Error in user authentication')
             return redirect('main')
     else:
         form = AuthenticationForm()
