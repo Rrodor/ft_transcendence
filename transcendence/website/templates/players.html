@@ -9,7 +9,7 @@
 	<div class="mycard">
 		<h1>Players</h1>
 		<ul>
-			{% for x in all_users %}
+			{% for x in users %}
 				<li onclick="window.location = 'details/{{ x.id }}'">{{ x.username }}</li>
 			{% endfor %}
 		</ul>

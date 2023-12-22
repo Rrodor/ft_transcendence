@@ -2,16 +2,16 @@
 {% load widget_tweaks %}
 
 {% block title %}
-  FT_TRANSCENDENCE - Register
+  FT_TRANSCENDENCE - Login
 {% endblock %}
 
 {% block content %}
 <div class="container" style="margin-top: 50px;">
-	<form method="post" action="{% url 'register' %}">
+	<form method="post" action="{% url 'login' %}"> <!-- Assurez-vous que l'URL correspond à votre vue de connexion -->
 		{% csrf_token %}
 		<div class="row text-center">
-			<h1 class="display-5 text-center mb-0">Register</h1>
-			<p class="lead text-center mb-4">Please fill out the form below to create an account.</p>
+			<h1 class="display-5 text-center mb-0">Login</h1>
+			<p class="lead text-center mb-4">Please enter your credentials to log in.</p>
 		</div>
 
 		{% for field in form  %}
@@ -31,7 +31,8 @@
 		<div class="container-fluid text-center">
 			<div class="row">
 				<div class="col">
-					<button type="submit" class="btn btn-primary btn-block col-3 mb-4">Sign up</button>
+					<button type="submit" class="btn btn-primary btn-block col-3 mb-4">Log in</button>
+					<p class="mt-3">Don't have an account? <a href="{% url 'register' %}">Register here</a></p> <!-- Lien vers la page d'inscription -->
 				</div>
 			</div>
 		</div>
