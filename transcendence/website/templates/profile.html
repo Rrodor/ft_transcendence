@@ -1,0 +1,117 @@
+{% extends "master.html" %}
+{% load widget_tweaks %}\
+<head>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  
+
+{% block title %}
+  FT_TRANSCENDENCE - Register
+{% endblock %}
+
+{% block content %}
+<!--<body style="background-color: black;">
+	<div class="container-fluid mt-5 mb-5">
+		<p class="lead text center" style="color: #ffffff";> {{user.username}} </p>
+		<p class="text center" style="color: #ffffff";> {{user.email}} </p>
+		<table class="table table-striped table-hover"> <thead>
+			<thead>
+				<tr>
+					<th scope="col">Nombre de parties</th>
+					<th scope="col">Colonne 2</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Donnée 1</td>
+					<td>Donnée 2</td>
+				</tr>	
+        </table>
+	</div>
+	</body> -->
+	
+	<body style="background-color: black;">
+
+		<div class="container-fluid mt-5 mb-5">
+			<div class="row">
+				<div class="col-lg-4">
+					<div class="card mb-4">
+						<div class="card-body text-center">
+							<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+							class="rounded-circle img-fluid" style="width: 150px;">
+						</div>
+						<p class="lead text-center" >{{ request.user.username }}</p>
+					</div>
+			<div class="card mb-4 mb-lg-0">
+				<div class="card-body p-0">
+					<ul class="list-group list-group-flush rounded-3">
+						<li class="list-group-item d-flex justify-content-between align-items-center p-3">
+							<i class="fas fa-globe fa-lg text-warning"></i>
+							<p class="mb-0">FRIEND LIST</p>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
+					  <i class="fab fa-github fa-lg" style="color: #333333;"></i>
+					  <p class="mb-0">FRIEND LIST</p>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
+						<i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
+						<p class="mb-0">FRIEND LIST</p>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
+						<i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
+						<p class="mb-0">FRIEND LIST</p>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
+						<i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
+						<p class="mb-0">FRIEND LIST</p>
+					</li>
+				  </ul>
+				</div>
+			</div>
+			</div>
+			<div class="col-lg-8">
+			  <div class="card mb-4">
+				  <div class="card-body">
+					  <div class="row">
+						  <div class="col-sm-3">
+					  <p class="mb-0">Full Name</p>
+					</div>
+					<div class="col-sm-9">
+						<p class="text-muted mb-0">/*FIELD A CREER*/</p>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-sm-3">
+						<p class="mb-0">Email</p>
+					</div>
+					<div class="col-sm-9">
+						<p class="text-muted mb-0">{{ request.user.email }}</p>
+					</div>
+				  </div>
+				  <hr>
+				  <div class="row">
+					  <div class="col-sm-3">
+						  <p class="mb-0">Password</p>
+					</div>
+					<div class="col-sm-9">
+						<button type="button" class="btn btn-primary"
+							style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+					  Change Password /*Ce bouton ne fonctionnes pas atm*/
+					</button>
+					</div>
+				</div>
+			  </div>
+			  </div>
+
+				<div class="col-md-6">
+					<div class="card mb-4 mb-md-0">
+						<p class="lead text-center">Peut etre un camebert ou des slides pour voir les win/looses sur les deux jeux</p>
+				  </div>
+				</div>
+			</div>
+		</div>
+		  </div>
+		</div>
+	</section>
+	{% endblock %}
