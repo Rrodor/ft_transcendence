@@ -74,3 +74,6 @@ def logout_view(request):
 
 def profile(request):
 	return render(request, 'profile.html')
+
+def handler404(request, exception):
+    return render(request, '404.html', status=404)
