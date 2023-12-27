@@ -4,14 +4,16 @@
   ft_transcendence - List of all players
 {% endblock %}
 
-
 {% block content %}
-	<div class="mycard">
-		<h1>Players</h1>
-		<ul>
-			{% for x in all_users %}
-				<li onclick="window.location = 'details/{{ x.id }}'">{{ x.username }}</li>
-			{% endfor %}
-		</ul>
+	<body style="background-color: black;">
+		<div class="container-fluid mt-5"><h1 style="color: white; font-size: 1.5em;">List of players</h1></div>
+	<div class="list-group">
+		{% for player in all_users %}
+		  <a href="details/{{ player.id }}" class="list-group-item list-group-item-action" style="background-color: lightgray; max-width: 300px; margin-left: 75px;">
+			{{ player.username }}
+		</a>
+		{% endfor %}
 	</div>
+	</body>
 {% endblock %}
+
