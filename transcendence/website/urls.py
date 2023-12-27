@@ -11,6 +11,11 @@ urlpatterns = [
 		path('register/', views.register, name='register'),
 		path('logout/', views.logout_view, name='logout'),
 		path('profile/', views.profile, name='profile'),
+		path('increment_victory/<int:player_id>/', views.increment_victory, name='increment_victory'),
+    	path('increment_defeat/<int:player_id>/', views.increment_defeat, name='increment_defeat'),
+		path('decrement_victory/<int:player_id>/', views.decrement_victory, name='decrement_victory'),
+		path('decrement_defeat/<int:player_id>/', views.decrement_defeat, name='decrement_defeat'),
+		path('resetWL/<int:player_id>/', views.resetWL, name='resetWL'),
 ]
 
 handler404 = 'website.views.handler404'

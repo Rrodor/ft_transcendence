@@ -5,45 +5,71 @@
 {% endblock %}
 
 {% block content %}
-<body style="background-color: black;">
+	<body style="background-color: black;">
 		<div class="container py-5 h-100">
 		  <div class="row d-flex justify-content-center align-items-center h-100">
 			<div class="col-md-12 col-xl-4">
-	  
-			  <div class="card" style="border-radius: 15px;">
+			<div class="card" style="border-radius: 15px;">
 				<div class="card-body text-center">
-				  <div class="mt-3 mb-4">
-					<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
-					  class="rounded-circle img-fluid" style="width: 100px;" />
-				  </div>
-				  <h4 class="mb-2">{{ player.username }}</h4>
-				  <p class="text-muted mb-4">{{ player.email }} <span class="mx-2">|</span>Id: {{ player.id }}</a></p><hr>
-				  Pong:
-				  7 V | 3 L
-				  <div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-					<!-- Partie pour les victoires (en vert) -->
-					<div class="progress-bar bg-success" style="width: 70%;" aria-valuenow="70"></div>
-					<!-- Partie pour les défaites (en rouge) -->
-					<div class="progress-bar bg-danger" style="width: 30%;" aria-valuenow="30"></div>
-				  </div>
-				  Hexa-Race:
-				  3 V | 7 L
-				  <div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-					<!-- Partie pour les victoires (en vert) -->
+					<div class="mt-3 mb-4">
+						<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+							class="rounded-circle img-fluid" style="width: 100px;">
+					</div>
+					<h4 class="mb-2">{{ player.username }}</h4>
+					{% if player.email %}
+	 					<p class="text-muted mb-4">{{ player.email }}<span class="mx-2">|</span>Id: {{ player.id }}</p>
+					{% else %}
+						<p class="text-muted mb-4" style="text-align: center;">Id: {{ player.id }}</p>
+					{% endif %}
+					<hr>
+					Pong - {{ player.total_pong_games }} games
+					<div class="col-12 d-flex justify-content-between text-end small">
+						<span>Wins: {{ player.pong_victories }}</span>
+						<span>Loses: {{ player.pong_defeats }}</span>
+					</div>  
+					{% if player.pong_defeats == 0 and player.pong_victories == 0 %}
+						<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+						<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">No matches played yet
+						</div>
+						</div>
+					{% else %}
+						<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+						<div class="progress-bar bg-success" style="width: {{ player.pong_victories_percentage }}%;" aria-valuenow="{{ player.pong_victories_percentage }}"></div>
+						<div class="progress-bar bg-danger" style="width: {{ player.pong_defeats_percentage }}%;" aria-valuenow="{{ player.pong_defeats_percentage }}"></div>
+						</div>
+					{% endif %}
+					<hr>	
+					Hexa-Race:
+					3 V | 7 L
+					<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
 					<div class="progress-bar bg-success" style="width: 30%;" aria-valuenow="30"></div>
-					<!-- Partie pour les défaites (en rouge) -->
 					<div class="progress-bar bg-danger" style="width: 70%;" aria-valuenow="70"></div>
-				  </div>
-								<hr>					  
-				  <button type="button" class="btn btn-primary btn-rounded btn-lg">
-					Add friend
-				  </button>
+					</div>
+					<hr>
+					<!-- <div class="container">
+						<a href="{% url 'increment_victory' player.id %}" class="btn btn-success btn-sm">
+							Increment Victories
+						</a>
+						<a href="{% url 'decrement_victory' player.id %}" class="btn btn-danger btn-sm">
+							Decrement Victories
+						</a>
+						<a href="{% url 'increment_defeat' player.id %}" class="btn btn-success btn-sm">
+							Increment Defeats
+						</a>
+						<a href="{% url 'decrement_defeat' player.id %}" class="btn btn-danger btn-sm">
+							Decrement Defeats
+						</a>
+						<a href="{% url 'resetWL' player.id %}" class="btn btn-secondary btn-sm">
+							Reset wins and defeats
+						</a>
+					</div> -->
+					{% if user.is_authenticated %}
+						<button type="button" class="btn btn-primary btn-rounded btn-lg">Add friend</button>
+					{% endif %}
 				</div>
 			  </div>
-	  
 			</div>
 		  </div>
 		</div>
-	  </section>
-	</div>
+	</body>
 {% endblock %}
