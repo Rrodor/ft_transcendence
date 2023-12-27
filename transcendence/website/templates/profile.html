@@ -2,7 +2,7 @@
 {% load widget_tweaks %}\
 <head>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
+</head>
   
 
 {% block title %}
@@ -96,7 +96,7 @@
 					</div>
 					<div class="col-sm-9">
 						<button type="button" class="btn btn-primary"
-							style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+							style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
 					  Change Password /*Ce bouton ne fonctionnes pas atm*/
 					</button>
 					</div>
@@ -113,5 +113,40 @@
 		</div>
 		  </div>
 		</div>
-	</section>
+		<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+				  <!-- Formulaire de changement de mot de passe -->
+				  <form id="passwordChangeForm" method="post" action="{% url 'profile' %}">
+					{% csrf_token %}
+					{% for field in form  %}
+						<div class="form-group mb-4">
+							<label class="form-label" for="{{ field.id_for_label }}" style="color: #000000;">{{ field.label }}</label>
+							{{ field|add_class:"form-control" }}
+							{% if field.help_text %}
+								<small class="form-text text-muted">{{ field.help_text }}</small>
+							{% endif %}
+							{% for error in field.errors %}
+								<div class="alert alert-danger" role="alert">
+									{{ error }}
+								</div>
+							{% endfor %}
+						</div>
+					{% endfor %}
+					<!-- Champs du formulaire -->
+				  </form>
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				  <button id="change-pass" type="submit" form="passwordChangeForm" class="btn btn-primary">Save changes</button>
+				</div>
+			  </div>
+			</div>
+		</div>
+	</body>
 	{% endblock %}

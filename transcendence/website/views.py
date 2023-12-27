@@ -2,15 +2,17 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from .models import User
-from django.contrib.auth import login, authenticate, logout
-from .forms import UserForm
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
+from .forms import UserForm, ChangePasswordForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
 def main(request):
+    password_changed = 'password_changed' in request.GET
     context = {
         'user': request.user,
+        'password_changed': password_changed,  # Ajout de cette ligne
     }
     return render(request, 'main.html', context)
 
@@ -69,8 +71,19 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 def logout_view(request):
-	logout(request)
-	return redirect('main')
+    logout(request)
+    return redirect('main')
 
 def profile(request):
-	return render(request, 'profile.html')
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, request.user)
+            messages.success(request, 'Password changed successfully')
+            return redirect('/main?password_changed=true')  # Ajout du paramètre ici
+        else:
+            messages.error(request, 'Error in form submission')
+    else:
+        form = ChangePasswordForm(request.user)
+    return render(request, 'profile.html', {'form': form})
