@@ -10,28 +10,13 @@
 {% endblock %}
 
 {% block content %}
-<!--<body style="background-color: black;">
-	<div class="container-fluid mt-5 mb-5">
-		<p class="lead text center" style="color: #ffffff";> {{user.username}} </p>
-		<p class="text center" style="color: #ffffff";> {{user.email}} </p>
-		<table class="table table-striped table-hover"> <thead>
-			<thead>
-				<tr>
-					<th scope="col">Nombre de parties</th>
-					<th scope="col">Colonne 2</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>Donnée 1</td>
-					<td>Donnée 2</td>
-				</tr>	
-        </table>
-	</div>
-	</body> -->
-	
 	<body style="background-color: black;">
-
+		{% if not user.is_authenticated %}
+		 <script>
+			alert("You must be connected to access this page.");
+			window.location.href = "{% url 'login' %}"
+		 </script>
+		{% endif %}
 		<div class="container-fluid mt-5 mb-5">
 			<div class="row">
 				<div class="col-lg-4">

@@ -87,3 +87,6 @@ def profile(request):
     else:
         form = ChangePasswordForm(request.user)
     return render(request, 'profile.html', {'form': form})
+
+def handler404(request, exception):
+    return render(request, '404.html', status=404)

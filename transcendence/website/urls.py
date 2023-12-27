@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from django.conf.urls import handler404
 from .views import register
 
 urlpatterns = [
@@ -11,4 +12,6 @@ urlpatterns = [
 		path('logout/', views.logout_view, name='logout'),
 		path('profile/', views.profile, name='profile'),
 ]
+
+handler404 = 'website.views.handler404'
 
