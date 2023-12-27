@@ -5,17 +5,18 @@ from .views import register
 
 urlpatterns = [
 		path('', views.main, name='main'),
+		path('main/', views.main, name='main'),
 		path('players/', views.players, name='players'),
 		path('players/details/<int:id>', views.details, name='details'),
 		path('login/', views.login_view, name='login'),
 		path('register/', views.register, name='register'),
 		path('logout/', views.logout_view, name='logout'),
 		path('profile/', views.profile, name='profile'),
-		path('increment_victory/<int:player_id>/', views.increment_victory, name='increment_victory'),
-    	path('increment_defeat/<int:player_id>/', views.increment_defeat, name='increment_defeat'),
-		path('decrement_victory/<int:player_id>/', views.decrement_victory, name='decrement_victory'),
-		path('decrement_defeat/<int:player_id>/', views.decrement_defeat, name='decrement_defeat'),
-		path('resetWL/<int:player_id>/', views.resetWL, name='resetWL'),
+		path('increment_victory/<int:player_id>/', views.increment_victory, name='increment_victory'),	#bouton +1 victoire
+    	path('increment_defeat/<int:player_id>/', views.increment_defeat, name='increment_defeat'),		#bouton +1 défaite
+		path('decrement_victory/<int:player_id>/', views.decrement_victory, name='decrement_victory'),	#bouton -1 victoire
+		path('decrement_defeat/<int:player_id>/', views.decrement_defeat, name='decrement_defeat'),		#bouton -1 défaite
+		path('resetWL/<int:player_id>/', views.resetWL, name='resetWL'),								#bouton reset Win et Lose
 ]
 
 handler404 = 'website.views.handler404'
