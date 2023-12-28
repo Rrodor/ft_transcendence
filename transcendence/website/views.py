@@ -5,6 +5,9 @@ from .models import User
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from .forms import UserForm, ChangePasswordForm
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
@@ -90,3 +93,36 @@ def profile(request):
 
 def handler404(request, exception):
     return render(request, '404.html', status=404)
+
+def increment_victory(request, player_id):
+    player = get_object_or_404(User, id=player_id)
+    player.pong_victories += 1
+    player.save()
+    return HttpResponseRedirect(reverse('details', args=[player_id]))
+
+def increment_defeat(request, player_id):
+    player = get_object_or_404(User, id=player_id)
+    player.pong_defeats += 1
+    player.save()
+    return HttpResponseRedirect(reverse('details', args=[player_id]))
+
+def decrement_victory(request, player_id):
+    player = get_object_or_404(User, id=player_id)
+    if (player.pong_victories > 0):
+        player.pong_victories -= 1
+    player.save()
+    return HttpResponseRedirect(reverse('details', args=[player_id]))
+
+def decrement_defeat(request, player_id):
+    player = get_object_or_404(User, id=player_id)
+    if (player.pong_defeats > 0):
+        player.pong_defeats -= 1
+    player.save()
+    return HttpResponseRedirect(reverse('details', args=[player_id]))
+
+def resetWL(request, player_id):
+    player = get_object_or_404(User, id=player_id)
+    player.pong_victories = 0
+    player.pong_defeats = 0
+    player.save()
+    return HttpResponseRedirect(reverse('details', args=[player_id]))

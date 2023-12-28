@@ -111,6 +111,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+FAVICON = 'static/favicon.ico'
+
 AUTH_USER_MODEL = 'website.User'
 LOGIN_REDIRECT_URL = 'main'
 
