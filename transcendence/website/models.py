@@ -10,6 +10,7 @@ class User(AbstractUser):
 	pong_defeats = models.IntegerField(default=0)
 	pong_victories_percentage = models.FloatField(default=0)
 	pong_defeats_percentage = models.FloatField(default=0)
+	avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', blank=True, null=True)
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)

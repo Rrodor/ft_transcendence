@@ -1,5 +1,6 @@
 {% extends "master.html" %}
 {% load widget_tweaks %}
+{% load static %}
 
 {% block title %}
 	Register
@@ -8,13 +9,12 @@
 {% block content %}
 <body style="background-color: black;">
 <div class="container" style="margin-top: 50px;">
-	<form method="post" action="{% url 'register' %}">
+	<form method="post" action="{% url 'register' %}" enctype="multipart/form-data">
 		{% csrf_token %}
 		<div class="row text-center">
 			<h1 class="display-5 text-center mb-0" style="color: #ffffff;">Register</h1>
 			<p class="lead text-center mb-4" style="color: #ffffff;">Please fill out the form below to create an account.</p>
 		</div>
-
 		{% for field in form  %}
 			<div class="form-group mb-4">
 				<label class="form-label" for="{{ field.id_for_label }}" style="color: #ffffff;">{{ field.label }}</label>

@@ -1,5 +1,6 @@
 {% extends "master.html" %}
-{% load widget_tweaks %}\
+{% load widget_tweaks %}
+{% load static %}
 <head>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -22,8 +23,12 @@
 				<div class="col-lg-4">
 					<div class="card mb-4">
 						<div class="card-body text-center">
-							<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+							<img src="{{ request.user.avatar.url }}" alt="avatar"
 							class="rounded-circle img-fluid" style="width: 150px;">
+							<div></div>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeAvatarModal">
+								Change Avatar
+							</button>							
 						</div>
 						<p class="lead text-center" >{{ request.user.username }}</p>
 					</div>
@@ -87,7 +92,6 @@
 				</div>
 			  </div>
 			  </div>
-
 				<div class="col-md-6">
 					<div class="card mb-4 mb-md-0">
 						<p class="lead text-center">Peut etre un camebert ou des slides pour voir les win/looses sur les deux jeux</p>

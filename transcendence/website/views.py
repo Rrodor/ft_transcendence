@@ -37,7 +37,7 @@ def details(request, id):
 
 def register(request):
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = UserForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -80,11 +80,12 @@ def logout_view(request):
 def profile(request):
     if request.method == 'POST':
         form = ChangePasswordForm(request.user, request.POST)
+        form = ChangeAvatarForm(request.user, request.POST, request.FILES)
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, request.user)
             messages.success(request, 'Password changed successfully')
-            return redirect('/main?password_changed=true')  # Ajout du paramètre ici
+            return redirect('/main?password_changed=true')
         else:
             messages.error(request, 'Error in form submission')
     else:
