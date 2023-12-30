@@ -15,4 +15,7 @@ class ChangePasswordForm(PasswordChangeForm):
 	new_password2 = forms.CharField(widget=forms.PasswordInput, label='Confirm Password', help_text='Confirm your new password')
 
 class ChangeAvatarForm(forms.ModelForm):
-	avatar = forms.FileField(label='Avatar', required=True, help_text=mark_safe('<br>Upload your avatar here'))
+	class Meta:
+		model = User
+		fields = ['avatar']
+	avatar = forms.FileField(label='Avatar', required=True, help_text=mark_safe('<br>Upload your avatar here'), widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))

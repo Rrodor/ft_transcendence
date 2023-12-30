@@ -23,7 +23,7 @@
 				<div class="col-lg-4">
 					<div class="card mb-4">
 						<div class="card-body text-center">
-							<img src="{{ request.user.avatar.url }}" alt="avatar"
+							<img src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}{% static 'media/avatars/default.png' %}{% endif %}"" alt="avatar"
 							class="rounded-circle img-fluid" style="width: 150px;">
 							<div></div>
 							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeAvatarModal">
@@ -110,9 +110,9 @@
 				</div>
 				<div class="modal-body">
 				  <!-- Formulaire de changement de mot de passe -->
-				  <form id="passwordChangeForm" method="post" action="{% url 'profile' %}">
+				  <!-- <form id="passwordChangeForm" method="post" action="{% url 'profile' %}">
 					{% csrf_token %}
-					{% for field in form  %}
+					{% for field in pwd_form  %}
 						<div class="form-group mb-4">
 							<label class="form-label" for="{{ field.id_for_label }}" style="color: #000000;">{{ field.label }}</label>
 							{{ field|add_class:"form-control" }}
@@ -126,15 +126,39 @@
 							{% endfor %}
 						</div>
 					{% endfor %}
-					<!-- Champs du formulaire -->
-				  </form>
+				  </form> -->
+				  <form method="post" action="{% url 'profile' %}">
+					{% csrf_token %}
+					{{ pwd_form.as_p }}
+					<button type="submit" name="change_password">Change Password</button>
+				</form>
 				</div>
 				<div class="modal-footer">
 				  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				  <button id="change-pass" type="submit" form="passwordChangeForm" class="btn btn-primary">Save changes</button>
+				  <button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Save changes</button>
 				</div>
 			  </div>
 			</div>
 		</div>
+		<div class="modal fade" id="changeAvatarModal" tabindex="-1" aria-labelledby="changeAvatarModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="changeAvatarModalLabel">Change Avatar</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<!-- Formulaire pour changer l'avatar -->
+						<form method="post" action="{% url 'profile' %}" enctype="multipart/form-data">
+							{% csrf_token %}
+							{{ avatar_form.avatar }}
+							{{ avatar_form.errors }}
+							<button type="submit" name="change_avatar">Change Avatar</button>
+						</form>						
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
 	</body>
 	{% endblock %}

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import User
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
-from .forms import UserForm, ChangePasswordForm
+from .forms import UserForm, ChangePasswordForm, ChangeAvatarForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
@@ -77,20 +77,40 @@ def logout_view(request):
     logout(request)
     return redirect('main')
 
+from django.contrib import messages
+
 def profile(request):
     if request.method == 'POST':
-        form = ChangePasswordForm(request.user, request.POST)
-        form = ChangeAvatarForm(request.user, request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
+        pwd_form = ChangePasswordForm(request.user, request.POST)
+        avatar_form = ChangeAvatarForm(request.user, request.POST, request.FILES)
+        
+        if 'change_password' in request.POST:
+            # Traitement du formulaire de changement de mot de passe
+            if pwd_form.is_valid():
+                pwd_form.save()
+                update_session_auth_hash(request, request.user)
+                messages.success(request, 'Password changed successfully')
+                return redirect('/main?password_changed=true')
+            else:
+                messages.error(request, 'Error in password change form submission')
+        elif 'change_avatar' in request.POST:
+            old_avatar = request.user.avatar
+            if old_avatar and not old_avatar.name.endswith('default.png'):
+                old_avatar.delete()
+            request.user.avatar = request.FILES['avatar']
+            request.user.save()
             update_session_auth_hash(request, request.user)
-            messages.success(request, 'Password changed successfully')
-            return redirect('/main?password_changed=true')
+            messages.success(request, 'Avatar changed successfully')
+            return redirect('/main?avatar_changed=true')
         else:
-            messages.error(request, 'Error in form submission')
+            messages.error(request, 'Error in avatar change form submission')
+            print(avatar_form.errors)
     else:
-        form = ChangePasswordForm(request.user)
-    return render(request, 'profile.html', {'form': form})
+        pwd_form = ChangePasswordForm(request.user)
+        avatar_form = ChangeAvatarForm(request.user)
+
+    return render(request, 'profile.html', {'pwd_form': pwd_form, 'avatar_form': avatar_form})
+
 
 def handler404(request, exception):
     return render(request, '404.html', status=404)
