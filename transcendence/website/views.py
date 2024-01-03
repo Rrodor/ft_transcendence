@@ -92,7 +92,7 @@ def profile(request):
     if request.method == 'POST':
         pwd_form = ChangePasswordForm(request.user, request.POST)
         avatar_form = ChangeAvatarForm(request.user, request.POST, request.FILES)
-        
+
         if 'change_password' in request.POST:
             # Traitement du formulaire de changement de mot de passe
             if pwd_form.is_valid():
@@ -156,3 +156,7 @@ def resetWL(request, player_id):
     player.pong_defeats = 0
     player.save()
     return HttpResponseRedirect(reverse('details', args=[player_id]))
+
+def pong(request):
+    # Your view logic here
+    return render(request, 'pong.html')
