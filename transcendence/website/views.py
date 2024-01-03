@@ -15,7 +15,7 @@ def main(request):
     password_changed = 'password_changed' in request.GET
     context = {
         'user': request.user,
-        'password_changed': password_changed,  # Ajout de cette ligne
+        'password_changed': password_changed,
     }
     return render(request, 'main.html', context)
 
@@ -36,6 +36,9 @@ def details(request, id):
     return (HttpResponse(template.render(context, request)))
 
 def register(request):
+    if request.user.is_authenticated:
+        messages.error(request, 'You are already logged in')
+        return redirect('/')
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
@@ -46,7 +49,7 @@ def register(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'Account created successfully')
-                return redirect('main')
+                return redirect('/')
             else:
                 messages.error(request, 'Error in user authentication')
         else:
@@ -57,6 +60,9 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 def login_view(request):
+    if request.user.is_authenticated:
+        messages.error(request, 'You are already logged in')
+        return redirect('main')
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -74,8 +80,11 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 def logout_view(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You are not logged in')
+        return redirect('/')
     logout(request)
-    return redirect('main')
+    return redirect('/')
 
 def profile(request):
     if request.method == 'POST':
