@@ -45,10 +45,6 @@
 		scene.add(paddleLeft);
 		scene.add(paddleRight);
 
-		// Time variables
-		let lastTime = 0;
-		let deltaTime = 0;
-
 		// Inputs logic
 		window.addEventListener('keydown', function(event) {
 			if (event.key === 'q' || event.key === 'Q') movePaddleLeftUp = true;
@@ -252,6 +248,11 @@
 		scene.add(scoreLeftSprite);
 		scene.add(scoreRightSprite);
 
+		// Time variables
+		let lastTime = 0;
+		let deltaTime = 0;
+		let pongPosTime = 0;
+
 		function checkGoal()
 		{
 			// Check if the ball is 2 units behind the left paddle on x axis
@@ -287,6 +288,22 @@
 			}
 		}
 
+		function sendBallPositionToServer(position)
+		{
+			fetch('http://127.0.0.1:8000/pong/update_ball_position', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ position }),
+			})
+			.then(response => response.json())
+			.then(data => console.log(data))
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+		}
+
 		// Render and animation
 		function animate(time)
 		{
@@ -295,6 +312,12 @@
 			// Calculate deltaTime for frame-independent movement
 			deltaTime = (time - (lastTime || time)) / 1000;
 			lastTime = time;
+			pongPosTime += deltaTime;
+			if (pongPosTime > 1) // Send the ball's position to the server
+			{
+				sendBallPositionToServer({ x: ball.position.x, y: ball.position.y, z: ball.position.z });
+				pongPosTime = 0;
+			}
 
 			// Inputs logic
 			if (movePaddleLeftUp) paddleLeft.position.z -= paddleSpeed * deltaTime;
@@ -309,6 +332,7 @@
 
 			// Update ball's position
 			ball.position.add(ballVelocity);
+
 			// Debug
 			arrowHelper.position.copy(ball.position);
 			arrowHelper.setDirection(ballVelocity.clone().normalize());
@@ -316,6 +340,7 @@
 
 			// Increment the position of the camera
 			renderer.render(scene, camera);
+
 		}
 
 		animate(); // Start the animation loop
