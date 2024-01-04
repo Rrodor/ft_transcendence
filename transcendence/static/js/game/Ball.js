@@ -10,3 +10,8 @@ export function initBall()
 
 	return { ball, ballGeometry, ballMaterial };
 }
+
+export function getBallPosition(ball)
+{
+	return ball.position;
+}
