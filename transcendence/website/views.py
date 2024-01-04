@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import JsonResponse
 
 # Create your views here.
 def main(request):
@@ -160,3 +161,10 @@ def resetWL(request, player_id):
 def pong(request):
     # Your view logic here
     return render(request, 'pong.html')
+
+def update_ball_position(request):
+    if request.method == 'POST':
+        # Handle the POST request here
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'fail'})

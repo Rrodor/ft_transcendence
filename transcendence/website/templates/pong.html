@@ -290,7 +290,7 @@
 
 		function sendBallPositionToServer(position)
 		{
-			fetch('http://127.0.0.1:8000/pong/update_ball_position', {
+			fetch('http://127.0.0.1:8000/pong/update_ball_position/', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -304,6 +304,7 @@
 			});
 		}
 
+		let elapsedTime = 1;
 		// Render and animation
 		function animate(time)
 		{
@@ -313,17 +314,33 @@
 			deltaTime = (time - (lastTime || time)) / 1000;
 			lastTime = time;
 			pongPosTime += deltaTime;
-			if (pongPosTime > 1) // Send the ball's position to the server
-			{
-				sendBallPositionToServer({ x: ball.position.x, y: ball.position.y, z: ball.position.z });
-				pongPosTime = 0;
-			}
+			console.log("deltatime" + deltaTime);
+			console.log("elapsedTime" + elapsedTime);
+			if (Number.isNaN(deltaTime))
+				deltaTime = 0;
+			elapsedTime += deltaTime;
+			//sendBallPositionToServer({ x: ball.position.x, y: ball.position.y, z: ball.position.z });
 
 			// Inputs logic
 			if (movePaddleLeftUp) paddleLeft.position.z -= paddleSpeed * deltaTime;
 			if (movePaddleLeftDown) paddleLeft.position.z += paddleSpeed * deltaTime;
-			if (movePaddleRightUp) paddleRight.position.z -= paddleSpeed * deltaTime;
-			if (movePaddleRightDown) paddleRight.position.z += paddleSpeed * deltaTime;
+			//if (movePaddleRightUp) paddleRight.position.z -= paddleSpeed * deltaTime;
+			//if (movePaddleRightDown) paddleRight.position.z += paddleSpeed * deltaTime;
+
+			console.log(elapsedTime);
+			if (elapsedTime >= 1)
+			{
+				elapsedTime = 0;
+				console.log("test");
+				if (ball.position.z > paddleRight.position.z)
+				{
+					paddleRight.position.z += paddleSpeed * deltaTime;
+				}
+				if (ball.position.z < paddleRight.position.z)
+				{
+					paddleRight.position.z -= paddleSpeed * deltaTime;
+				}
+			}
 
 			// Collision logic
 			updateBoundingBoxes();
