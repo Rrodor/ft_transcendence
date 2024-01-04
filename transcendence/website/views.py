@@ -91,10 +91,10 @@ from django.contrib import messages
 def profile(request):
     if request.method == 'POST':
         pwd_form = ChangePasswordForm(request.user, request.POST)
-        avatar_form = ChangeAvatarForm(request.user, request.POST, request.FILES)
+        avatar_form = ChangeAvatarForm(request.POST, request.FILES, instance=request.user)
 
         if 'change_password' in request.POST:
-            # Traitement du formulaire de changement de mot de passe
+            # Handle password change form submission
             if pwd_form.is_valid():
                 pwd_form.save()
                 update_session_auth_hash(request, request.user)
@@ -103,20 +103,24 @@ def profile(request):
             else:
                 messages.error(request, 'Error in password change form submission')
         elif 'change_avatar' in request.POST:
-            old_avatar = request.user.avatar
-            if old_avatar and not old_avatar.name.endswith('default.png'):
-                old_avatar.delete()
-            request.user.avatar = request.FILES['avatar']
-            request.user.save()
-            update_session_auth_hash(request, request.user)
-            messages.success(request, 'Avatar changed successfully')
-            return redirect('/main?avatar_changed=true')
+            # Handle avatar change form submission
+            if avatar_form.is_valid():
+                old_avatar = request.user.avatar
+                if old_avatar and not old_avatar.name.endswith('default.png'):
+                    old_avatar.delete()
+                avatar_form.save()
+                update_session_auth_hash(request, request.user)
+                messages.success(request, 'Avatar changed successfully')
+                return redirect('/main?avatar_changed=true')
+            else:
+                messages.error(request, 'Error in avatar change form submission')
+                print(avatar_form.errors)
         else:
-            messages.error(request, 'Error in avatar change form submission')
-            print(avatar_form.errors)
+            messages.error(request, 'Invalid form submission')
+
     else:
         pwd_form = ChangePasswordForm(request.user)
-        avatar_form = ChangeAvatarForm(request.user)
+        avatar_form = ChangeAvatarForm(instance=request.user)
 
     return render(request, 'profile.html', {'pwd_form': pwd_form, 'avatar_form': avatar_form})
 
