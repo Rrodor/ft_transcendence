@@ -9,6 +9,12 @@
 </head>
 <body>
 	{% load static %}
+	{% if not user.is_authenticated %}
+		 <script>
+			alert("You must be connected to access this page.");
+			window.location.href = "{% url 'login' %}"
+		 </script>
+	{% endif %}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
 	<script type="module" src="{% static 'js/game/Scene.js' %}"></script>
 	<script type="module" src="{% static 'js/game/Ball.js' %}"></script>
