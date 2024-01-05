@@ -12,6 +12,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
 	<script type="module" src="{% static 'js/game/Scene.js' %}"></script>
 	<script type="module" src="{% static 'js/game/Ball.js' %}"></script>
+	<script type="module" src="{% static 'js/game/AI.js' %}"></script>
 	<script type="module">
 
 		// Import all the functions from the other files
@@ -22,6 +23,7 @@
 		import { initLights } from "{% static 'js/game/Lights.js' %}";
 		import { initInputs } from "{% static 'js/game/Inputs.js' %}";
 		import { addBox } from "{% static 'js/game/Environment.js' %}";
+		import { AImove } from "{% static 'js/game/AI.js' %}";
 
 		// Initialize every components
 		const { scene, camera, renderer } = initScene();
@@ -304,7 +306,6 @@
 			});
 		}
 
-		let elapsedTime = 1;
 		// Render and animation
 		function animate(time)
 		{
@@ -314,11 +315,8 @@
 			deltaTime = (time - (lastTime || time)) / 1000;
 			lastTime = time;
 			pongPosTime += deltaTime;
-			console.log("deltatime" + deltaTime);
-			console.log("elapsedTime" + elapsedTime);
 			if (Number.isNaN(deltaTime))
 				deltaTime = 0;
-			elapsedTime += deltaTime;
 			//sendBallPositionToServer({ x: ball.position.x, y: ball.position.y, z: ball.position.z });
 
 			// Inputs logic
@@ -327,20 +325,7 @@
 			//if (movePaddleRightUp) paddleRight.position.z -= paddleSpeed * deltaTime;
 			//if (movePaddleRightDown) paddleRight.position.z += paddleSpeed * deltaTime;
 
-			console.log(elapsedTime);
-			if (elapsedTime >= 1)
-			{
-				elapsedTime = 0;
-				console.log("test");
-				if (ball.position.z > paddleRight.position.z)
-				{
-					paddleRight.position.z += paddleSpeed * deltaTime;
-				}
-				if (ball.position.z < paddleRight.position.z)
-				{
-					paddleRight.position.z -= paddleSpeed * deltaTime;
-				}
-			}
+			paddleRight.position.z = AImove(ball, paddleRight.position.z, paddleSpeed, deltaTime);
 
 			// Collision logic
 			updateBoundingBoxes();
