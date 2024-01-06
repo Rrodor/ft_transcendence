@@ -15,6 +15,7 @@ urlpatterns = [
 		path('logout/', views.logout_view, name='logout'),
 		path('profile/', views.profile, name='profile'),
 		path('pong/', views.pong, name='pong'),
+		path('test/', views.test, name='test'),
 		path('increment_victory/<int:player_id>/', views.increment_victory, name='increment_victory'),	#bouton +1 victoire
 		path('increment_defeat/<int:player_id>/', views.increment_defeat, name='increment_defeat'),		#bouton +1 défaite
 		path('decrement_victory/<int:player_id>/', views.decrement_victory, name='decrement_victory'),	#bouton -1 victoire
@@ -24,5 +25,5 @@ urlpatterns = [
 
 handler404 = 'website.views.handler404'
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

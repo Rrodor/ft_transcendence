@@ -9,13 +9,14 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.files.storage import default_storage
 
 # Create your views here.
 def main(request):
     password_changed = 'password_changed' in request.GET
     context = {
         'user': request.user,
-        'password_changed': password_changed,  # Ajout de cette ligne
+        'password_changed': password_changed,
     }
     return render(request, 'main.html', context)
 
@@ -89,10 +90,11 @@ def logout_view(request):
 from django.contrib import messages
 
 def profile(request):
+    old_avatar = request.user.avatar
+    print(f"Old Avatar before deletion: {old_avatar.name}")
     if request.method == 'POST':
         pwd_form = ChangePasswordForm(request.user, request.POST)
         avatar_form = ChangeAvatarForm(request.POST, request.FILES, instance=request.user)
-
         if 'change_password' in request.POST:
             # Handle password change form submission
             if pwd_form.is_valid():
@@ -104,24 +106,24 @@ def profile(request):
                 messages.error(request, 'Error in password change form submission')
         elif 'change_avatar' in request.POST:
             # Handle avatar change form submission
+            print(f"Avatar before form validation: {request.user.avatar}")
             if avatar_form.is_valid():
-                old_avatar = request.user.avatar
-                if old_avatar and not old_avatar.name.endswith('default.png'):
-                    old_avatar.delete()
+                new_avatar = avatar_form.save(commit=False)
+                print(f"New Avatar before deletion: {new_avatar.avatar.name}")
+                if old_avatar and not old_avatar.name.endswith('default.png') and old_avatar.name != new_avatar.avatar.name:
+                    default_storage.delete(old_avatar.name)
+                    print(f"Old Avatar after deletion: {old_avatar.name}")
                 avatar_form.save()
                 update_session_auth_hash(request, request.user)
                 messages.success(request, 'Avatar changed successfully')
                 return redirect('/main?avatar_changed=true')
             else:
-                messages.error(request, 'Error in avatar change form submission')
-                print(avatar_form.errors)
+                print(f"Form errors: {avatar_form.errors}")
         else:
             messages.error(request, 'Invalid form submission')
-
     else:
         pwd_form = ChangePasswordForm(request.user)
         avatar_form = ChangeAvatarForm(instance=request.user)
-
     return render(request, 'profile.html', {'pwd_form': pwd_form, 'avatar_form': avatar_form})
 
 
@@ -164,3 +166,7 @@ def resetWL(request, player_id):
 def pong(request):
     # Your view logic here
     return render(request, 'pong.html')
+
+def test(request):
+    avatar_name = request.user.avatar.name if request.user.avatar else "No avatar uploaded"
+    return render(request, 'test.html', {'avatar_name': avatar_name})
