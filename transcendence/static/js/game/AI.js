@@ -5,6 +5,7 @@ let ballPos = [];
 export function AImove(trueBallPos, truePaddlePos, paddleSpeed, deltaTime)
 {
 	elapsedTime += deltaTime;
+	let ballFinalPos = 0;
 
 	if (elapsedTime >= 1)
 	{
@@ -44,7 +45,16 @@ export function AImove(trueBallPos, truePaddlePos, paddleSpeed, deltaTime)
 		}
 		else
 		{
-
+			ballFinalPos = ballCollision();
+			console.log("ballFinalPos = " + ballFinalPos);
+			if (ballFinalPos > paddlePos && paddlePos < 8.75 && ballFinalPos > -10)
+			{
+				paddlePos += paddleSpeed * deltaTime;
+			}
+			if (ballFinalPos < paddlePos && paddlePos > -8.75 && ballFinalPos < 10)
+			{
+				paddlePos -= paddleSpeed * deltaTime;
+			}
 		}
 
 	}
@@ -64,4 +74,16 @@ function ballDirectionIsLeft()
 		return false;
 	}
 	return false;
+}
+
+function ballCollision()
+{
+	let A = 0;
+	let B = 0;
+	A = (ballPos[1].position.z - ballPos[0].position.z) / (ballPos[1].position.x - ballPos[0].position.x);
+	B = ballPos[0].position.z - A * ballPos[0].position.x;
+	console.log("A = " + A);
+	console.log("B = " + B);
+
+	return (A * 10 + B);
 }
