@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 
 class UserForm(UserCreationForm):
-	avatar = forms.FileField(label='Avatar', required=True, help_text=mark_safe('<br>Upload your avatar here'))
+	avatar = forms.ImageField(label='Avatar', required=True, help_text=mark_safe('<br>Upload your avatar here'))
 	class Meta(UserCreationForm.Meta):
 		model = User
 		fields = UserCreationForm.Meta.fields + ('email', 'avatar')
@@ -15,7 +15,7 @@ class ChangePasswordForm(PasswordChangeForm):
 	new_password2 = forms.CharField(widget=forms.PasswordInput, label='Confirm Password', help_text='Confirm your new password')
 
 class ChangeAvatarForm(forms.ModelForm):
+	avatar = forms.ImageField(label='Avatar', required=True, help_text=mark_safe('<br>Upload your avatar here'), widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
 	class Meta:
 		model = User
 		fields = ['avatar']
-	avatar = forms.FileField(label='Avatar', required=True, help_text=mark_safe('<br>Upload your avatar here'), widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))

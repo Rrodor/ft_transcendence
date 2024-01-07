@@ -19,7 +19,7 @@
 				<div class="col-lg-4">
 					<div class="card mb-4">
 						<div class="card-body text-center">
-							<img src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}{% static 'media/avatars/default.png' %}{% endif %}" alt="avatar"
+							<img src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}/media/avatars/default.png{% endif %}" alt="avatar"
 							class="rounded-circle img-fluid" style="width: 150px;">
 							<div></div>
 							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeAvatarModal">

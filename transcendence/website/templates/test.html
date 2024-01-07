@@ -1,0 +1,13 @@
+{% extends "master.html" %}
+
+{% block content %}
+    <body style="background-color: black;">
+        <p style="color: white;">Test<br>
+            {{ request.user.id }}<br>
+            {{ request.user.username }}<br>
+            {{ request.user.total_pong_games }}<br>
+            {{ avatar_name }}
+            <br>
+        </p>
+    </body>
+{% endblock %}
