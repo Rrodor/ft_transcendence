@@ -17,11 +17,13 @@ from django.contrib.auth.decorators import login_required
 def main(request):
     password_changed = 'password_changed' in request.GET
     avatar_changed = 'avatar_changed' in request.GET
+    name_changed = 'name_changed' in request.GET
     update_session_auth_hash(request, request.user)
     context = {
         'user': request.user,
         'password_changed': password_changed,
         'avatar_changed': avatar_changed,
+        'name_changed': name_changed,
     }
     return render(request, 'main.html', context)
 
@@ -132,7 +134,7 @@ def profile(request):
             request.user.save()
             update_session_auth_hash(request, request.user)
             messages.success(request, 'Name changed successfully')
-            return redirect('/main')
+            return redirect('/main?name_changed=true')
         else:
             messages.error(request, 'Invalid form submission')
             if avatar_form.is_valid():
@@ -149,7 +151,7 @@ def profile(request):
     else:
         pwd_form = ChangePasswordForm(request.user)
         avatar_form = ChangeAvatarForm(instance=request.user)
-    return render(request, 'profile.html', {'pwd_form': pwd_form, 'avatar_form': avatar_form})
+    return render(request, 'profile.html', {'pwd_form': pwd_form, 'avatar_form': avatar_form, 'user_stats': user_stats})
 
 
 def handler404(request, exception):

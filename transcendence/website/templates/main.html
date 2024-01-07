@@ -37,21 +37,5 @@
 			</div>
 		</div>
 	</div>
-	{% if password_changed or avatar_changed %}
-	<script>
-		window.onload = function() {
-			if (window.location.search.indexOf('password_changed=true') > -1) {
-				var newUrl = window.location.href.split('?')[0];
-				window.history.replaceState({}, '', newUrl);
-				window.location.reload(true);
-			}
-			if (window.location.search.indexOf('avatar_changed=true') > -1) {
-				var newUrl = window.location.href.split('?')[0];
-				window.history.replaceState({}, '', newUrl);
-				window.location.reload(true);
-			}
-		};
-	</script>
-	{% endif %}
 </body>
 {% endblock %}
