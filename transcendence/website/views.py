@@ -125,6 +125,14 @@ def profile(request):
                 return redirect('/main?avatar_changed=true')
             else:
                 print(f"Form errors: {avatar_form.errors}")
+        elif 'change_name' in request.POST:
+            # Aucun formulaire n'est nécessaire car vous récupérez directement les données du POST
+            request.user.first_name = request.POST['first_name']
+            request.user.last_name = request.POST['last_name']
+            request.user.save()
+            update_session_auth_hash(request, request.user)
+            messages.success(request, 'Name changed successfully')
+            return redirect('/main')
         else:
             messages.error(request, 'Invalid form submission')
             if avatar_form.is_valid():
@@ -138,18 +146,6 @@ def profile(request):
                 return redirect('/main?avatar_changed=true')
             else:
                 messages.error(request, 'Error in avatar change form submission')
-
-        elif 'change_name' in request.POST:
-            # Aucun formulaire n'est nécessaire car vous récupérez directement les données du POST
-            request.user.first_name = request.POST['first_name']
-            request.user.last_name = request.POST['last_name']
-            request.user.save()
-            update_session_auth_hash(request, request.user)
-            messages.success(request, 'Name changed successfully')
-            return redirect('/main')
-        else:
-            messages.error(request, 'An unexpected error occurred')
-
     else:
         pwd_form = ChangePasswordForm(request.user)
         avatar_form = ChangeAvatarForm(instance=request.user)
