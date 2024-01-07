@@ -10,13 +10,18 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.files.storage import default_storage
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def main(request):
     password_changed = 'password_changed' in request.GET
+    avatar_changed = 'avatar_changed' in request.GET
+    update_session_auth_hash(request, request.user)
     context = {
         'user': request.user,
         'password_changed': password_changed,
+        'avatar_changed': avatar_changed,
     }
     return render(request, 'main.html', context)
 
@@ -92,11 +97,11 @@ from django.contrib import messages
 def profile(request):
     old_avatar = request.user.avatar
     print(f"Old Avatar before deletion: {old_avatar.name}")
+    user_stats = User.objects.get(id=request.user.id)
     if request.method == 'POST':
         pwd_form = ChangePasswordForm(request.user, request.POST)
         avatar_form = ChangeAvatarForm(request.POST, request.FILES, instance=request.user)
         if 'change_password' in request.POST:
-            # Handle password change form submission
             if pwd_form.is_valid():
                 pwd_form.save()
                 update_session_auth_hash(request, request.user)
@@ -104,6 +109,7 @@ def profile(request):
                 return redirect('/main?password_changed=true')
             else:
                 messages.error(request, 'Error in password change form submission')
+        
         elif 'change_avatar' in request.POST:
             # Handle avatar change form submission
             print(f"Avatar before form validation: {request.user.avatar}")
@@ -121,6 +127,29 @@ def profile(request):
                 print(f"Form errors: {avatar_form.errors}")
         else:
             messages.error(request, 'Invalid form submission')
+            if avatar_form.is_valid():
+                old_avatar = request.user.avatar
+                if old_avatar and not old_avatar.name.endswith('default.png'):
+                    old_avatar.delete()
+                request.user.avatar = request.FILES['avatar']
+                request.user.save()
+                update_session_auth_hash(request, request.user)
+                messages.success(request, 'Avatar changed successfully')
+                return redirect('/main?avatar_changed=true')
+            else:
+                messages.error(request, 'Error in avatar change form submission')
+
+        elif 'change_name' in request.POST:
+            # Aucun formulaire n'est nécessaire car vous récupérez directement les données du POST
+            request.user.first_name = request.POST['first_name']
+            request.user.last_name = request.POST['last_name']
+            request.user.save()
+            update_session_auth_hash(request, request.user)
+            messages.success(request, 'Name changed successfully')
+            return redirect('/main')
+        else:
+            messages.error(request, 'An unexpected error occurred')
+
     else:
         pwd_form = ChangePasswordForm(request.user)
         avatar_form = ChangeAvatarForm(instance=request.user)
@@ -129,6 +158,12 @@ def profile(request):
 
 def handler404(request, exception):
     return render(request, '404.html', status=404)
+
+def increment_game(request, player_id):
+    player = get_object_or_404(User, id=player_id)
+    player.total_pong_games += 1
+    player.save()
+    return HttpResponseRedirect(reverse('details', args=[player_id]))
 
 def increment_victory(request, player_id):
     player = get_object_or_404(User, id=player_id)
@@ -170,3 +205,7 @@ def pong(request):
 def test(request):
     avatar_name = request.user.avatar.name if request.user.avatar else "No avatar uploaded"
     return render(request, 'test.html', {'avatar_name': avatar_name})
+
+@login_required
+def	check_login(request):
+    return JsonResponse({'is_logged_in': request.user.is_authenticated})

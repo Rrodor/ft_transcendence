@@ -1,10 +1,6 @@
 {% extends "master.html" %}
 {% load widget_tweaks %}
 {% load static %}
-<head>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-  
 
 {% block title %}
   Profile
@@ -67,7 +63,13 @@
 					  <p class="mb-0">Full Name</p>
 					</div>
 					<div class="col-sm-9">
-						<p class="text-muted mb-0">/*FIELD A CREER*/</p>
+						{% if request.user.first_name == "" and request.user.last_name == "" %}
+							<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changeNameModal">
+								Set Name
+							</button>
+						{% else %}
+							<p class="text-muted mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</p>
+						{% endif %}
 					</div>
 				</div>
 				<hr>
@@ -92,11 +94,85 @@
 				</div>
 			  </div>
 			  </div>
-				<div class="col-md-6">
-					<div class="card mb-4 mb-md-0">
-						<p class="lead text-center">Peut etre un camebert ou des slides pour voir les win/looses sur les deux jeux</p>
-				  </div>
-				</div>
+			  <div class="card mb-4 mb-md-0">
+                <div id="statsCarousel" class="carousel slide" data-bs-interval="false">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="d-flex justify-content-center align-items-center" style="gap: 20px; padding: 20px;">
+                                <div style="text-align: center;">
+                                    <p style="font-weight: bold; margin-bottom: 0;">
+                                        Nombre de parties jouées (Pong):<br>
+                                        {{ user_stats.total_pong_games }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <canvas id="myChart1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="d-flex justify-content-center align-items-center" style="gap: 20px; padding: 20px;">
+                                <div style="text-align: center;">
+                                    <p style="font-weight: bold; margin-bottom: 0;">
+                                        Nombre de parties jouées (Jeu 2):<br>
+                                        {{ user_stats.total_pong_games }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <canvas id="myChart2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#statsCarousel" role="button" data-bs-slide="prev" style="color: black; left: -25px;">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					</a>
+					<a class="carousel-control-next" href="#statsCarousel" role="button" data-bs-slide="next" style="color: black;">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					</a>
+                </div>
+            </div>
+			<script>
+				var ctx1 = document.getElementById('myChart1').getContext('2d');
+				var myChart1 = new Chart(ctx1, {
+					type: 'doughnut',
+					data: {
+						labels: ['Victoires', 'Défaites'],
+						datasets: [{
+							label: 'Statistiques du Joueur',
+							data: [{{ user_stats.pong_victories }}, {{ user_stats.pong_defeats }}],
+							backgroundColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
+							borderColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
+							borderWidth: 1
+						}]
+					},
+					options: {
+						responsive: true,
+						cutoutPercentage: 40,
+						maintainAspectRatio: true
+					}
+				});
+		
+				var ctx2 = document.getElementById('myChart2').getContext('2d');
+				var myChart2 = new Chart(ctx2, {
+					type: 'doughnut',
+					data: {
+						labels: ['Victoires', 'Défaites'],
+						datasets: [{
+							label: 'Statistiques du Joueur',
+							data: [{{ user_stats.pong_victories }}, {{ user_stats.pong_defeats }}],
+							backgroundColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
+							borderColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
+							borderWidth: 1
+						}]
+					},
+					options: {
+						responsive: true,
+						cutoutPercentage: 40,
+						maintainAspectRatio: true
+					}
+				});
+			</script>
 			</div>
 		</div>
 		  </div>
@@ -159,6 +235,33 @@
 				</div>
 			</div>
 		</div>
-	</body>
+		<div class="modal fade" id="changeNameModal" tabindex="-1" aria-labelledby="changeNameModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="changeNameModalLabel">Set Name</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<!-- Formulaire pour changer le nom -->
+						<form method="post" action="{% url 'profile' %}">
+							{% csrf_token %}
+							<div class="mb-3">
+								<label for="first_name" class="form-label">First Name</label>
+								<input type="text" class="form-control" id="first_name" name="first_name">
+							</div>
+							<div class="mb-3">
+								<label for="last_name" class="form-label">Last Name</label>
+								<input type="text" class="form-control" id="last_name" name="last_name">
+							</div>
+							<button type="submit" name="change_name" class="btn btn-primary">Save Name</button>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 	{% endblock %}

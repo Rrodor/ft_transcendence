@@ -30,17 +30,22 @@
 	<div class="container-fluid text-center" style="margin-top: 100px;">
 		<div class="row align-items-center">
 			<div class="col">
-				<a href="{% url 'pong' %}" button class="glow-on-hover" type="button">Play <em>Pong</em></button></a>
+				<button class="glow-on-hover" onclick="location.href='{% url 'pong' %}'">Play <em>Pong</em></a>
 			</div>
 			<div class="col">
 				<button class="glow-on-hover" type="button">Play <em>Hexa-Race</em></button>
 			</div>
 		</div>
 	</div>
-	{% if password_changed %}
+	{% if password_changed or avatar_changed %}
 	<script>
 		window.onload = function() {
 			if (window.location.search.indexOf('password_changed=true') > -1) {
+				var newUrl = window.location.href.split('?')[0];
+				window.history.replaceState({}, '', newUrl);
+				window.location.reload(true);
+			}
+			if (window.location.search.indexOf('avatar_changed=true') > -1) {
 				var newUrl = window.location.href.split('?')[0];
 				window.history.replaceState({}, '', newUrl);
 				window.location.reload(true);
