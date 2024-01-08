@@ -1,0 +1,7 @@
+FROM nginx:alpine
+RUN rm /etc/nginx/conf.d/default.conf
+COPY ./Docker/nginx.conf.prod /etc/nginx/conf.d/nginx.conf
+COPY ./Docker/certs/localhost+3.pem /etc/ssl/certs/
+COPY ./Docker/certs/localhost+3-key.pem /etc/ssl/private/
+EXPOSE 80 443
+CMD ["nginx", "-g", "daemon off;"]

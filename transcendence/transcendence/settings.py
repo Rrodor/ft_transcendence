@@ -129,6 +129,9 @@ STATICFILES_DIRS = [
 	BASE_DIR / 'static'
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'productionfiles')
+CSRF_TRUSTED_ORIGINS = ['https://192.168.1.5', 'https://localhost']
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

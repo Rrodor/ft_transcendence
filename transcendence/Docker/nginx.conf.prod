@@ -1,0 +1,36 @@
+server {
+    listen 443 ssl;
+    server_name localhost 127.0.0.1 192.168.1.5;
+
+    ssl_certificate /etc/ssl/certs/localhost+3.pem;
+    ssl_certificate_key /etc/ssl/private/localhost+3-key.pem;
+
+    # Configuration de la sécurité SSL
+    ssl_session_cache shared:SSL:1m;
+    ssl_session_timeout 10m;
+    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256';
+    ssl_prefer_server_ciphers on;
+
+    location / {
+        proxy_pass http://django:8001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+	location /static/ {
+        alias /app/productionfiles/;
+    }
+	location /media/ {
+		alias /app/media/;
+	}
+}
+
+server {
+    listen 80;
+    server_name localhost 127.0.0.1 192.168.1.5;
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}

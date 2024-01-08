@@ -2,16 +2,16 @@ version: '3'
 
 services:
   django:
-    build: ./Docker
+    build:
+      context: .
+      dockerfile: Dockerfile.django
     command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
     ports:
       - "8001:8000"
 
   nginx:
     build:
-      context: ./Docker
+      context: .
       dockerfile: Dockerfile.nginx
     ports:
       - "80:80"
