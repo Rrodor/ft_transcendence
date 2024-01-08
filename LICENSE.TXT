@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2023-2024 Baptiste Breton, Roméo Rodor, Cyril Parras, Anthony Ramon.
+Copyright (c) 2023-2024 Anthony Ramon, Baptiste Breton, Cyril Parras and Roméo Rodor.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
