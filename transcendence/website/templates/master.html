@@ -9,7 +9,7 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 	<body>
-		{% if password_changed or avatar_changed or name_changed %}
+		{% if password_changed or avatar_changed or name_changed or friends_changed %}
 			<script src="{% static 'js/reload_changed.js' %}?v=02"></script>
 		{% endif %}
 		{% if messages %}

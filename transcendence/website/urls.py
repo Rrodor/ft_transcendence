@@ -23,6 +23,8 @@ urlpatterns = [
 		path('decrement_defeat/<int:player_id>/', views.decrement_defeat, name='decrement_defeat'),		#bouton -1 défaite
 		path('resetWL/<int:player_id>/', views.resetWL, name='resetWL'),						#bouton reset Win et Lose
         path('check_login/', views.check_login, name='check_login'),
+		path('add_friend/<int:id>/', views.add_friend, name='add_friend'),
+		path('remove_friend/<int:id>/', views.remove_friend, name='remove_friend'),
 ]
 
 handler404 = 'website.views.handler404'

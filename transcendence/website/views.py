@@ -1,29 +1,29 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.template import loader
-from .models import User
-from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
+from .models import User, Friendship
 from .forms import UserForm, ChangePasswordForm, ChangeAvatarForm
-from django.contrib import messages
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from django.db.models import Q
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template import loader
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm
-from django.core.files.storage import default_storage
-from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import default_storage
 
 # Create your views here.
 def main(request):
     password_changed = 'password_changed' in request.GET
     avatar_changed = 'avatar_changed' in request.GET
     name_changed = 'name_changed' in request.GET
+    friends_changed = 'friends_changed' in request.GET
     update_session_auth_hash(request, request.user)
     context = {
         'user': request.user,
         'password_changed': password_changed,
         'avatar_changed': avatar_changed,
         'name_changed': name_changed,
+        'friends_changed': friends_changed,
     }
     return render(request, 'main.html', context)
 
@@ -37,9 +37,16 @@ def players(request):
 
 def details(request, id):
     player = User.objects.get(id=id)
+    is_friend = False
+    if request.user.is_authenticated:
+        is_friend = Friendship.objects.filter(
+            (Q(user1=request.user) & Q(user2=player)) |
+            (Q(user1=player) & Q(user2=request.user))
+		).exists()
     template = loader.get_template('details.html')
     context = {
             'player': player,
+            'is_friend': is_friend,
     }
     return (HttpResponse(template.render(context, request)))
 
@@ -207,3 +214,29 @@ def test(request):
 @login_required
 def	check_login(request):
     return JsonResponse({'is_logged_in': request.user.is_authenticated})
+
+@login_required
+def add_friend(request, id):
+    if request.method == 'POST':
+        friend = get_object_or_404(User, id=id)
+        # Vérifie si l'amitié existe déjà
+        if not Friendship.objects.filter(user1=request.user, user2=friend).exists() and not Friendship.objects.filter(user1=friend, user2=request.user).exists():
+            friendship = Friendship(user1=request.user, user2=friend)
+            friendship.save()
+            messages.success(request, f"You and {friend.username} are now friends.")
+        else:
+            messages.info(request, "You are already friends.")
+        return redirect('/main?friends_changed=true', id=id)
+    
+@login_required
+def remove_friend(request, id):
+	if request.method == 'POST':
+		friend = get_object_or_404(User, id=id)
+		# Vérifie si l'amitié existe déjà
+		if Friendship.objects.filter(user1=request.user, user2=friend).exists() or Friendship.objects.filter(user1=friend, user2=request.user).exists():
+			Friendship.objects.filter(user1=request.user, user2=friend).delete()
+			Friendship.objects.filter(user1=friend, user2=request.user).delete()
+			messages.success(request, f"You and {friend.username} are no longer friends.")
+		else:
+			messages.info(request, "You are not friends.")
+		return redirect('/main?friends_changed=true', id=id)
