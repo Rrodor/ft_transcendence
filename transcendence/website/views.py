@@ -105,8 +105,8 @@ from django.contrib import messages
 
 def profile(request):
     old_avatar = request.user.avatar
-    print(f"Old Avatar before deletion: {old_avatar.name}")
     user_stats = User.objects.get(id=request.user.id)
+    friends = Friendship.objects.filter(Q(user1=request.user) | Q(user2=request.user)).distinct()[:5]
     if request.method == 'POST':
         pwd_form = ChangePasswordForm(request.user, request.POST)
         avatar_form = ChangeAvatarForm(request.POST, request.FILES, instance=request.user)
@@ -121,13 +121,11 @@ def profile(request):
         
         elif 'change_avatar' in request.POST:
             # Handle avatar change form submission
-            print(f"Avatar before form validation: {request.user.avatar}")
             if avatar_form.is_valid():
                 new_avatar = avatar_form.save(commit=False)
                 print(f"New Avatar before deletion: {new_avatar.avatar.name}")
                 if old_avatar and not old_avatar.name.endswith('default.png') and old_avatar.name != new_avatar.avatar.name:
                     default_storage.delete(old_avatar.name)
-                    print(f"Old Avatar after deletion: {old_avatar.name}")
                 avatar_form.save()
                 update_session_auth_hash(request, request.user)
                 messages.success(request, 'Avatar changed successfully')
@@ -158,7 +156,7 @@ def profile(request):
     else:
         pwd_form = ChangePasswordForm(request.user)
         avatar_form = ChangeAvatarForm(instance=request.user)
-    return render(request, 'profile.html', {'pwd_form': pwd_form, 'avatar_form': avatar_form, 'user_stats': user_stats})
+    return render(request, 'profile.html', {'pwd_form': pwd_form, 'avatar_form': avatar_form, 'user_stats': user_stats, 'friends': friends})
 
 
 def handler404(request, exception):

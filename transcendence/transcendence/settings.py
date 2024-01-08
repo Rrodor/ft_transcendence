@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 	'whitenoise.middleware.WhiteNoiseMiddleware',
+	'website.last_activity_middleware.LastActivityMiddleware',
 ]
 
 ROOT_URLCONF = 'transcendence.urls'
@@ -72,6 +73,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+
+			'libraries': {
+				'friends': 'website.templatetags.friends',
+			},
         },
     },
 ]

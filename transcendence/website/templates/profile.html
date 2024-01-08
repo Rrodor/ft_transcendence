@@ -1,6 +1,7 @@
 {% extends "master.html" %}
 {% load widget_tweaks %}
 {% load static %}
+{% load friends %}
 
 {% block title %}
   Profile
@@ -26,34 +27,29 @@
 								Change Avatar
 							</button>							
 						</div>
-						<p class="lead text-center" >{{ request.user.username }}</p>
+						<p class="lead text-center fw-bold" >{{ request.user.username }}</p>
 					</div>
-			<div class="card mb-4 mb-lg-0">
-				<div class="card-body p-0">
-					<ul class="list-group list-group-flush rounded-3">
-						<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-							<i class="fas fa-globe fa-lg text-warning"></i>
-							<p class="mb-0">FRIEND LIST</p>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-					  <i class="fab fa-github fa-lg" style="color: #333333;"></i>
-					  <p class="mb-0">FRIEND LIST</p>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-						<i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
-						<p class="mb-0">FRIEND LIST</p>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-						<i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
-						<p class="mb-0">FRIEND LIST</p>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-						<i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-						<p class="mb-0">FRIEND LIST</p>
-					</li>
-				  </ul>
-				</div>
-			</div>
+					<div class="card mb-4 mb-lg-0">
+						<div class="card-body p-0">
+							<ul class="list-group list-group-flush rounded-3">
+								{% for friendship in friends %}
+									{% with friend=friendship.user1|friendship_user:request.user %}
+										<li class="list-group-item d-flex align-items-center p-3">
+											<img src="{{ friendship.user2.avatar.url }}" class="rounded-circle me-3" style="width: 30px; height: 30px; object-fit: cover;" alt="Avatar">
+											<div class="text-center flex-grow-1">
+												<p class="mb-0 fw-bold">{{ friendship.user2.username }}</p>
+											</div>
+											<span class="status-dot {% if friendship.user2.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
+										</li>
+									{% endwith %}
+								{% empty %}
+									<li class="list-group-item d-flex justify-content-center align-items-center p-3">
+										<p class="mb-0 fw-bold">No friends yet.</p>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
 			</div>
 			<div class="col-lg-8">
 			  <div class="card mb-4">
@@ -185,24 +181,6 @@
 				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-				  <!-- Formulaire de changement de mot de passe -->
-				  <!-- <form id="passwordChangeForm" method="post" action="{% url 'profile' %}">
-					{% csrf_token %}
-					{% for field in pwd_form  %}
-						<div class="form-group mb-4">
-							<label class="form-label" for="{{ field.id_for_label }}" style="color: #000000;">{{ field.label }}</label>
-							{{ field|add_class:"form-control" }}
-							{% if field.help_text %}
-								<small class="form-text text-muted">{{ field.help_text }}</small>
-							{% endif %}
-							{% for error in field.errors %}
-								<div class="alert alert-danger" role="alert">
-									{{ error }}
-								</div>
-							{% endfor %}
-						</div>
-					{% endfor %}
-				  </form> -->
 				  <form method="post" action="{% url 'profile' %}">
 					{% csrf_token %}
 					{{ pwd_form.as_p }}
