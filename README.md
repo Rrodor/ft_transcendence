@@ -65,7 +65,7 @@ chmod +x transcendence.sh
 
 ## License
 
-The FT_TRANSCENDENCE project is open source and is available under the [MIT License](LICENSE.txt).
+The FT_TRANSCENDENCE project is open source and is available under the [MIT License](LICENSE.TXT).
 
 ---
 *FT_TRANSCENDENCE - A 42 School Project*
