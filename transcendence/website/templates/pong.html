@@ -12,7 +12,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
 	<script type="module" src="{% static 'js/game/Scene.js' %}"></script>
 	<script type="module" src="{% static 'js/game/Ball.js' %}"></script>
-	<script type="module" src="{% static 'js/game/AI.js' %}"></script>
+	<script type="module" src="{% static 'js/game/AI.js' %}?v=00"></script>
 	<script type="module">
 
 		// Import all the functions from the other files
@@ -95,7 +95,7 @@
 		forward.applyQuaternion(ball.quaternion);
 
 		// Set the speed and calculate the velocity
-		const speed = 0.1;
+		const speed = 0.15;
 		let ballVelocity = forward.multiplyScalar(speed);
 
 		// Create an ArrowHelper to represent velocity direction
@@ -269,7 +269,7 @@
 				ball.rotation.y = Math.random() * Math.PI * 2;
 				const forward = new THREE.Vector3(0, 0, -1);
 				forward.applyQuaternion(ball.quaternion);
-				const speed = 0.1;
+				const speed = 0.15;
 				const velocity = forward.multiplyScalar(speed);
 				ballVelocity = velocity;
 			}
@@ -284,7 +284,7 @@
 				ball.rotation.y = Math.random() * Math.PI * 2;
 				const forward = new THREE.Vector3(0, 0, -1);
 				forward.applyQuaternion(ball.quaternion);
-				const speed = 0.1;
+				const speed = 0.15;
 				const velocity = forward.multiplyScalar(speed);
 				ballVelocity = velocity;
 			}
@@ -325,7 +325,7 @@
 			//if (movePaddleRightUp) paddleRight.position.z -= paddleSpeed * deltaTime;
 			//if (movePaddleRightDown) paddleRight.position.z += paddleSpeed * deltaTime;
 
-			paddleRight.position.z = AImove(ball, paddleRight.position.z, paddleSpeed, deltaTime);
+			paddleRight.position.z = AImove(ball, paddleRight.position.z, paddleSpeed, deltaTime, scene);
 
 			// Collision logic
 			updateBoundingBoxes();
