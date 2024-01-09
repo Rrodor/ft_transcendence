@@ -1,12 +1,15 @@
-export function initPaddle(posX, posY, posZ)
+export function initPaddle(scene, position)
 {
 	const paddleGeometry = new THREE.BoxGeometry(2, 0.3, 0.3);
 	const paddleMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
 	const paddle = new THREE.Mesh(paddleGeometry, paddleMaterial);
-	paddle.position.set(posX, posY, posZ);
-	paddle.rotation.y = Math.PI / 2;
+	const paddleBoundingBox = new THREE.Box3().setFromObject(paddle);
+
+	paddle.position.set(position.x, position.y, position.z);
 	paddle.castShadow = true;
 	paddle.receiveShadow = true;
 
-	return { paddle };
+	scene.add(paddle);
+
+	return { paddle, paddleBoundingBox };
 }

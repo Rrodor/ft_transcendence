@@ -15,6 +15,7 @@ urlpatterns = [
 		path('logout/', views.logout_view, name='logout'),
 		path('profile/', views.profile, name='profile'),
 		path('pong/', views.pong, name='pong'),
+		path('brique/', views.brique, name='brique'),
 		path('test/', views.test, name='test'),
         path('increment_game/<int:player_id>/', views.increment_game, name='increment_game'),			#bouton +1 game (pong)
 		path('increment_victory/<int:player_id>/', views.increment_victory, name='increment_victory'),	#bouton +1 victoire
@@ -25,6 +26,9 @@ urlpatterns = [
         path('check_login/', views.check_login, name='check_login'),
 		path('add_friend/<int:id>/', views.add_friend, name='add_friend'),
 		path('remove_friend/<int:id>/', views.remove_friend, name='remove_friend'),
+		path('pong/send_score_player_left', views.send_score_player_left, name='send_score_player_left'),
+		path('pong/send_score_player_right', views.send_score_player_right, name='send_score_player_right'),
+		path('pong/send_score_ai', views.send_score_ai, name='send_score_ai'),
 ]
 
 handler404 = 'website.views.handler404'

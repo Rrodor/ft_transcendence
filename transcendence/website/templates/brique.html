@@ -12,8 +12,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
 	<script type="module">
 
-		import { initScene, animateGame } from "{% static 'js/game/pong/Scene.js' %}";
-		import * as Game from "{% static 'js/game/pong/Game.js' %}";
+		import { initScene, animateGame } from "{% static '/js/game/brique/Scene.js' %}";
+		import * as Game from "{% static '/js/game/brique/Game.js' %}";
 		const { renderer, scene, camera, environmentBoundingBoxes } = initScene();
 		Game.init(scene, environmentBoundingBoxes);
 		animateGame(renderer, scene, camera);
