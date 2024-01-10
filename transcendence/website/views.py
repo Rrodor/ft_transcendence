@@ -10,6 +10,9 @@ from django.contrib.auth import login, authenticate, logout, update_session_auth
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
+from django.views.decorators.csrf import csrf_exempt
+
+import json
 
 # Create your views here.
 def main(request):
@@ -122,7 +125,7 @@ def profile(request):
                 return redirect('/main?password_changed=true')
             else:
                 messages.error(request, 'Error in password change form submission')
-        
+
         elif 'change_avatar' in request.POST:
             # Handle avatar change form submission
             if avatar_form.is_valid():
@@ -183,7 +186,7 @@ def add_friend(request, id):
         else:
             messages.info(request, "Friend request already sent or you are already friends.")
         return redirect('/main?friends_changed=true', id=id)
-    
+
 @login_required
 def accept_friend_request(request, id):
     if request.method == 'POST':
@@ -193,7 +196,7 @@ def accept_friend_request(request, id):
         friendship.save()
         messages.success(request, f"You are now friends with {friendship.user1.username}.")
         return redirect('/profile?friends_changed=true', id=id)
-    
+
 @login_required
 def decline_friend_request(request, id):
     if request.method == 'POST':
@@ -261,6 +264,10 @@ def pong(request):
     # Your view logic here
     return render(request, 'pong.html')
 
+def brique(request):
+    # Your view logic here
+    return render(request, 'brique.html')
+
 def test(request):
     avatar_name = request.user.avatar.name if request.user.avatar else "No avatar uploaded"
     return render(request, 'test.html', {'avatar_name': avatar_name})
@@ -268,3 +275,30 @@ def test(request):
 @login_required
 def	check_login(request):
     return JsonResponse({'is_logged_in': request.user.is_authenticated})
+
+@csrf_exempt
+def send_score_player_left(request):
+	if request.method == 'POST':
+		data = json.loads(request.body)
+		score_left = data['score']
+		print(score_left)
+		return JsonResponse({"status": "success"})
+	return JsonResponse({"status": "invalid request"}, status=400)
+
+@csrf_exempt
+def send_score_player_right(request):
+	if request.method == 'POST':
+		data = json.loads(request.body)
+		score_right = data['score']
+		print(score_right)
+		return JsonResponse({"status": "success"})
+	return JsonResponse({"status": "invalid request"}, status=400)
+
+@csrf_exempt
+def send_score_ai(request):
+	if request.method == 'POST':
+		data = json.loads(request.body)
+		score_right = data['score']
+		print(score_AI)
+		return JsonResponse({"status": "success"})
+	return JsonResponse({"status": "invalid request"}, status=400)

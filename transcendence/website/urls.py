@@ -15,6 +15,7 @@ urlpatterns = [
 		path('logout/', views.logout_view, name='logout'),
 		path('profile/', views.profile, name='profile'),
 		path('pong/', views.pong, name='pong'),
+		path('brique/', views.brique, name='brique'),
 		path('test/', views.test, name='test'),
         path('increment_game/<int:player_id>/', views.increment_game, name='increment_game'),			#bouton +1 game (pong)
 		path('increment_victory/<int:player_id>/', views.increment_victory, name='increment_victory'),	#bouton +1 victoire
