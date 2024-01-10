@@ -28,6 +28,7 @@ urlpatterns = [
 		path('remove_friend/<int:id>/', views.remove_friend, name='remove_friend'),
 		path('accept_friend_request/<int:id>/', views.accept_friend_request, name='accept_friend_request'),
 		path('decline_friend_request/<int:id>/', views.decline_friend_request, name='decline_friend_request'),
+		path('pong/sendscore/', views.sendscore, name='sendscore'),
 ]
 
 handler404 = 'website.views.handler404'

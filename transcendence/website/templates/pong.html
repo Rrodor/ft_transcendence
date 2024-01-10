@@ -6,13 +6,17 @@
 	<style>
 		body { margin: 0; }
 	</style>
+	{% load static %}
 </head>
 <body>
-	{% load static %}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+	<script type="text/javascript">
+		var userId = "{{ user_id}}";
+	</script>
 	<script type="module">
 
 		import { initScene, animateGame } from "{% static 'js/game/pong/Scene.js' %}";
+		var	userId = {{ user_id }};
 		import * as Game from "{% static 'js/game/pong/Game.js' %}";
 		const { renderer, scene, camera, environmentBoundingBoxes } = initScene();
 		Game.init(scene, environmentBoundingBoxes);

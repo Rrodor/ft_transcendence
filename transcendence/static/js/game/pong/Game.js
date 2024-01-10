@@ -26,7 +26,7 @@ let rightPlayerIsAI = false;
 let scoreLeft = 0;
 let scoreRight = 0;
 let scoreAI = 0;
-let scoreMax = 11;
+let scoreMax = 2;
 
 export function init(scene, envBoundingBoxes)
 {
@@ -158,11 +158,7 @@ function adjustBallVelocity(ball, paddle)
 
 function sendInfosToServer()
 {
-	Network.sendScorePlayerLeft(scoreLeft);
-	if (rightPlayerIsAI)
-		Network.sendScoreAI(scoreAI);
-	else
-		Network.sendScorePlayerRight(scoreRight);
+	Network.sendScore(scoreLeft, scoreRight, userId);
 }
 
 function endGame()

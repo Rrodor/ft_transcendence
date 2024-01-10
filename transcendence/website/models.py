@@ -10,6 +10,8 @@ class User(AbstractUser):
 	total_pong_games = models.IntegerField(default=0)
 	pong_victories = models.IntegerField(default=0)
 	pong_defeats = models.IntegerField(default=0)
+	pong_points_for = models.IntegerField(default=0)
+	pong_points_against = models.IntegerField(default=0)
 	pong_victories_percentage = models.FloatField(default=0)
 	pong_defeats_percentage = models.FloatField(default=0)
 	avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', blank=True, null=True)

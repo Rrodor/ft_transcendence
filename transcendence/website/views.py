@@ -261,8 +261,34 @@ def resetWL(request, player_id):
     return HttpResponseRedirect(reverse('details', args=[player_id]))
 
 def pong(request):
+    context = {
+        'user_id': request.user.id,
+    }
     # Your view logic here
-    return render(request, 'pong.html')
+    return render(request, 'pong.html', context)
+
+@csrf_exempt
+def	sendscore(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_id = data['userId']
+        score_left = data['scoreLeft']
+        score_right = data['scoreRight']
+        try:
+            user = User.objects.get(id=user_id)
+            if score_left > score_right:
+                user.pong_victories += 1
+            else:
+                user.pong_defeats += 1
+            user.pong_points_for += score_left
+            user.pong_points_against += score_right
+            user.save()
+
+            return JsonResponse({"status": "Score updated successfully"})
+        except User.DoesNotExist:
+            return JsonResponse({"status": "User not found"}, status=404)
+
+    return JsonResponse({"status": "Invalid request"}, status=400)
 
 def brique(request):
     # Your view logic here
@@ -277,28 +303,10 @@ def	check_login(request):
     return JsonResponse({'is_logged_in': request.user.is_authenticated})
 
 @csrf_exempt
-def send_score_player_left(request):
-	if request.method == 'POST':
-		data = json.loads(request.body)
-		score_left = data['score']
-		print(score_left)
-		return JsonResponse({"status": "success"})
-	return JsonResponse({"status": "invalid request"}, status=400)
-
-@csrf_exempt
-def send_score_player_right(request):
-	if request.method == 'POST':
-		data = json.loads(request.body)
-		score_right = data['score']
-		print(score_right)
-		return JsonResponse({"status": "success"})
-	return JsonResponse({"status": "invalid request"}, status=400)
-
-@csrf_exempt
 def send_score_ai(request):
-	if request.method == 'POST':
-		data = json.loads(request.body)
-		score_right = data['score']
-		print(score_AI)
-		return JsonResponse({"status": "success"})
-	return JsonResponse({"status": "invalid request"}, status=400)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        score_right = data['score']
+        print(score_AI)
+        return JsonResponse({"status": "success"})
+    return JsonResponse({"status": "invalid request"}, status=400)
