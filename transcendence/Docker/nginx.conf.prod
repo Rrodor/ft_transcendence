@@ -24,6 +24,9 @@ server {
 	location /media/ {
 		alias /app/media/;
 	}
+	location /imgs/ {
+		alias /app/imgs/;
+	}
 }
 
 server {

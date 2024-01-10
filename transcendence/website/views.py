@@ -10,10 +10,6 @@ from django.contrib.auth import login, authenticate, logout, update_session_auth
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-import json
 
 # Create your views here.
 def main(request):
@@ -46,7 +42,7 @@ def details(request, id):
         is_friend = Friendship.objects.filter(
             (Q(user1=request.user) & Q(user2=player)) |
             (Q(user1=player) & Q(user2=request.user))
-		).exists()
+        ).exists()
     template = loader.get_template('details.html')
     context = {
             'player': player,
@@ -110,7 +106,11 @@ from django.contrib import messages
 def profile(request):
     old_avatar = request.user.avatar
     user_stats = User.objects.get(id=request.user.id)
-    friends = Friendship.objects.filter(Q(user1=request.user) | Q(user2=request.user)).distinct()[:5]
+    friends = Friendship.objects.filter((Q(user1=request.user) | Q(user2=request.user)) & Q(is_confirmed=True) & ~Q(is_pending=True)
+).distinct()[:5]
+    pending_friends = Friendship.objects.filter(Q(user2=request.user, is_pending=True)).distinct()[:5]
+    friends_changed = 'friends_changed' in request.GET
+    avatar_changed = 'avatar_changed' in request.GET
     if request.method == 'POST':
         pwd_form = ChangePasswordForm(request.user, request.POST)
         avatar_form = ChangeAvatarForm(request.POST, request.FILES, instance=request.user)
@@ -122,7 +122,7 @@ def profile(request):
                 return redirect('/main?password_changed=true')
             else:
                 messages.error(request, 'Error in password change form submission')
-
+        
         elif 'change_avatar' in request.POST:
             # Handle avatar change form submission
             if avatar_form.is_valid():
@@ -133,7 +133,7 @@ def profile(request):
                 avatar_form.save()
                 update_session_auth_hash(request, request.user)
                 messages.success(request, 'Avatar changed successfully')
-                return redirect('/main?avatar_changed=true')
+                return redirect('/profile?avatar_changed=true')
             else:
                 print(f"Form errors: {avatar_form.errors}")
         elif 'change_name' in request.POST:
@@ -143,7 +143,7 @@ def profile(request):
             request.user.save()
             update_session_auth_hash(request, request.user)
             messages.success(request, 'Name changed successfully')
-            return redirect('/main?name_changed=true')
+            return redirect('/profile?name_changed=true')
         else:
             messages.error(request, 'Invalid form submission')
             if avatar_form.is_valid():
@@ -154,14 +154,66 @@ def profile(request):
                 request.user.save()
                 update_session_auth_hash(request, request.user)
                 messages.success(request, 'Avatar changed successfully')
-                return redirect('/main?avatar_changed=true')
+                return redirect('/profile?avatar_changed=true')
             else:
                 messages.error(request, 'Error in avatar change form submission')
     else:
         pwd_form = ChangePasswordForm(request.user)
         avatar_form = ChangeAvatarForm(instance=request.user)
-    return render(request, 'profile.html', {'pwd_form': pwd_form, 'avatar_form': avatar_form, 'user_stats': user_stats, 'friends': friends})
+    context = {
+        'pwd_form': pwd_form,
+        'avatar_form': avatar_form,
+        'user_stats': user_stats,
+        'friends': friends,
+        'pending_friends': pending_friends,
+        'friends_changed': friends_changed,
+        'avatar_changed': avatar_changed,
+    }
+    return render(request, 'profile.html', context)
 
+@login_required
+def add_friend(request, id):
+    if request.method == 'POST':
+        friend = get_object_or_404(User, id=id)
+        if not Friendship.objects.filter(user1=request.user, user2=friend).exists():
+            friendship = Friendship(user1=request.user, user2=friend, is_confirmed=False, is_pending=False)
+            friendship.is_pending = True
+            friendship.save()
+            messages.success(request, f"Friend request sent to {friend.username}.")
+        else:
+            messages.info(request, "Friend request already sent or you are already friends.")
+        return redirect('/main?friends_changed=true', id=id)
+    
+@login_required
+def accept_friend_request(request, id):
+    if request.method == 'POST':
+        friendship = get_object_or_404(Friendship, user1_id=id, user2=request.user, is_confirmed=False)
+        friendship.is_confirmed = True
+        friendship.is_pending = False
+        friendship.save()
+        messages.success(request, f"You are now friends with {friendship.user1.username}.")
+        return redirect('/profile?friends_changed=true', id=id)
+    
+@login_required
+def decline_friend_request(request, id):
+    if request.method == 'POST':
+        friendship = get_object_or_404(Friendship, user1_id=id, user2=request.user, is_confirmed=False)
+        friendship.delete()
+        messages.success(request, f"You declined {friendship.user1.username}'s friend request.")
+        return redirect('/profile?friends_changed=true', id=id)
+
+@login_required
+def remove_friend(request, id):
+    if request.method == 'POST':
+        friend = get_object_or_404(User, id=id)
+        # Vérifie si l'amitié existe déjà
+        if Friendship.objects.filter(user1=request.user, user2=friend).exists() or Friendship.objects.filter(user1=friend, user2=request.user).exists():
+            Friendship.objects.filter(user1=request.user, user2=friend).delete()
+            Friendship.objects.filter(user1=friend, user2=request.user).delete()
+            messages.success(request, f"You and {friend.username} are no longer friends.")
+        else:
+            messages.info(request, "You are not friends.")
+        return redirect('/profile?friends_changed=true', id=id)
 
 def handler404(request, exception):
     return render(request, '404.html', status=404)
@@ -209,10 +261,6 @@ def pong(request):
     # Your view logic here
     return render(request, 'pong.html')
 
-def brique(request):
-    # Your view logic here
-    return render(request, 'brique.html')
-
 def test(request):
     avatar_name = request.user.avatar.name if request.user.avatar else "No avatar uploaded"
     return render(request, 'test.html', {'avatar_name': avatar_name})
@@ -220,56 +268,3 @@ def test(request):
 @login_required
 def	check_login(request):
     return JsonResponse({'is_logged_in': request.user.is_authenticated})
-
-@login_required
-def add_friend(request, id):
-    if request.method == 'POST':
-        friend = get_object_or_404(User, id=id)
-        # Vérifie si l'amitié existe déjà
-        if not Friendship.objects.filter(user1=request.user, user2=friend).exists() and not Friendship.objects.filter(user1=friend, user2=request.user).exists():
-            friendship = Friendship(user1=request.user, user2=friend)
-            friendship.save()
-            messages.success(request, f"You and {friend.username} are now friends.")
-        else:
-            messages.info(request, "You are already friends.")
-        return redirect('/main?friends_changed=true', id=id)
-
-@login_required
-def remove_friend(request, id):
-	if request.method == 'POST':
-		friend = get_object_or_404(User, id=id)
-		# Vérifie si l'amitié existe déjà
-		if Friendship.objects.filter(user1=request.user, user2=friend).exists() or Friendship.objects.filter(user1=friend, user2=request.user).exists():
-			Friendship.objects.filter(user1=request.user, user2=friend).delete()
-			Friendship.objects.filter(user1=friend, user2=request.user).delete()
-			messages.success(request, f"You and {friend.username} are no longer friends.")
-		else:
-			messages.info(request, "You are not friends.")
-		return redirect('/main?friends_changed=true', id=id)
-
-@csrf_exempt
-def send_score_player_left(request):
-	if request.method == 'POST':
-		data = json.loads(request.body)
-		score_left = data['score']
-		print(score_left)
-		return JsonResponse({"status": "success"})
-	return JsonResponse({"status": "invalid request"}, status=400)
-
-@csrf_exempt
-def send_score_player_right(request):
-	if request.method == 'POST':
-		data = json.loads(request.body)
-		score_right = data['score']
-		print(score_right)
-		return JsonResponse({"status": "success"})
-	return JsonResponse({"status": "invalid request"}, status=400)
-
-@csrf_exempt
-def send_score_ai(request):
-	if request.method == 'POST':
-		data = json.loads(request.body)
-		score_right = data['score']
-		print(score_AI)
-		return JsonResponse({"status": "success"})
-	return JsonResponse({"status": "invalid request"}, status=400)

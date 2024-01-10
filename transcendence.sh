@@ -1,13 +1,14 @@
 #!/bin/bash
 
 show_help() {
-    echo "Usage: ./script.sh [dev|prod] [start|stop|status|log|clean] [bg]"
+    echo "Usage: ./script.sh [dev|prod] [start|stop|status|log|clean|rebuild] [bg]"
     echo "Commands:"
     echo "  start: Start the application."
     echo "  stop: Stop the application."
     echo "  status: Show the status of the application."
     echo "  log: Display log files."
     echo "  clean: Clean all Docker images and containers."
+    echo "  rebuild: Rebuild all Docker images without cache."
     echo "  bg: Run the application in the background (use with 'start')."
 }
 
@@ -43,6 +44,9 @@ case $2 in
         ;;
     clean)
         sudo docker system prune -a
+        ;;
+    rebuild)
+        sudo docker-compose -f $COMPOSE_FILE build --no-cache
         ;;
     help)
         show_help

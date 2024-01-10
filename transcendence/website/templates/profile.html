@@ -29,22 +29,78 @@
 						</div>
 						<p class="lead text-center fw-bold" >{{ request.user.username }}</p>
 					</div>
+					<div class="card mb-4">
+						<div class="card-body">
+							<div class="text-center flex-grow-1">
+								<h5 class="card-title fw-bold">Demandes d'amitié en attente</h5>
+							</div>
+							{% for friendship in pending_friends %}
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+									<strong>{{ friendship.user1.username }} souhaite être votre ami.</strong>
+								</div>
+								<div class="d-flex align-items-center">
+									<!-- Formulaire pour accepter la demande d'amitié -->
+									<form action="{% url 'accept_friend_request' friendship.user1.id %}" method="POST" class="me-1">
+										{% csrf_token %}
+										<button type="submit" class="btn btn-outline-success d-flex align-items-center">
+											<img src="{{ IMGS_URL }}/imgs/check.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+										</button>
+									</form>
+									<!-- Formulaire pour refuser la demande d'amitié -->
+									<form action="{% url 'decline_friend_request' friendship.user1.id %}" method="POST">
+										{% csrf_token %}
+										<button type="submit" class="btn btn-outline-danger d-flex align-items-center">
+											<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+										</button>
+									</form>
+								</div>
+							</div>
+							{% empty %}
+							<div class="text-center flex-grow-1">
+								<p class="text-muted fw-bold">Pas de demandes d'amitié en attente.</p>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
 					<div class="card mb-4 mb-lg-0">
 						<div class="card-body p-0">
 							<ul class="list-group list-group-flush rounded-3">
 								{% for friendship in friends %}
-									{% with friend=friendship.user1|friendship_user:request.user %}
-										<li class="list-group-item d-flex align-items-center p-3">
+									<li class="list-group-item d-flex align-items-center p-3">
+										{% if friendship.user1 == request.user %}
 											<img src="{{ friendship.user2.avatar.url }}" class="rounded-circle me-3" style="width: 30px; height: 30px; object-fit: cover;" alt="Avatar">
 											<div class="text-center flex-grow-1">
-												<p class="mb-0 fw-bold">{{ friendship.user2.username }}</p>
+												<a href="{% url 'details' friendship.user2.id %}" class="mb-0 fw-bold text-decoration-none text-dark">
+													{{ friendship.user2.username }}
+												</a>
 											</div>
 											<span class="status-dot {% if friendship.user2.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
-										</li>
-									{% endwith %}
+											<form action="{% url 'remove_friend' friendship.user2.id %}" method="POST" class="ms-2">
+												{% csrf_token %}
+												<button type="submit" class="btn btn-outline-danger d-flex align-items-center">
+													<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+												</button>
+											</form>
+										{% else %}
+											<img src="{{ friendship.user1.avatar.url }}" class="rounded-circle me-3" style="width: 30px; height: 30px; object-fit: cover;" alt="Avatar">
+											<div class="text-center flex-grow-1">
+												<a href="{% url 'details' friendship.user1.id %}" class="mb-0 fw-bold text-decoration-none text-dark">
+													{{ friendship.user1.username }}
+												</a>
+											</div>
+											<span class="status-dot {% if friendship.user1.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
+											<form action="{% url 'remove_friend' friendship.user1.id %}" method="POST" class="ms-2">
+												{% csrf_token %}
+												<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
+													<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+												</button>
+											</form>
+										{% endif %}
+									</li>
 								{% empty %}
 									<li class="list-group-item d-flex justify-content-center align-items-center p-3">
-										<p class="mb-0 fw-bold">No friends yet.</p>
+										<p class="mb-0 fw-bold">Pas d'amis confirmés.</p>
 									</li>
 								{% endfor %}
 							</ul>

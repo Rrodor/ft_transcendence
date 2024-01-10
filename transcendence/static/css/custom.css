@@ -1,4 +1,4 @@
-  welcome {
+welcome {
 	font-family: Work Sans, sans-serif;
 	font-size: 5vw;
 	text-transform: uppercase;
@@ -95,4 +95,21 @@
     width: 10px;
     border-radius: 50%;
     display: inline-block;
+}
+
+.friend-request {
+	border-bottom: 1px solid #ddd; /* Séparateur */
+	padding: 10px;
+	margin-bottom: 10px;
+}
+.friend-request:last-child {
+	border-bottom: none;
+}
+.friend-request-icon {
+	width: 18px;
+	height: 18px;
+}
+
+.align-button {
+	transform: translateY(7px);
 }

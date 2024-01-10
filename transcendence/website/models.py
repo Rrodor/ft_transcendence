@@ -51,6 +51,8 @@ class User(AbstractUser):
 class Friendship(models.Model):
 	user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user1')
 	user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user2')
+	is_pending = models.BooleanField(default=False)
+	is_confirmed = models.BooleanField(default=False)
 	date = models.DateTimeField(auto_now_add=True)
 
 	class Meta:
