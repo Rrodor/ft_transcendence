@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ft_transcendence</title>
+	<style>
+		body { margin: 0; }
+	</style>
+</head>
+<body>
+	{% load static %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+	<script type="module" src="{% static 'js/game/Scene.js' %}"></script>
+	<script type="module" src="{% static 'js/game/Ball.js' %}"></script>
+	<script type="module" src="{% static 'js/game/AI.js' %}?v=00"></script>
+	<script type="module">
+
+		// Import all the functions from the other files
+		import { initScene } from "{% static 'js/game/Scene.js' %}";
+		import { initBall } from "{% static 'js/game/Ball.js' %}";
+		import { initGround } from "{% static 'js/game/Ground.js' %}";
+		import { initPaddle } from "{% static 'js/game/Paddle.js' %}";
+		import { initLights } from "{% static 'js/game/Lights.js' %}";
+		import { initInputs } from "{% static 'js/game/Inputs.js' %}";
+		import { addBox } from "{% static 'js/game/Environment.js' %}";
+		import { AImove } from "{% static 'js/game/AI.js' %}";
+
+		// Initialize every components
+		const { scene, camera, renderer } = initScene();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		const { dl } = initLights(camera);
+		const { ballGeometry, ballMaterial, ball } = initBall();
+		const { groundGeometry, groundMaterial, ground } = initGround();
+		const { paddle: paddleLeft } = initPaddle(-10, 0, 0);
+		const { paddle: paddleRight } = initPaddle(10, 0, 0);
+		let { movePaddleLeftUp, movePaddleLeftDown, movePaddleRightUp, movePaddleRightDown } = initInputs();
+		const { mesh: boxBot } = addBox(scene, new THREE.Vector3(0, 0, 15), new THREE.Vector3(30, 2.5, 10), 0x222222);
+		const { mesh: boxTop } = addBox(scene, new THREE.Vector3(0, 0, -15), new THREE.Vector3(30, 2.5, 10), 0x222222);
+		const { mesh: boxLeft } = addBox(scene, new THREE.Vector3(-20, 0, 0), new THREE.Vector3(10, 2.5, 40), 0x222222);
+		const { mesh: boxRight } = addBox(scene, new THREE.Vector3(20, 0, 0), new THREE.Vector3(10, 2.5, 40), 0x222222);
+
+		// Add all objects to the scene
+		scene.add(camera);
+		scene.add(dl);
+		scene.add(ball);
+		scene.add(ground);
+		scene.add(paddleLeft);
+		scene.add(paddleRight);
+
+		// Inputs logic
+		window.addEventListener('keydown', function(event) {
+			if (event.key === 'q' || event.key === 'Q') movePaddleLeftUp = true;
+			else if (event.key === 'a' || event.key === 'A') movePaddleLeftDown = true;
+			else if (event.key === 'p' || event.key === 'P') movePaddleRightUp = true;
+			else if (event.key === 'l' || event.key === 'L') movePaddleRightDown = true;
+		});
+		window.addEventListener('keyup', function(event) {
+			if (event.key === 'q' || event.key === 'Q') movePaddleLeftUp = false;
+			else if (event.key === 'a' || event.key === 'A') movePaddleLeftDown = false;
+			else if (event.key === 'p' || event.key === 'P') movePaddleRightUp = false;
+			else if (event.key === 'l' || event.key === 'L') movePaddleRightDown = false;
+		});
+
+		// Resize the canvas when the window is resized
+		window.addEventListener('resize', () => {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+		});
+
+		// Game logic
+		const paddleSpeed = 20;
+
+		// Convert degrees to radians
+		const degToRad = (degrees) => degrees * (Math.PI / 180);
+
+		// Define the angle ranges
+		const angleClamp = 45;
+		const minRightAngle = degToRad(0 + angleClamp);
+		const maxRightAngle = degToRad(180 - angleClamp);
+		const minLeftAngle = degToRad(180 + angleClamp);
+		const maxLeftAngle = degToRad(0 - angleClamp);
+
+		// Randomly choose between the right and left side ranges
+		const isRightSide = Math.random() < 0.5;
+		const randomAngle = isRightSide
+			? minRightAngle + Math.random() * (maxRightAngle - minRightAngle)
+			: minLeftAngle + Math.random() * (maxLeftAngle - minLeftAngle);
+
+		// Apply the rotation to the ball (around the Y-axis)
+		ball.rotation.y = randomAngle;
+
+		// Calculate the forward vector
+		const forward = new THREE.Vector3(0, 0, -1);
+		forward.applyQuaternion(ball.quaternion);
+
+		// Set the speed and calculate the velocity
+		const speed = 0.15;
+		let ballVelocity = forward.multiplyScalar(speed);
+
+		// Create an ArrowHelper to represent velocity direction
+		let arrowHelper = new THREE.ArrowHelper(ballVelocity, ball.position, 1, 0xffff00);
+		scene.add(arrowHelper);
+
+		// Collision logic
+		const ballBoundingBox = new THREE.Box3();
+		const paddleLeftBoundingBox = new THREE.Box3();
+		const paddleRightBoundingBox = new THREE.Box3();
+		const boxBotBoundingBox = new THREE.Box3();
+		const boxTopBoundingBox = new THREE.Box3();
+		const boxLeftBoundingBox = new THREE.Box3();
+		const boxRightBoundingBox = new THREE.Box3();
+
+		// Add a 2 x 3 pointLight to the scene
+		for (let i = 0; i < 3; i++)
+		{
+			for (let j = 0; j < 2; j++)
+			{
+				const pointLight = new THREE.PointLight(0xffffff, 0.25, 100);
+				pointLight.position.set(-10 + i * 10, 10, -5 + j * 10);
+				scene.add(pointLight);
+			}
+		}
+
+		// Terrain delimitation
+		const planeGeometryLong = new THREE.PlaneGeometry(30, 0.1);
+		const planeGeometryShort = new THREE.PlaneGeometry(20, 0.1);
+		const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+		const lineBot = new THREE.Mesh(planeGeometryLong, planeMaterial);
+		const lineTop = new THREE.Mesh(planeGeometryLong, planeMaterial);
+		const lineLeft_1 = new THREE.Mesh(planeGeometryShort, planeMaterial);
+		const lineLeft_2 = new THREE.Mesh(planeGeometryShort, planeMaterial);
+		const lineRight_1 = new THREE.Mesh(planeGeometryShort, planeMaterial);
+		const lineRight_2 = new THREE.Mesh(planeGeometryShort, planeMaterial);
+		lineBot.position.set(0, 0, 9.95);
+		lineBot.rotation.x = degToRad(-90);
+		lineTop.position.set(0, 0, -9.95);
+		lineTop.rotation.x = degToRad(-90);
+		lineLeft_1.position.set(-14.95, 0, 0);
+		lineLeft_1.rotation.x = degToRad(-90);
+		lineLeft_1.rotation.z = degToRad(-90);
+		lineLeft_2.position.set(-11, 0, 0);
+		lineLeft_2.rotation.x = degToRad(-90);
+		lineLeft_2.rotation.z = degToRad(-90);
+		lineRight_1.position.set(14.95, 0, 0);
+		lineRight_1.rotation.x = degToRad(-90);
+		lineRight_1.rotation.z = degToRad(-90);
+		lineRight_2.position.set(11, 0, 0);
+		lineRight_2.rotation.x = degToRad(-90);
+		lineRight_2.rotation.z = degToRad(-90);
+		scene.add(lineBot);
+		scene.add(lineTop);
+		scene.add(lineLeft_1);
+		scene.add(lineLeft_2);
+		scene.add(lineRight_1);
+		scene.add(lineRight_2);
+
+		// Update bounding boxes to match the ball and paddle's position
+		function updateBoundingBoxes()
+		{
+			ballBoundingBox.setFromObject(ball);
+			paddleLeftBoundingBox.setFromObject(paddleLeft);
+			paddleRightBoundingBox.setFromObject(paddleRight);
+			boxBotBoundingBox.setFromObject(boxBot);
+			boxTopBoundingBox.setFromObject(boxTop);
+			boxLeftBoundingBox.setFromObject(boxLeft);
+			boxRightBoundingBox.setFromObject(boxRight);
+		}
+
+		function checkCollision()
+		{
+			// Check if the ball is colliding with the paddle
+			if (ballBoundingBox.intersectsBox(paddleLeftBoundingBox) || ballBoundingBox.intersectsBox(paddleRightBoundingBox))
+			{
+				// If the ball is colliding with the paddle, invert its x velocity
+				ballVelocity.x *= -1.1;
+				console.log("Collision with paddle");
+			}
+			else if (ballBoundingBox.intersectsBox(boxBotBoundingBox) || ballBoundingBox.intersectsBox(boxTopBoundingBox))
+			{
+				// If the ball is colliding with the top or bottom box, invert its z velocity
+				ballVelocity.z *= -1;
+				console.log("Collision with top or bottom box");
+			}
+			else if (ballBoundingBox.intersectsBox(boxLeftBoundingBox) || ballBoundingBox.intersectsBox(boxRightBoundingBox))
+			{
+				// If the ball is colliding with the left or right box, invert its x velocity
+				ballVelocity.x *= -1.1;
+				console.log("Collision with left or right box");
+			}
+		}
+
+		function createTextTexture(text, fontSize = 100, fontFace = 'Arial', textColor = 'white', backgroundColor = 'black')
+		{
+			// Create a canvas
+			const canvas = document.createElement('canvas');
+			const context = canvas.getContext('2d');
+
+			// Set canvas size
+			canvas.width = 256;
+			canvas.height = 256;
+
+			// Set background color
+			context.fillStyle = backgroundColor;
+			context.fillRect(0, 0, canvas.width, canvas.height);
+
+			// Set text properties
+			context.font = `${fontSize}px ${fontFace}`;
+			context.fillStyle = textColor;
+			context.textAlign = 'center';
+			context.textBaseline = 'middle';
+
+			// Draw text
+			context.fillText(text, canvas.width / 2, canvas.height / 2);
+
+			// Create texture from canvas
+			const texture = new THREE.CanvasTexture(canvas);
+			return texture;
+		}
+
+		function updateScoreSprite(sprite, newScore)
+		{
+			// Create a new texture with the updated score
+			const newScoreText = newScore.toString();
+			const newTexture = createTextTexture(newScoreText);
+
+			// Update the sprite's material with the new texture
+			sprite.material.map = newTexture;
+			sprite.material.needsUpdate = true; // This line is important to tell Three.js to update the texture
+		}
+
+		let scoreLeft = 0;
+		let scoreRight = 0;
+		const scoreLeftText = scoreLeft.toString();
+		const scoreRightText = scoreRight.toString();
+		const scoreLeftTexture = createTextTexture(scoreLeftText);
+		const scoreRightTexture = createTextTexture(scoreRightText);
+		const scoreLeftMaterial = new THREE.SpriteMaterial({ map: scoreLeftTexture });
+		const scoreRightMaterial = new THREE.SpriteMaterial({ map: scoreRightTexture });
+		const scoreLeftSprite = new THREE.Sprite(scoreLeftMaterial);
+		const scoreRightSprite = new THREE.Sprite(scoreRightMaterial);
+
+		// Set sprite scale and position
+		scoreLeftSprite.scale.set(1.75, 1.75, 1.75); // Adjust the scale as needed
+		scoreLeftSprite.position.set(-2, 10, -6.5);
+		scoreRightSprite.scale.set(1.75, 1.75, 1.75); // Adjust the scale as needed
+		scoreRightSprite.position.set(2, 10, -6.5);
+
+		// Add sprite to the scene
+		scene.add(scoreLeftSprite);
+		scene.add(scoreRightSprite);
+
+		// Time variables
+		let lastTime = 0;
+		let deltaTime = 0;
+		let pongPosTime = 0;
+
+		function checkGoal()
+		{
+			// Check if the ball is 2 units behind the left paddle on x axis
+			if (ball.position.x < paddleLeft.position.x - 2)
+			{
+				// If the ball is behind the left paddle, increment the score of the right player
+				scoreRight++;
+				updateScoreSprite(scoreRightSprite, scoreRight);
+
+				// Reset the ball
+				ball.position.set(0, 0, 0);
+				ball.rotation.y = Math.random() * Math.PI * 2;
+				const forward = new THREE.Vector3(0, 0, -1);
+				forward.applyQuaternion(ball.quaternion);
+				const speed = 0.15;
+				const velocity = forward.multiplyScalar(speed);
+				ballVelocity = velocity;
+			}
+			if (ball.position.x > paddleRight.position.x + 2)
+			{
+				// If the ball is behind the right paddle, increment the score of the left player
+				scoreLeft++;
+				updateScoreSprite(scoreLeftSprite, scoreLeft);
+
+				// Reset the ball
+				ball.position.set(0, 0, 0);
+				ball.rotation.y = Math.random() * Math.PI * 2;
+				const forward = new THREE.Vector3(0, 0, -1);
+				forward.applyQuaternion(ball.quaternion);
+				const speed = 0.15;
+				const velocity = forward.multiplyScalar(speed);
+				ballVelocity = velocity;
+			}
+		}
+
+		function sendBallPositionToServer(position)
+		{
+			fetch('http://127.0.0.1:8000/pong/update_ball_position/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ position }),
+			})
+			.then(response => response.json())
+			.then(data => console.log(data))
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+		}
+
+		// Render and animation
+		function animate(time)
+		{
+			requestAnimationFrame(animate);
+
+			// Calculate deltaTime for frame-independent movement
+			deltaTime = (time - (lastTime || time)) / 1000;
+			lastTime = time;
+			pongPosTime += deltaTime;
+			if (Number.isNaN(deltaTime))
+				deltaTime = 0;
+			//sendBallPositionToServer({ x: ball.position.x, y: ball.position.y, z: ball.position.z });
+
+			// Inputs logic
+			if (movePaddleLeftUp) paddleLeft.position.z -= paddleSpeed * deltaTime;
+			if (movePaddleLeftDown) paddleLeft.position.z += paddleSpeed * deltaTime;
+			//if (movePaddleRightUp) paddleRight.position.z -= paddleSpeed * deltaTime;
+			//if (movePaddleRightDown) paddleRight.position.z += paddleSpeed * deltaTime;
+
+			paddleRight.position.z = AImove(ball, paddleRight.position.z, paddleSpeed, deltaTime, scene);
+
+			// Collision logic
+			updateBoundingBoxes();
+			checkCollision();
+			checkGoal();
+
+			// Update ball's position
+			ball.position.add(ballVelocity);
+
+			// Debug
+			arrowHelper.position.copy(ball.position);
+			arrowHelper.setDirection(ballVelocity.clone().normalize());
+			arrowHelper.setLength(1, 0.1, 0.1);
+
+			// Increment the position of the camera
+			renderer.render(scene, camera);
+
+		}
+
+		animate(); // Start the animation loop
+
+	</script>
+</body>
+</html>
