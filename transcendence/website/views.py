@@ -269,12 +269,38 @@ def resetWL(request, player_id):
     player.save()
     return HttpResponseRedirect(reverse('details', args=[player_id]))
 
-def pong(request):
+def pong_welcome(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Pong')
+        return redirect('/login')
     context = {
         'user_id': request.user.id,
     }
     # Your view logic here
-    return render(request, 'pong.html', context)
+    return render(request, 'pong_welcome.html', context)
+
+def two_players(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Pong')
+        return redirect('/login')
+    context = {
+        'user_id': request.user.id,
+        'is_ai': 0,
+    }
+    # Your view logic here
+    return render(request, 'pong_two_players.html', context)
+
+def vs_ai(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Pong')
+        return redirect('/login')
+    context = {
+        'user_id': request.user.id,
+        'is_ai': 1,
+    }
+    # Your view logic here
+    return render(request, 'pong_two_players.html', context)
+
 
 @csrf_exempt
 def	sendscore(request):
@@ -305,6 +331,9 @@ def	sendscore(request):
     return JsonResponse({"status": "Invalid request"}, status=400)
 
 def brique(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Casse-Brique')
+        return redirect('/login')
     # Your view logic here
     return render(request, 'brique.html')
 

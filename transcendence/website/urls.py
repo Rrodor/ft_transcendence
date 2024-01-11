@@ -14,7 +14,7 @@ urlpatterns = [
 		path('register/', views.register, name='register'),
 		path('logout/', views.logout_view, name='logout'),
 		path('profile/', views.profile, name='profile'),
-		path('pong/', views.pong, name='pong'),
+		path('pong_welcome/', views.pong_welcome, name='pong_welcome'),
 		path('brique/', views.brique, name='brique'),
 		path('test/', views.test, name='test'),
         path('increment_game/<int:player_id>/', views.increment_game, name='increment_game'),			#bouton +1 game (pong)
@@ -29,6 +29,8 @@ urlpatterns = [
 		path('accept_friend_request/<int:id>/', views.accept_friend_request, name='accept_friend_request'),
 		path('decline_friend_request/<int:id>/', views.decline_friend_request, name='decline_friend_request'),
 		path('pong/sendscore/', views.sendscore, name='sendscore'),
+		path('pong/two_players/', views.two_players, name='two_players'),
+		path('pong/vs_ai/', views.vs_ai, name='vs_ai'),
 ]
 
 handler404 = 'website.views.handler404'

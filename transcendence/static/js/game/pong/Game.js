@@ -21,6 +21,10 @@ let paddleRightBoundingBox = null;
 
 let scoreLeftSprite, scoreRightSprite;
 
+if (is_ai === 1)
+	console.log("AI is enabled");
+else
+	console.log("AI is disabled");
 let rightPlayerIsAI = false;
 
 let scoreLeft = 0;
@@ -28,7 +32,7 @@ let scoreRight = 0;
 let scoreAI = 0;
 let scoreMax = 2;
 
-export function init(scene, envBoundingBoxes)
+export function init(scene, envBoundingBoxes, is_ai)
 {
 	const initBall = Ball.initBall(scene);
 	ball = initBall.ball;

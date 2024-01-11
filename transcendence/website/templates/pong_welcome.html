@@ -1,0 +1,33 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+    FT_TRANSCENDENCE - Pong
+{% endblock %}
+
+{% block content %}
+<body style="background-color: black;">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <div class="container text-center" style="margin-top: 50px; color: #ffffff;">
+        <h1 class="mb-5">Welcome to <span class="fancy">PONG</span> !</h1>
+        <div class="row mt-4">
+            <div class="col">
+                <button class="glow-on-hover" onclick="startGame('two_players')">Play both on keyboard</button>
+            </div>
+            <div class="col">
+                <button class="glow-on-hover" onclick="startGame('vs_ai')">Play VS AI</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+    <script>
+        function startGame(mode) {
+            if (mode === 'two_players') {
+                window.location.href = '{% url 'two_players' %}'; // Remplacez par l'URL appropriée
+            } else if (mode === 'vs_ai') {
+                window.location.href = '{% url 'vs_ai' %}'; // Remplacez par l'URL appropriée
+            }
+        }
+    </script>
+{% endblock %}
