@@ -31,6 +31,7 @@ urlpatterns = [
 		path('pong/sendscore/', views.sendscore, name='sendscore'),
 		path('pong/two_players/', views.two_players, name='two_players'),
 		path('pong/vs_ai/', views.vs_ai, name='vs_ai'),
+		path('pong/end_game/', views.end_game, name='end_game'),
 ]
 
 handler404 = 'website.views.handler404'

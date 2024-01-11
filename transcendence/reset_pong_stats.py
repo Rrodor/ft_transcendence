@@ -15,6 +15,8 @@ def reinitialiser_statistiques_pong():
         objet.pong_points_against = 0
         objet.pong_wl_ratio = 0
         objet.pong_points_ratio = 0
+        objet.pong_average_for = 0
+        objet.pong_average_against = 0
         objet.pong_victories_percentage = 0
         objet.pong_defeats_percentage = 0
         objet.save()

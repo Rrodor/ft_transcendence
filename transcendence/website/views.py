@@ -301,6 +301,16 @@ def vs_ai(request):
     # Your view logic here
     return render(request, 'pong_two_players.html', context)
 
+def end_game(request):
+	if not request.user.is_authenticated:
+		messages.error(request, 'You must be logged in to play Pong')
+		return redirect('/login')
+	context = {
+		'user_id': request.user.id,
+	}
+	messages.success(request, 'Game ended, see you soon!')
+	return render(request, 'pong_welcome.html', context)
+
 
 @csrf_exempt
 def	sendscore(request):

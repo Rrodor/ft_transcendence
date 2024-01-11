@@ -32,6 +32,8 @@ let scoreRight = 0;
 let scoreAI = 0;
 let scoreMax = 2;
 
+let gameEnded = false;
+
 export function init(scene, envBoundingBoxes, is_ai)
 {
 	const initBall = Ball.initBall(scene);
@@ -165,7 +167,12 @@ function sendInfosToServer()
 	Network.sendScore(scoreLeft, scoreRight, userId);
 }
 
-function endGame()
-{
-	sendInfosToServer();
+function endGame() {
+    if (gameEnded) return; // Empêche les appels multiples
+    gameEnded = true;
+
+    sendInfosToServer();
+    window.setTimeout(() => {
+        window.location.href = "/pong/end_game/";
+    }, 1000); // Délai avant la redirection pour permettre l'envoi des données
 }
