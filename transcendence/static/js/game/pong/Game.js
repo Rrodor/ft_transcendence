@@ -5,6 +5,7 @@ import * as Network from './Network.js';
 import { initInputs } from './Inputs.js';
 import { ballBoundingBox } from './Ball.js';
 import { initScoreSprites, updateScoreSprite } from "./UserInterface.js";
+import { AImove } from './AI.js';
 //import assetManager from './AssetManager.js';
 
 let ball = null;
@@ -61,6 +62,8 @@ export function update(scene, deltaTime)
 
 	Ball.move(ball);
 	movePaddles(deltaTime);
+	if (is_ai === 1)
+		paddleRight.position.z = AImove(ball, paddleRight.position.z, paddleSpeed, deltaTime, scene);
 	checkCollision(ball, paddleLeft, paddleRight);
 	checkBallPosition(ball);
 	updateScoreSprite(scoreLeftSprite, scoreLeft);
