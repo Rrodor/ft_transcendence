@@ -173,7 +173,7 @@
 			if (ballBoundingBox.intersectsBox(paddleLeftBoundingBox) || ballBoundingBox.intersectsBox(paddleRightBoundingBox))
 			{
 				// If the ball is colliding with the paddle, invert its x velocity
-				ballVelocity.x *= -1;
+				ballVelocity.x *= -1.1;
 				console.log("Collision with paddle");
 			}
 			else if (ballBoundingBox.intersectsBox(boxBotBoundingBox) || ballBoundingBox.intersectsBox(boxTopBoundingBox))
@@ -185,7 +185,7 @@
 			else if (ballBoundingBox.intersectsBox(boxLeftBoundingBox) || ballBoundingBox.intersectsBox(boxRightBoundingBox))
 			{
 				// If the ball is colliding with the left or right box, invert its x velocity
-				ballVelocity.x *= -1;
+				ballVelocity.x *= -1.1;
 				console.log("Collision with left or right box");
 			}
 		}

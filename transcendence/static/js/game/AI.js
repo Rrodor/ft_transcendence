@@ -1,17 +1,19 @@
 const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
 const material2 = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
+const material3 = new THREE.LineBasicMaterial( { color: 0xffffff } );
 
 
 let elapsedTime = 1;
 let dircount = 0;
 let	paddlePos = 0;
 let ballPos = [];
+let ballFinalPos = 0;
+let dirright = 0;
 
 export function AImove(trueBallPos, truePaddlePos, paddleSpeed, deltaTime, scene)
 {
 	elapsedTime += deltaTime;
-	let ballFinalPos = 0;
-	let dirright = 0;
+	let traj = false;
 
 	if (elapsedTime >= 1)
 	{
@@ -23,10 +25,11 @@ export function AImove(trueBallPos, truePaddlePos, paddleSpeed, deltaTime, scene
 			ballPos.shift();
 		paddlePos = truePaddlePos;
 		dirright = getDirection();
+		if (dirright == 0)
+			traj = false;
 	}
 	if (ballPos.lenght == 1)
 	{
-		//console.log("Alpha ballPos.z = " + ballPos[0].position.z);
 		if (ballPos[0].position.z > paddlePos && paddlePos < 8.75)
 		{
 			paddlePos += paddleSpeed * deltaTime;
@@ -38,29 +41,14 @@ export function AImove(trueBallPos, truePaddlePos, paddleSpeed, deltaTime, scene
 	}
 	else if (ballPos.length == 2)
 	{
-		//console.log("Omega ballPos.z = " + ballPos[1].position.z);
-		if (!dirright)
+		if (dirright == 1)
 		{
-			console.log("going to the left");
-			if (ballPos[1].position.z > paddlePos && paddlePos < 8.75)
-			{
-				paddlePos += paddleSpeed * deltaTime;
-			}
-			if (ballPos[1].position.z < paddlePos && paddlePos > -8.75)
-			{
-				paddlePos -= paddleSpeed * deltaTime;
-			}
-		}
-		else
-		{
-			console.log("going to the right long time");
 			ballFinalPos = ballCollision(scene);
-			//console.log("ballFinalPos = " + ballFinalPos);
-			if (ballFinalPos > paddlePos && paddlePos < 8.75 && ballFinalPos > -10)
+			if (ballFinalPos > paddlePos && paddlePos < 8.75)
 			{
 				paddlePos += paddleSpeed * deltaTime;
 			}
-			if (ballFinalPos < paddlePos && paddlePos > -8.75 && ballFinalPos < 10)
+			if (ballFinalPos < paddlePos && paddlePos > -8.75)
 			{
 				paddlePos -= paddleSpeed * deltaTime;
 			}
@@ -75,19 +63,16 @@ function getDirection()
 	{
 		if (ballPos[0].position.x > ballPos[1].position.x)
 		{
-			console.log("going to the left");
 			dircount = 0;
 			return 0;
 		}
 		else if (ballPos[0].position.x < ballPos[1].position.x && dircount == 0)
 		{
-			console.log("going to the left ----------------------------");
 			dircount = 1;
-			return 0;
+			return 1;
 		}
 		else if (ballPos[0].position.x < ballPos[1].position.x && dircount == 1)
 		{
-			console.log("going to the right");
 			return 1;
 		}
 	}
@@ -104,24 +89,11 @@ function ballCollision(scene)
 	let savecollx = 0;
 	let savecollz = 0;
 	let endline = 0;
+	let points2 = [];
 
 	A = (ballPos[1].position.z - ballPos[0].position.z) / (ballPos[1].position.x - ballPos[0].position.x);
 	B = ballPos[0].position.z - A * ballPos[0].position.x;
-	//console.log("A = " + A);
-	//console.log("B = " + B);
-
 	collision = A * 10 + B;
-	console.log("collision = " + collision);
-
-	const points = [];
-	points.push( ballPos[1].position.clone() );
-	points.push( new THREE.Vector3(10, 0, A * 10 + B) );
-
-	const geometry = new THREE.BufferGeometry().setFromPoints( points );
-	const line = new THREE.Line( geometry, material );
-	scene.add( line );
-	points.shift();
-	points.shift();
 
 	while (collision > 10 || collision < -10)
 	{
@@ -131,10 +103,8 @@ function ballCollision(scene)
 			savecollz = 10;
 
 			bounce = (10 - B) / A;
-			console.log("A = " + A);
 			A = A * -1;
-			console.log("B = " + B);
-			B = bounce - (A * 10);
+			B = 10 - (A * bounce);
 		}
 		else if (collision < -10)
 		{
@@ -142,17 +112,14 @@ function ballCollision(scene)
 			savecollz = -10;
 
 			bounce = (-10 - B) / A;
-			console.log("A = " + A);
 			A = A * -1;
-			console.log("B = " + B);
-			B = bounce - (A * 10);
+			B = -10 - (A * bounce);
 		}
 
 		bouncecount++;
 		collision = A * 10 + B;
 
-		/*endline = 10;
-		console.log("nextcollision = " + collision);
+		endline = 10;
 		if (collision > 10 || collision < -10)
 		{
 			if (collision > 10)
@@ -163,20 +130,8 @@ function ballCollision(scene)
 			{
 				endline = (-10 - B) / A;
 			}
-		}*/
-
-		console.log(A + " * x + " + B + " = " + collision);
-		const points2 = [];
-		points2.push( new THREE.Vector3(savecollx, 0, savecollz) );
-		points2.push( new THREE.Vector3(10, 0, collision) );
-
-		const geometry = new THREE.BufferGeometry().setFromPoints( points2 );
-		const line2 = new THREE.Line( geometry, material2 );
-		scene.add( line2 );
-		points2.shift();
-		points2.shift();
+		}
 	}
-	//console.log("bouncecount = " + bouncecount);
 	return (collision);
 }
 
