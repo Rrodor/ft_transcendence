@@ -108,7 +108,7 @@
 					</div>
 				</div>
 				<div class="col-lg-8">
-					<div class="card mb-4">
+					<div class="card mb-4"> <!-- Card pour les informations du profil -->
 						<div class="card-body">
 							<div class="row">
 								<div class="col-sm-3">
@@ -146,7 +146,7 @@
 						</div>
 					</div>
 					</div>
-					<div class="card mb-4 mb-md-0">
+					<div class="card mb-4 mb-md-0"> <!-- Card pour les statistiques -->
 						<div id="statsCarousel" class="carousel slide" data-bs-interval="false">
 							<div class="carousel-inner">
 								<div class="carousel-item active">
@@ -159,6 +159,7 @@
 													{{ user_stats.total_pong_games }}
 												</p>
 												<div>
+													<div id="chart-data" data-pong-victories="{{ user_stats.pong_victories }}" data-pong-defeats="{{ user_stats.pong_defeats }}"></div>
 													<canvas id="myChart1"></canvas>
 												</div>
 											</div>
@@ -217,50 +218,6 @@
 							</a>
 						</div>
 					</div>
-					<script>
-						var ctx1 = document.getElementById('myChart1').getContext('2d');
-						var myChart1 = new Chart(ctx1, {
-							type: 'doughnut',
-							data: {
-								// Inverser l'ordre des labels
-								labels: ['Victories', 'Defeats'],
-								datasets: [{
-									label: 'Statistiques du Joueur',
-									// Inverser l'ordre des données
-									data: [{{ user_stats.pong_victories }}, {{ user_stats.pong_defeats }}],
-									// Inverser l'ordre des couleurs
-									backgroundColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
-									borderColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
-									borderWidth: 1
-								}]
-							},
-							options: {
-								responsive: true,
-								cutoutPercentage: 40,
-								maintainAspectRatio: true
-							}
-						});
-				
-						var ctx2 = document.getElementById('myChart2').getContext('2d');
-						var myChart2 = new Chart(ctx2, {
-							type: 'doughnut',
-							data: {
-								labels: ['Victories', 'Defeats'],
-								datasets: [{
-									label: 'Statistiques du Joueur',
-									data: [{{ user_stats.pong_victories }}, {{ user_stats.pong_defeats }}],
-									backgroundColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
-									borderColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
-									borderWidth: 1
-								}]
-							},
-							options: {
-								responsive: true,
-								cutoutPercentage: 40,
-								maintainAspectRatio: true
-							}
-						});
-					</script>
 				</div>
 			</div>
 		</div>
