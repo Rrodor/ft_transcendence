@@ -13,4 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
         alert.classList.remove('alert-error');
         alert.classList.add('alert-danger');
     });
+	var legendHtml = myChart1.data.labels.map(function(label, index) {
+        var color = myChart1.data.datasets[0].backgroundColor[index];
+        return '<span style="display:inline-block;margin-right:10px;">' +
+               '<span style="background:' + color + ';width:12px;height:12px;display:inline-block;margin-right:5px;"></span>' +
+               '<span>' + label + '</span>' +
+               '</span>';
+    }).join("");
+
+    document.getElementById('myChartLegend').innerHTML = legendHtml;
 });

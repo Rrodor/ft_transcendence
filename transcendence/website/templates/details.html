@@ -7,82 +7,176 @@
 {% block content %}
 	<body style="background-color: black;">
 		<div class="container py-5 h-100">
-		  <div class="row d-flex justify-content-center align-items-center h-100">
-			<div class="col-md-12 col-xl-4">
-			<div class="card" style="border-radius: 15px;">
-				<div class="card-body text-center">
-					<div class="mt-3 mb-4">
-						<img src="{% if player.avatar %}{{ player.avatar.url }}{% else %}https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp{% endif %}"
-							class="rounded-circle img-fluid" style="width: 100px;">
+			<!-- Section pour les informations du joueur -->
+			<div class="row">
+				<div class="col-md-4 offset-md-4">
+					<div class="card" style="border-radius: 15px;">
+						<div class="card-body text-center">
+							<div class="mt-3 mb-4">
+								<img src="{% if player.avatar %}{{ player.avatar.url }}{% else %}https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp{% endif %}"
+									 class="rounded-circle img-fluid" style="width: 100px;">
+							</div>
+							<h4 class="mb-2">{{ player.username }}</h4>
+							{% if player.email %}
+								<p class="text-muted mb-4">{{ player.email }}<span class="mx-2">|</span>Id: {{ player.id }}</p>
+							{% else %}
+								<p class="text-muted mb-4" style="text-align: center;">Id: {{ player.id }}</p>
+							{% endif %}
+							<hr>
+							Pong - {{ player.total_pong_games }} games
+							<div class="col-12 d-flex justify-content-between text-end small">
+								<span>Wins: {{ player.pong_victories }}</span>
+								<span>Loses: {{ player.pong_defeats }}</span>
+							</div>  
+							{% if player.pong_defeats == 0 and player.pong_victories == 0 %}
+								<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">No matches played yet
+									</div>
+								</div>
+							{% else %}
+								<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+									<div class="progress-bar bg-success" style="width: {{ player.pong_victories_percentage }}%;" aria-valuenow="{{ player.pong_victories_percentage }}"></div>
+									<div class="progress-bar bg-danger" style="width: {{ player.pong_defeats_percentage }}%;" aria-valuenow="{{ player.pong_defeats_percentage }}"></div>
+								</div>
+							{% endif %}
+							<hr>    
+							Hexa-Race:
+							3 V | 7 L
+							<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+								<div class="progress-bar bg-success" style="width: 30%;" aria-valuenow="30"></div>
+								<div class="progress-bar bg-danger" style="width: 70%;" aria-valuenow="70"></div>
+							</div>
+							<hr>
+							{% if user.is_authenticated %}
+								{% if not is_friend %}
+									{% if not is_pending %}
+										<form action="{% url 'add_friend' player.id %}" method="POST">
+											{% csrf_token %}
+											<button type="submit" class="btn btn-primary btn-rounded btn-lg">Add friend</button>
+										</form>
+									{% endif %}
+								{% else %}
+									<form action="{% url 'remove_friend' player.id %}" method="POST">
+										{% csrf_token %}
+										<button type="submit" class="btn btn-danger btn-rounded btn-lg">Remove friend</button>
+									</form>
+						</div>
 					</div>
-					<h4 class="mb-2">{{ player.username }}</h4>
-					{% if player.email %}
-	 					<p class="text-muted mb-4">{{ player.email }}<span class="mx-2">|</span>Id: {{ player.id }}</p>
-					{% else %}
-						<p class="text-muted mb-4" style="text-align: center;">Id: {{ player.id }}</p>
-					{% endif %}
-					<hr>
-					Pong - {{ player.total_pong_games }} games
-					<div class="col-12 d-flex justify-content-between text-end small">
-						<span>Wins: {{ player.pong_victories }}</span>
-						<span>Loses: {{ player.pong_defeats }}</span>
-					</div>  
-					{% if player.pong_defeats == 0 and player.pong_victories == 0 %}
-						<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-						<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">No matches played yet
-						</div>
-						</div>
-					{% else %}
-						<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-						<div class="progress-bar bg-success" style="width: {{ player.pong_victories_percentage }}%;" aria-valuenow="{{ player.pong_victories_percentage }}"></div>
-						<div class="progress-bar bg-danger" style="width: {{ player.pong_defeats_percentage }}%;" aria-valuenow="{{ player.pong_defeats_percentage }}"></div>
-						</div>
-					{% endif %}
-					<hr>	
-					Hexa-Race:
-					3 V | 7 L
-					<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-					<div class="progress-bar bg-success" style="width: 30%;" aria-valuenow="30"></div>
-					<div class="progress-bar bg-danger" style="width: 70%;" aria-valuenow="70"></div>
-					</div>
-					<hr>
-					<!-- <div class="container">
-						<a href="{% url 'increment_game' player.id %}" class="btn btn-success btn-sm">
-							Increment Games
-						</a>
-						<a href="{% url 'increment_victory' player.id %}" class="btn btn-success btn-sm">
-							Increment Victories
-						</a>
-						<a href="{% url 'decrement_victory' player.id %}" class="btn btn-danger btn-sm">
-							Decrement Victories
-						</a>
-						<a href="{% url 'increment_defeat' player.id %}" class="btn btn-success btn-sm">
-							Increment Defeats
-						</a>
-						<a href="{% url 'decrement_defeat' player.id %}" class="btn btn-danger btn-sm">
-							Decrement Defeats
-						</a>
-						<a href="{% url 'resetWL' player.id %}" class="btn btn-secondary btn-sm">
-							Reset wins and defeats
-						</a>
-					</div> -->
-					{% if user.is_authenticated %}
-						{% if not is_friend %}
-							<form action="{% url 'add_friend' player.id %}" method="POST">
-								{% csrf_token %}
-								<button type="submit" class="btn btn-primary btn-rounded btn-lg">Add friend</button>
-							</form>
-						{% else %}
-							<form action="{% url 'remove_friend' player.id %}" method="POST">
-								{% csrf_token %}
-								<button type="submit" class="btn btn-danger btn-rounded btn-lg">Remove friend</button>
-							</form>
-						{% endif %}
-					{% endif %}
 				</div>
-			  </div>
 			</div>
-		  </div>
+	
+			<!-- Section pour le graphique -->
+			<div class="row mt-1">
+				<div class="col-12">
+					<div class="card" style="border-radius: 15px;">
+						<div id="statsCarousel" class="carousel slide" data-bs-interval="false">
+							<div class="carousel-inner">
+								<div class="carousel-item active">
+									<div class="row">
+										<!-- Colonne de gauche pour le graphique et le nombre de parties -->
+										<div class="col-md-6">
+											<div class="graphique-conteneur" style="text-align: center;">
+												<p style="font-weight: bold; margin-bottom: 0;">
+													Number of games played (Pong):<br>
+													{{ user_stats.total_pong_games }}
+												</p>
+												<div>
+													<canvas id="myChart1"></canvas>
+												</div>
+											</div>
+										</div>
+								
+										<!-- Colonne de droite pour les moyennes -->
+										<div class="col-md-6">
+											<div class="moyenne-encart-conteneur">
+												<div class="moyenne-encart">
+													<div class="moyenne-texte">
+														<p style="font-weight: bold;">Average points for :</p>
+													</div>
+													<div class="moyenne-stat">
+														<p style="font-weight: bold;">{{ user_stats.pong_average_for }}</p>
+													</div>
+												</div>
+												<div class="moyenne-encart">
+													<div class="moyenne-texte">
+														<p style="font-weight: bold;">Average points against :</p>
+													</div>
+													<div class="moyenne-stat">
+														<p style="font-weight: bold;">{{ user_stats.pong_average_against }}</p>
+													</div>
+												</div>
+												<div class="moyenne-encart">
+													<div class="moyenne-texte">
+														<p style="font-weight: bold;">W/L Ratio :</p>
+													</div>
+													<div class="moyenne-stat">
+														<p style="font-weight: bold;">{{ user_stats.pong_wl_ratio }}</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="carousel-item">
+									<!-- Contenu pour le deuxième élément de carrousel si nécessaire -->
+								</div>
+							</div>
+							<a class="carousel-control-prev" href="#statsCarousel" role="button" data-bs-slide="prev" style="color: black; left: -25px;">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							</a>
+							<a class="carousel-control-next" href="#statsCarousel" role="button" data-bs-slide="next" style="color: black;">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
+		{% endif %}
+		{% endif %}
+		<script>
+						var ctx1 = document.getElementById('myChart1').getContext('2d');
+						var myChart1 = new Chart(ctx1, {
+							type: 'doughnut',
+							data: {
+								// Inverser l'ordre des labels
+								labels: ['Victories', 'Defeats'],
+								datasets: [{
+									label: 'Statistiques du Joueur',
+									// Inverser l'ordre des données
+									data: [{{ user_stats.pong_victories }}, {{ user_stats.pong_defeats }}],
+									// Inverser l'ordre des couleurs
+									backgroundColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
+									borderColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
+									borderWidth: 1
+								}]
+							},
+							options: {
+								responsive: true,
+								cutoutPercentage: 40,
+								maintainAspectRatio: true
+							}
+						});
+				
+						var ctx2 = document.getElementById('myChart2').getContext('2d');
+						var myChart2 = new Chart(ctx2, {
+							type: 'doughnut',
+							data: {
+								labels: ['Victories', 'Defeats'],
+								datasets: [{
+									label: 'Statistiques du Joueur',
+									data: [{{ user_stats.pong_victories }}, {{ user_stats.pong_defeats }}],
+									backgroundColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
+									borderColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
+									borderWidth: 1
+								}]
+							},
+							options: {
+								responsive: true,
+								cutoutPercentage: 40,
+								maintainAspectRatio: true
+							}
+						});
+					</script>
 	</body>
 {% endblock %}

@@ -40,9 +40,16 @@ def players(request):
 
 def details(request, id):
     player = User.objects.get(id=id)
+    user_stats = User.objects.get(id=id)
     is_friend = False
+    is_pending = False
     if request.user.is_authenticated:
         is_friend = Friendship.objects.filter(
+            ((Q(user1=request.user) & Q(user2=player)) |
+            (Q(user1=player) & Q(user2=request.user))) &
+            Q(is_confirmed=True)
+        ).exists()
+        is_pending = Friendship.objects.filter(
             (Q(user1=request.user) & Q(user2=player)) |
             (Q(user1=player) & Q(user2=request.user))
         ).exists()
@@ -50,6 +57,8 @@ def details(request, id):
     context = {
             'player': player,
             'is_friend': is_friend,
+            'is_pending': is_pending,
+            'user_stats': user_stats,
     }
     return (HttpResponse(template.render(context, request)))
 
@@ -276,12 +285,17 @@ def	sendscore(request):
         score_right = data['scoreRight']
         try:
             user = User.objects.get(id=user_id)
+            user.total_pong_games += 1
             if score_left > score_right:
                 user.pong_victories += 1
             else:
                 user.pong_defeats += 1
+            user.pong_wl_ratio = user.pong_victories / user.pong_defeats if user.pong_defeats > 0 else user.pong_victories
             user.pong_points_for += score_left
             user.pong_points_against += score_right
+            user.pong_points_ratio = user.pong_points_for / user.pong_points_against if user.pong_points_against > 0 else user.pong_points_for
+            user.pong_average_for = user.pong_points_for / user.total_pong_games
+            user.pong_average_against = user.pong_points_against / user.total_pong_games
             user.save()
 
             return JsonResponse({"status": "Score updated successfully"})
