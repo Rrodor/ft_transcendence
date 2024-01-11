@@ -1,0 +1,29 @@
+version: '3'
+
+volumes:
+  static_volume: {}
+  media_volume: {}
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8001:8000"
+    volumes:
+      - static_volume:/app/productionfiles
+      - media_volume:/app/media
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+    volumes:
+      - static_volume:/app/productionfiles
+      - media_volume:/app/media

@@ -1,4 +1,4 @@
-  welcome {
+welcome {
 	font-family: Work Sans, sans-serif;
 	font-size: 5vw;
 	text-transform: uppercase;
@@ -83,4 +83,70 @@
     0% { background-position: 0 0; }
     50% { background-position: 400% 0; }
     100% { background-position: 0 0; }
+}
+
+.carousel-control-next,
+.carousel-control-prev /*, .carousel-indicators */ {
+    filter: invert(100%);
+}
+
+.status-dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.friend-request {
+	border-bottom: 1px solid #ddd; /* Séparateur */
+	padding: 10px;
+	margin-bottom: 10px;
+}
+.friend-request:last-child {
+	border-bottom: none;
+}
+.friend-request-icon {
+	width: 18px;
+	height: 18px;
+}
+
+.align-button {
+	transform: translateY(7px);
+}
+
+.graphique-conteneur {
+    max-width: 300px; /* Ajustez selon vos besoins */
+    margin: auto; /* Centre le graphique horizontalement */
+	padding: 10px; /* Ajoute une marge intérieure */
+    background-color: #fff; /* Fond blanc */
+}
+
+.moyenne-encart {
+	margin-right: 150px;
+    display: flex;
+    justify-content: space-between; /* Sépare les éléments */
+    align-items: center; /* Centre verticalement */
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.moyenne-texte, .moyenne-stat {
+    flex: 1; /* Assure une répartition égale de l'espace */
+}
+
+.moyenne-encart p {
+    display: table-cell; /* Comme une cellule de tableau */
+    vertical-align: middle; /* Centrage vertical */
+}
+
+/* Style pour le centrage vertical des encarts de moyenne */
+.moyenne-encart-conteneur {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centre verticalement */
+    height: 100%; /* Prend toute la hauteur de la colonne */
 }

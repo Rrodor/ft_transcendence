@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
 	'127.0.0.1',
-	'192.168.1.5'
+	'192.168.1.5',
+    '127.0.0.1:8000',
 ]
 
 
@@ -54,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 	'whitenoise.middleware.WhiteNoiseMiddleware',
+	'website.last_activity_middleware.LastActivityMiddleware',
 ]
 
 ROOT_URLCONF = 'transcendence.urls'
@@ -70,6 +73,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+
+			'libraries': {
+				'friends': 'website.templatetags.friends',
+			},
         },
     },
 ]
@@ -127,10 +134,15 @@ STATICFILES_DIRS = [
 	BASE_DIR / 'static'
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'productionfiles')
+CSRF_TRUSTED_ORIGINS = ['https://192.168.1.5', 'https://localhost']
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+IMGS_URL = 'imgs/'
+IMGS_ROOT = os.path.join(BASE_DIR, 'imgs')

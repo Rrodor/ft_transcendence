@@ -1,5 +1,7 @@
+import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 # Create your models here.
 
@@ -8,9 +10,16 @@ class User(AbstractUser):
 	total_pong_games = models.IntegerField(default=0)
 	pong_victories = models.IntegerField(default=0)
 	pong_defeats = models.IntegerField(default=0)
+	pong_points_for = models.IntegerField(default=0)
+	pong_points_against = models.IntegerField(default=0)
+	pong_wl_ratio = models.FloatField(default=0)
+	pong_points_ratio = models.FloatField(default=0)
+	pong_average_for = models.FloatField(default=0)
+	pong_average_against = models.FloatField(default=0)
 	pong_victories_percentage = models.FloatField(default=0)
 	pong_defeats_percentage = models.FloatField(default=0)
 	avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', blank=True, null=True)
+	last_activity = models.DateTimeField(auto_now=True)
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -38,3 +47,22 @@ class User(AbstractUser):
 		super().save(*args, **kwargs)
 		self._original_pong_defeats = self.pong_defeats
 		self._original_pong_victories = self.pong_victories
+
+	def are_friends(self, user):
+		return Friendship.objects.filter(user1=self, user2=user).exists() or Friendship.objects.filter(user1=user, user2=self).exists()
+
+	def is_online(self):
+		return self.last_activity > timezone.now() - datetime.timedelta(minutes=5)
+
+class Friendship(models.Model):
+	user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user1')
+	user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user2')
+	is_pending = models.BooleanField(default=False)
+	is_confirmed = models.BooleanField(default=False)
+	date = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		unique_together = ['user1', 'user2']
+
+	def __str__(self):
+		return f"{self.user1} is friend with {self.user2}"

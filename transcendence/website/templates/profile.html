@@ -1,10 +1,7 @@
 {% extends "master.html" %}
 {% load widget_tweaks %}
 {% load static %}
-<head>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-  
+{% load friends %}
 
 {% block title %}
   Profile
@@ -21,7 +18,7 @@
 		<div class="container-fluid mt-5 mb-5">
 			<div class="row">
 				<div class="col-lg-4">
-					<div class="card mb-4">
+					<div class="card mb-4"> <!-- Card pour l'avatar -->
 						<div class="card-body text-center">
 							<img src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}/media/avatars/default.png{% endif %}" alt="avatar"
 							class="rounded-circle img-fluid" style="width: 150px;">
@@ -30,76 +27,200 @@
 								Change Avatar
 							</button>							
 						</div>
-						<p class="lead text-center" >{{ request.user.username }}</p>
+						<p class="lead text-center fw-bold" >{{ request.user.username }}</p>
 					</div>
-			<div class="card mb-4 mb-lg-0">
-				<div class="card-body p-0">
-					<ul class="list-group list-group-flush rounded-3">
-						<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-							<i class="fas fa-globe fa-lg text-warning"></i>
-							<p class="mb-0">FRIEND LIST</p>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-					  <i class="fab fa-github fa-lg" style="color: #333333;"></i>
-					  <p class="mb-0">FRIEND LIST</p>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-						<i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
-						<p class="mb-0">FRIEND LIST</p>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-						<i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
-						<p class="mb-0">FRIEND LIST</p>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center p-3">
-						<i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-						<p class="mb-0">FRIEND LIST</p>
-					</li>
-				  </ul>
+					<div class="card mb-4"> <!-- Card pour les demandes d'amitié -->
+						<div class="card-body">
+							<div class="text-center flex-grow-1">
+								<h5 class="card-title fw-bold">Demandes d'amitié en attente</h5>
+							</div>
+							{% for friendship in pending_friends %}
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+									<strong>{{ friendship.user1.username }} souhaite être votre ami.</strong>
+								</div>
+								<div class="d-flex align-items-center">
+									<!-- Formulaire pour accepter la demande d'amitié -->
+									<form action="{% url 'accept_friend_request' friendship.user1.id %}" method="POST" class="me-1">
+										{% csrf_token %}
+										<button type="submit" class="btn btn-outline-success d-flex align-items-center align-button">
+											<img src="{{ IMGS_URL }}/imgs/check.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+										</button>
+									</form>
+									<!-- Formulaire pour refuser la demande d'amitié -->
+									<form action="{% url 'decline_friend_request' friendship.user1.id %}" method="POST">
+										{% csrf_token %}
+										<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
+											<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+										</button>
+									</form>
+								</div>
+							</div>
+							{% empty %}
+							<div class="text-center flex-grow-1">
+								<p class="text-muted fw-bold">Pas de demandes d'amitié en attente.</p>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+					<div class="card mb-4 mb-lg-0"> <!-- Card pour les amis -->
+						<div class="card-body p-0">
+							<ul class="list-group list-group-flush rounded-3">
+								{% for friendship in friends %}
+									<li class="list-group-item d-flex align-items-center p-3">
+										{% if friendship.user1 == request.user %}
+											<img src="{{ friendship.user2.avatar.url }}" class="rounded-circle me-3" style="width: 30px; height: 30px; object-fit: cover;" alt="Avatar">
+											<div class="text-center flex-grow-1">
+												<a href="{% url 'details' friendship.user2.id %}" class="mb-0 fw-bold text-decoration-none text-dark">
+													{{ friendship.user2.username }}
+												</a>
+											</div>
+											<span class="status-dot {% if friendship.user2.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
+											<form action="{% url 'remove_friend' friendship.user2.id %}" method="POST" class="ms-2">
+												{% csrf_token %}
+												<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
+													<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+												</button>
+											</form>
+										{% else %}
+											<img src="{{ friendship.user1.avatar.url }}" class="rounded-circle me-3" style="width: 30px; height: 30px; object-fit: cover;" alt="Avatar">
+											<div class="text-center flex-grow-1">
+												<a href="{% url 'details' friendship.user1.id %}" class="mb-0 fw-bold text-decoration-none text-dark">
+													{{ friendship.user1.username }}
+												</a>
+											</div>
+											<span class="status-dot {% if friendship.user1.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
+											<form action="{% url 'remove_friend' friendship.user1.id %}" method="POST" class="ms-2">
+												{% csrf_token %}
+												<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
+													<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+												</button>
+											</form>
+										{% endif %}
+									</li>
+								{% empty %}
+									<li class="list-group-item d-flex justify-content-center align-items-center p-3">
+										<p class="mb-0 fw-bold">Pas d'amis confirmés.</p>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
 				</div>
-			</div>
-			</div>
-			<div class="col-lg-8">
-			  <div class="card mb-4">
-				  <div class="card-body">
-					  <div class="row">
-						  <div class="col-sm-3">
-					  <p class="mb-0">Full Name</p>
+				<div class="col-lg-8">
+					<div class="card mb-4"> <!-- Card pour les informations du profil -->
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-3">
+							<p class="mb-0">Full Name</p>
+							</div>
+							<div class="col-sm-9">
+								{% if request.user.first_name == "" and request.user.last_name == "" %}
+									<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changeNameModal">
+										Set Name
+									</button>
+								{% else %}
+									<p class="text-muted mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</p>
+								{% endif %}
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-sm-3">
+								<p class="mb-0">Email</p>
+							</div>
+							<div class="col-sm-9">
+								<p class="text-muted mb-0">{{ request.user.email }}</p>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-sm-3">
+								<p class="mb-0">Password</p>
+							</div>
+							<div class="col-sm-9">
+								<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+							Change Password
+							</button>
+							</div>
+						</div>
 					</div>
-					<div class="col-sm-9">
-						<p class="text-muted mb-0">/*FIELD A CREER*/</p>
 					</div>
-				</div>
-				<hr>
-				<div class="row">
-					<div class="col-sm-3">
-						<p class="mb-0">Email</p>
+					<div class="card mb-4 mb-md-0"> <!-- Card pour les statistiques -->
+						<div id="statsCarousel" class="carousel slide" data-bs-interval="false">
+							<div class="carousel-inner">
+								<div class="carousel-item active">
+									<div class="row">
+										<!-- Colonne de gauche pour le graphique et le nombre de parties -->
+										<div class="col-md-6">
+											<div class="graphique-conteneur" style="text-align: center;">
+												<p style="font-weight: bold; margin-bottom: 0;">
+													Number of games played (Pong):<br>
+													{{ user_stats.total_pong_games }}
+												</p>
+												<div>
+													<div id="chart-data" data-pong-victories="{{ user_stats.pong_victories }}" data-pong-defeats="{{ user_stats.pong_defeats }}"></div>
+													<canvas id="myChart1"></canvas>
+												</div>
+											</div>
+										</div>
+								
+										<!-- Colonne de droite pour les moyennes -->
+										<div class="col-md-6">
+											<div class="moyenne-encart-conteneur">
+												<div class="moyenne-encart">
+													<div class="moyenne-texte">
+														<p style="font-weight: bold;">Average points for :</p>
+													</div>
+													<div class="moyenne-stat">
+														<p style="font-weight: bold;">{{ user_stats.pong_average_for }}</p>
+													</div>
+												</div>
+												<div class="moyenne-encart">
+													<div class="moyenne-texte">
+														<p style="font-weight: bold;">Average points against :</p>
+													</div>
+													<div class="moyenne-stat">
+														<p style="font-weight: bold;">{{ user_stats.pong_average_against }}</p>
+													</div>
+												</div>
+												<div class="moyenne-encart">
+													<div class="moyenne-texte">
+														<p style="font-weight: bold;">W/L Ratio :</p>
+													</div>
+													<div class="moyenne-stat">
+														<p style="font-weight: bold;">{{ user_stats.pong_wl_ratio }}</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="carousel-item">
+									<div class="d-flex justify-content-center align-items-center" style="gap: 20px; padding: 20px;">
+										<div style="text-align: center;">
+											<p style="font-weight: bold; margin-bottom: 0;">
+												Number of games played (Jeu 2):<br>
+												{{ user_stats.total_pong_games }}
+											</p>
+										</div>
+										<div>
+											<canvas id="myChart2"></canvas>
+										</div>
+									</div>
+								</div>
+							</div>
+							<a class="carousel-control-prev" href="#statsCarousel" role="button" data-bs-slide="prev" style="color: black; left: -25px;">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							</a>
+							<a class="carousel-control-next" href="#statsCarousel" role="button" data-bs-slide="next" style="color: black;">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							</a>
+						</div>
 					</div>
-					<div class="col-sm-9">
-						<p class="text-muted mb-0">{{ request.user.email }}</p>
-					</div>
-				  </div>
-				  <hr>
-				  <div class="row">
-					  <div class="col-sm-3">
-						  <p class="mb-0">Password</p>
-					</div>
-					<div class="col-sm-9">
-						<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-					  Change Password
-					</button>
-					</div>
-				</div>
-			  </div>
-			  </div>
-				<div class="col-md-6">
-					<div class="card mb-4 mb-md-0">
-						<p class="lead text-center">Peut etre un camebert ou des slides pour voir les win/looses sur les deux jeux</p>
-				  </div>
 				</div>
 			</div>
 		</div>
-		  </div>
 		</div>
 		<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -109,24 +230,6 @@
 				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-				  <!-- Formulaire de changement de mot de passe -->
-				  <!-- <form id="passwordChangeForm" method="post" action="{% url 'profile' %}">
-					{% csrf_token %}
-					{% for field in pwd_form  %}
-						<div class="form-group mb-4">
-							<label class="form-label" for="{{ field.id_for_label }}" style="color: #000000;">{{ field.label }}</label>
-							{{ field|add_class:"form-control" }}
-							{% if field.help_text %}
-								<small class="form-text text-muted">{{ field.help_text }}</small>
-							{% endif %}
-							{% for error in field.errors %}
-								<div class="alert alert-danger" role="alert">
-									{{ error }}
-								</div>
-							{% endfor %}
-						</div>
-					{% endfor %}
-				  </form> -->
 				  <form method="post" action="{% url 'profile' %}">
 					{% csrf_token %}
 					{{ pwd_form.as_p }}
@@ -159,6 +262,33 @@
 				</div>
 			</div>
 		</div>
-	</body>
+		<div class="modal fade" id="changeNameModal" tabindex="-1" aria-labelledby="changeNameModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="changeNameModalLabel">Set Name</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<!-- Formulaire pour changer le nom -->
+						<form method="post" action="{% url 'profile' %}">
+							{% csrf_token %}
+							<div class="mb-3">
+								<label for="first_name" class="form-label">First Name</label>
+								<input type="text" class="form-control" id="first_name" name="first_name">
+							</div>
+							<div class="mb-3">
+								<label for="last_name" class="form-label">Last Name</label>
+								<input type="text" class="form-control" id="last_name" name="last_name">
+							</div>
+							<button type="submit" name="change_name" class="btn btn-primary">Save Name</button>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 	{% endblock %}
