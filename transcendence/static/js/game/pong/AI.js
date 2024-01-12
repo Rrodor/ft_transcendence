@@ -1,8 +1,3 @@
-const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
-const material2 = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
-const material3 = new THREE.LineBasicMaterial( { color: 0xffffff } );
-
-
 let elapsedTime = 1;
 let dircount = 0;
 let	paddlePos = 0;
@@ -12,14 +7,13 @@ let dirright = 0;
 
 export function AImove(trueBallPos, truePaddlePos, paddleSpeed, deltaTime, scene)
 {
-	elapsedTime += deltaTime;
+	if (!isNaN(deltaTime))
+		elapsedTime += deltaTime;
 	let traj = false;
 
 	if (elapsedTime >= 1)
 	{
-		console.log("one sec");
 		elapsedTime = 0;
-		//console.log("trueBallPos.z = " + trueBallPos.position.z);
 		ballPos.push(trueBallPos.clone());
 		if (ballPos.length == 3)
 			ballPos.shift();
