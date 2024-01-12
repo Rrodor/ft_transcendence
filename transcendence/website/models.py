@@ -7,6 +7,7 @@ from django.utils import timezone
 
 class User(AbstractUser):
 	date_joined = models.DateTimeField(auto_now_add=True)
+	language = models.CharField(max_length=2, default='en')
 	total_pong_games = models.IntegerField(default=0)
 	pong_victories = models.IntegerField(default=0)
 	pong_defeats = models.IntegerField(default=0)

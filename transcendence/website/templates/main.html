@@ -2,40 +2,92 @@
 {% load static %}
 
 {% block title %}
-	FT_TRANSCENDENCE
+    FT_TRANSCENDENCE
 {% endblock %}
-
-
 
 {% block content %}
 <head>
-	<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 </head>
 <body style="background-color: black;">
-	<div style="display: flex; justify-content: center; align-items: center; min-height: 23vh;"></div>
-	<div class="container-fluid mt-5 mb-5">
-		<div class="row">
-			<div class="col-4 mt-4">
-				<welcome>Welcome to <br><span class="fancy">TRANSCENDENCE</span></welcome>
+    {% if user.is_authenticated and request.user.language == 'fr' %}
+        <div style="display: flex; justify-content: center; align-items: center; min-height: 23vh;"></div>
+        <div class="container-fluid mt-5 mb-5">
+            <div class="row">
+                <div class="col-4 mt-4">
+                    <welcome>Bievenue sur <br><span class="fancy">TRANSCENDENCE</span></welcome>
+                </div>
+                <div class="col">
+                </div>
+                <div class="col-4 mt-5">
+                    <p class="lead text-center" style="color: #ffffff;">FT_TRANSCENDENCE est un projet de <em>l'ecole 42</em>, il consiste a creer un site web avec plusieurs fonctionalites.</p>
+                    <p class="lead text-center" style="color: #ffffff;">On a ajoute des jeux, amusez vous bien!</p>
+                </div>
+            </div>
+            <p class="lead mt-3" style="color: #ffffff;"><em>par Aramon, Babreton, Cparras et Rrodor</em></p>
+        </div>
+        <div class="container-fluid text-center" style="margin-top: 100px;">
+            <div class="row align-items-center">
+                <div class="col">
+                    <button class="glow-on-hover" onclick="location.href='{% url 'pong_welcome' %}'">Jouer a <em>Pong</em></a>
+                </div>
+                <div class="col">
+                    <button class="glow-on-hover" onclick="location.href='{% url 'brique' %}'">Jouer au <em>Casse-Briques</em></a>
+                </div>
+            </div>
+        </div>
+    {% elif user.is_authenticated and request.user.language == 'sp' %}
+		<div style="display: flex; justify-content: center; align-items: center; min-height: 23vh;"></div>
+		<div class="container-fluid mt-5 mb-5">
+			<div class="row">
+				<div class="col-4 mt-4">
+					<welcome>Bienvenido a <br><span class="fancy">TRANSCENDENCE</span></welcome>
+				</div>
+				<div class="col">
+				</div>
+				<div class="col-4 mt-5">
+					<p class="lead text-center" style="color: #ffffff;">FT_TRANSCENDENCE es un proyecto de la <em>escuela 42 </em>, que consiste en crear un sitio web con diversas funcionalidades.</p>
+					<p class="lead text-center" style="color: #ffffff;">Hemos añadido algunos juegos, ¡diviértete!</p>
+				</div>
 			</div>
-			<div class="col">
-			</div>
-			<div class="col-4 mt-5">
-				<p class="lead text-center" style="color: #ffffff;">FT_TRANSCENDENCE is a project from <em>42 school</em>, which consists of creating a website with various functionalities.</p>
-				<p class="lead text-center" style="color: #ffffff;">We've added some games, have fun!</p>
+			<p class="lead mt-3" style="color: #ffffff;"><em>de Aramon, Babreton, Cparras y Rrodor</em></p>
+		</div>
+		<div class="container-fluid text-center" style="margin-top: 100px;">
+			<div class="row align-items-center">
+				<div class="col">
+					<button class="glow-on-hover" onclick="location.href='{% url 'pong_welcome' %}'">Jugar a <em>Pong</em></a>
+				</div>
+				<div class="col">
+					<button class="glow-on-hover" onclick="location.href='{% url 'brique' %}'">Jugar al <em>Rompe Lardillos</em></a>
+				</div>
 			</div>
 		</div>
-		<p class="lead mt-3" style="color: #ffffff;"><em>by Aramon, Babreton, Cparras and Rrodor</em></p>
-	</div>
-	<div class="container-fluid text-center" style="margin-top: 100px;">
-		<div class="row align-items-center">
-			<div class="col">
-				<button class="glow-on-hover" onclick="location.href='{% url 'pong_welcome' %}'">Play <em>Pong</em></a>
+	{% else %}
+		<div style="display: flex; justify-content: center; align-items: center; min-height: 23vh;"></div>
+		<div class="container-fluid mt-5 mb-5">
+			<div class="row">
+				<div class="col-4 mt-4">
+					<welcome>Welcome to <br><span class="fancy">TRANSCENDENCE</span></welcome>
+				</div>
+				<div class="col">
+				</div>
+				<div class="col-4 mt-5">
+					<p class="lead text-center" style="color: #ffffff;">FT_TRANSCENDENCE is a project from <em>42 school</em>, which consists of creating a website with various functionalities.</p>
+					<p class="lead text-center" style="color: #ffffff;">We've added some games, have fun!</p>
+				</div>
 			</div>
-			<div class="col">
-				<button class="glow-on-hover" onclick="location.href='{% url 'brique' %}'">Play <em>Casse-Brique</em></a>
+			<p class="lead mt-3" style="color: #ffffff;"><em>by Aramon, Babreton, Cparras and Rrodor</em></p>
+		</div>
+		<div class="container-fluid text-center" style="margin-top: 100px;">
+			<div class="row align-items-center">
+				<div class="col">
+					<button class="glow-on-hover" onclick="location.href='{% url 'pong_welcome' %}'">Play <em>Pong</em></a>
+				</div>
+				<div class="col">
+					<button class="glow-on-hover" onclick="location.href='{% url 'brique' %}'">Play <em>Casse-Brique</em></a>
+				</div>
 			</div>
 		</div>
-	</div>
+	{% endif %}
 </body>
 {% endblock %}

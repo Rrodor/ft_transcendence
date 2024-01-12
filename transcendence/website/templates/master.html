@@ -24,14 +24,23 @@
 			<nav class="navbar d-none" id="main-navbar" style="background-color:lightgrey; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
 				<div class="container-fluid">
 					<a class="navbar-brand" id="name" href="/#">FT_TRANSCENDENCE</a>
-					{% if user.is_authenticated %}
-					<div class="btn-group" role="group" aria-label="Basic example">
-						Hola {{ user.username }}!
-					</div>
-					{% endif %}
-					<div class="btn-group" role="group" aria-label="Basic example">
-						<a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-						<a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+						{% if user.is_authenticated %}
+							{% if request.user.language == 'fr %'}
+							<div class="btn-group" role="group" aria-label="Basic example">
+								Salutations {{ user.username }}!
+							</div>
+							{% elif request.user.language == 'sp' %}
+							<div class="btn-group" role="group" aria-label="Basic example">
+								Hola {{ user.username }}!
+							</div>
+							{% else %}
+							<div class="btn-group" role="group" aria-label="Basic example">
+								What's up {{ user.username }}?
+							</div>
+						{% endif %}
+						<div class="btn-group" role="group" aria-label="Basic example">
+							<a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+							<a href="{% url 'register' %}" class="btn btn-primary">Register</a>
 					</div>
 				</div>
 			</nav>
@@ -40,14 +49,76 @@
 				<div class="container-fluid">
 					<a class="navbar-brand" id="name" href="/#">FT_TRANSCENDENCE</a>
 					{% if user.is_authenticated %}
+						{%if request.user.language == 'fr' %}
+						Salutations {{ user.username }}!
+						<div class="btn-group" role="group" aria-label="Basic example">
+							<div class="btn-group" role="group" aria-label="Basic example">
+								<div class="container-fluid">
+									<form method="post" action="{% url 'change_language' %}">
+										{% csrf_token %}
+										<button type="submit" name="language_code" value="fr">
+											<img src="{% static 'fr.png'%}" style="margin-right: 3px;">
+										</button>
+										<button type="submit" name="language_code" value="en">
+											<img src="{% static 'uk.png'%}" style="margin-right: 3px;">
+										</button>
+										<button type="submit" name="language_code" value="sp">
+											<img src="{% static 'sp.png'%}" style="margin-right: 3px;">
+										</button>
+									</form>
+								</div>
+								<a href="{% url 'logout' %}" class="btn btn-primary">Deconnection</a>
+								<a href="{% url 'profile' %}" class="btn btn-primary">Profil</a>
+								<a href="{% url 'players' %}" class="btn btn-primary">Joueurs</a>
+							</div>
+						</div>
+						{% elif request.user.language == 'sp' %}
 						Hola {{ user.username }}!
 						<div class="btn-group" role="group" aria-label="Basic example">
+							<div class="btn-group" role="group" aria-label="Basic example">
+								<div class="container-fluid">
+									<form method="post" action="{% url 'change_language' %}">
+										{% csrf_token %}
+										<button type="submit" name="language_code" value="fr">
+											<img src="{% static 'fr.png'%}" style="margin-right: 3px;">
+										</button>
+										<button type="submit" name="language_code" value="en">
+											<img src="{% static 'uk.png'%}" style="margin-right: 3px;">
+										</button>
+										<button type="submit" name="language_code" value="sp">
+											<img src="{% static 'sp.png'%}" style="margin-right: 3px;">
+										</button>
+									</form>
+								</div>
+								<a href="{% url 'logout' %}" class="btn btn-primary">Desconexión</a>
+								<a href="{% url 'profile' %}" class="btn btn-primary">Perfil</a>
+								<a href="{% url 'players' %}" class="btn btn-primary">Jugdores</a>
+							</div>
+						</div>
+						{% else %}
+						What's up {{ user.username }}?
+						<div class="btn-group" role="group" aria-label="Basic example">
+							<div class="container-fluid">
+								<form method="post" action="{% url 'change_language' %}">
+									{% csrf_token %}
+									<button type="submit" name="language_code" value="fr">
+										<img src="{% static 'fr.png'%}" style="margin-right: 3px;">
+									</button>
+									<button type="submit" name="language_code" value="en">
+										<img src="{% static 'uk.png'%}" style="margin-right: 3px;">
+									</button>
+									<button type="submit" name="language_code" value="sp">
+										<img src="{% static 'sp.png'%}" style="margin-right: 3px;">
+									</button>
+								</form>
+							</div>
 							<div class="btn-group" role="group" aria-label="Basic example">
 								<a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
 								<a href="{% url 'profile' %}" class="btn btn-primary">Profile</a>
 								<a href="{% url 'players' %}" class="btn btn-primary">Players</a>
 							</div>
 						</div>
+						{% endif %}
 					{% else %}
 					<div class="btn-group" role="group" aria-label="Basic example">
 						<a href="{% url 'login' %}" class="btn btn-primary">Login</a>

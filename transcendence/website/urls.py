@@ -4,6 +4,7 @@ from django.conf.urls import handler404
 from .views import register
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import change_language
 
 urlpatterns = [
 		path('', views.main, name='main'),
@@ -32,6 +33,7 @@ urlpatterns = [
 		path('pong/two_players/', views.two_players, name='two_players'),
 		path('pong/vs_ai/', views.vs_ai, name='vs_ai'),
 		path('pong/end_game/', views.end_game, name='end_game'),
+		path('change_language/', change_language, name='change_language'),
 ]
 
 handler404 = 'website.views.handler404'

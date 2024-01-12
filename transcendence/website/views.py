@@ -11,6 +11,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import activate
 
 import json
 
@@ -63,7 +64,13 @@ def details(request, id):
     return (HttpResponse(template.render(context, request)))
 
 def register(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.language == 'sp':
+        messages.error(request, 'Ya se ha autentificado')
+        return redirect('/')
+    elif request.user.is_authenticated and request.user.language == 'fr':
+        messages.error(request, 'Vous etes deja connecte')
+        return redirect('/')
+    elif request.user.is_authenticated and request.user.language == 'en':
         messages.error(request, 'You are already logged in')
         return redirect('/')
     if request.method == 'POST':
@@ -87,7 +94,13 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 def login_view(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.language == 'sp':
+        messages.error(request, 'Ya se ha autentificado')
+        return redirect('/')
+    elif request.user.is_authenticated and request.user.language == 'fr':
+        messages.error(request, 'Vous etes deja connecte')
+        return redirect('/')
+    elif request.user.is_authenticated and request.user.language == 'en':
         messages.error(request, 'You are already logged in')
         return redirect('/')
     if request.method == 'POST':
@@ -363,3 +376,12 @@ def send_score_ai(request):
         print(score_AI)
         return JsonResponse({"status": "success"})
     return JsonResponse({"status": "invalid request"}, status=400)
+
+def change_language(request):
+    if request.method == 'POST':
+        language_code = request.POST.get('language_code', '')
+        activate(language_code)
+        request.user.language = language_code
+        request.user.save()
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    return render(request, 'error_page.html', {'error_message': 'Invalid request.'})

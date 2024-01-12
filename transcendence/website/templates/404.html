@@ -4,9 +4,19 @@
 	<body style="background-color: black;">
 		<div class="container-fluid mt-5 mb-5">
         <div style="text-align: center;">
-            <h1 style="color: white; font-size: 4em;">IL EST OU BBACH ????</h1>
-            <p style="color: white; font-size: 1.5em;">The page you're looking for was not found.</p>
-			<p style="color: white; font-size: 1.5em">Gamberges mon gourmand UwU</p>
+			{% if user.is_authenticated and request.user.language == 'fr' %}
+				<h1 style="color: white; font-size: 4em;">IL EST OU BBACH ????</h1>
+				<p style="color: white; font-size: 1.5em;">On a cherche partout on a pas trouve.</p>
+				<p style="color: white; font-size: 1.5em">Gamberges mon gourmand UwU</p>
+			{% elif user.is_authenticated and request.user.language == 'sp' %}
+				<h1 style="color: white; font-size: 4em;">DONDE ESTA EL BBACH ????</h1>
+				<p style="color: white; font-size: 1.5em;">No encontramos este muchacho.</p>
+				<p style="color: white; font-size: 1.5em">Donde esta la biblioteca ?</p>
+			{% else %}
+				<h1 style="color: white; font-size: 4em;">WHERE IS BBACH ????</h1>
+				<p style="color: white; font-size: 1.5em;">He's not even in the kitchen!</p>
+				<p style="color: white; font-size: 1.5em">Think harder.</p>
+			{% endif %}
         </div>
 		</div>
 	</body>
