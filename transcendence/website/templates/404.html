@@ -1,4 +1,5 @@
 {% extends "master.html" %}
+{% load static %}
 
 {% block content %}
 	<body style="background-color: black;">
@@ -17,6 +18,7 @@
 				<p style="color: white; font-size: 1.5em;">He's not even in the kitchen!</p>
 				<p style="color: white; font-size: 1.5em">Think harder.</p>
 			{% endif %}
+			<img src="{% static 'bbach.jpg' %}">
         </div>
 		</div>
 	</body>

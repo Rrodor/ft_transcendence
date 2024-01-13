@@ -9,14 +9,34 @@
 <body style="background-color: black;">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <div class="container text-center" style="margin-top: 50px; color: #ffffff;">
-        <h1 class="mb-5">Welcome to <span class="fancy">PONG</span> !</h1>
-        <div class="row mt-4">
-            <div class="col">
-                <button class="glow-on-hover" onclick="startGame('two_players')">Play both on keyboard</button>
-            </div>
-            <div class="col">
-                <button class="glow-on-hover" onclick="startGame('vs_ai')">Play VS AI</button>
-            </div>
+        {% if user.is_authenticated and request.user.language == 'fr' %}
+            <h1 class="mb-5">Bienvenue sur <span class="fancy">PONG</span> !</h1>
+            <div class="row mt-4">
+                <div class="col">
+                    <button class="glow-on-hover" onclick="startGame('two_players')">Jouer sur le meme clavier</button>
+                </div>
+                <div class="col">
+                    <button class="glow-on-hover" onclick="startGame('vs_ai')">Jouer contre l'IA</button>
+                </div>
+        {% elif user.is_authenticated and request.user.language == 'sp' %}
+            <h1 class="mb-5">Bienvenido a <span class="fancy">PONG</span> !</h1>
+            <div class="row mt-4">
+                <div class="col">
+                    <button class="glow-on-hover" onclick="startGame('two_players')">Jugar en el mismo teclado</button>
+                </div>
+                <div class="col">
+                    <button class="glow-on-hover" onclick="startGame('vs_ai')">Jugar contra la IA</button>
+                </div>
+        {% else %}
+            <h1 class="mb-5">Welcome to <span class="fancy">PONG</span> !</h1>
+            <div class="row mt-4">
+                <div class="col">
+                    <button class="glow-on-hover" onclick="startGame('two_players')">Play on same keyboard</button>
+                </div>
+                <div class="col">
+                    <button class="glow-on-hover" onclick="startGame('vs_ai')">Play VS IA</button>
+                </div>
+        {% endif%}
         </div>
     </div>
 </body>
