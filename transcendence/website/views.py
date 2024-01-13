@@ -141,6 +141,13 @@ def profile(request):
     latest_games = GameRecord.objects.filter(user=request.user).order_by('-date')[:5]
     friends_changed = 'friends_changed' in request.GET
     avatar_changed = 'avatar_changed' in request.GET
+    friends_info = []
+    for friendship in friends:
+        friend = friendship.user1 if friendship.user1 != request.user else friendship.user2
+        friends_info.append({
+            'friend': friend,
+            'is_in_game': friend.is_in_game
+        })
     if request.method == 'POST':
         pwd_form = ChangePasswordForm(request.user, request.POST)
         avatar_form = ChangeAvatarForm(request.POST, request.FILES, instance=request.user)
@@ -199,6 +206,7 @@ def profile(request):
         'friends_changed': friends_changed,
         'avatar_changed': avatar_changed,
         'latest_games': latest_games,
+        'friends_info': friends_info,
     }
     return render(request, 'profile.html', context)
 
@@ -306,6 +314,8 @@ def two_players(request):
         'user_id': request.user.id,
         'is_ai': 0,
     }
+    request.user.is_in_game = True
+    request.user.save()
     # Your view logic here
     return render(request, 'pong_two_players.html', context)
 
@@ -317,6 +327,8 @@ def vs_ai(request):
         'user_id': request.user.id,
         'is_ai': 1,
     }
+    request.user.is_in_game = True
+    request.user.save()
     # Your view logic here
     return render(request, 'pong_two_players.html', context)
 
@@ -329,6 +341,8 @@ def end_game(request):
         'user_id': request.user.id,
         'game_changed': game_changed,
     }
+    request.user.is_in_game = False
+    request.user.save()
     messages.success(request, 'Game ended, see you soon!')
     return redirect('/main?game_changed=true')
 

@@ -23,6 +23,7 @@ class User(AbstractUser):
 	pong_defeats_percentage = models.FloatField(default=0)
 	avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', blank=True, null=True)
 	last_activity = models.DateTimeField(auto_now=True)
+	is_in_game = models.BooleanField(default=False)
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)

@@ -66,37 +66,27 @@
 					<div class="card mb-4 mb-lg-0"> <!-- Card pour les amis -->
 						<div class="card-body p-0">
 							<ul class="list-group list-group-flush rounded-3">
-								{% for friendship in friends %}
+								{% for info in friends_info %}
 									<li class="list-group-item d-flex align-items-center p-3">
-										{% if friendship.user1 == request.user %}
-											<img src="{{ friendship.user2.avatar.url }}" class="rounded-circle me-3" style="width: 30px; height: 30px; object-fit: cover;" alt="Avatar">
-											<div class="text-center flex-grow-1">
-												<a href="{% url 'details' friendship.user2.id %}" class="mb-0 fw-bold text-decoration-none text-dark">
-													{{ friendship.user2.username }}
-												</a>
-											</div>
-											<span class="status-dot {% if friendship.user2.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
-											<form action="{% url 'remove_friend' friendship.user2.id %}" method="POST" class="ms-2">
-												{% csrf_token %}
-												<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
-													<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
-												</button>
-											</form>
-										{% else %}
-											<img src="{{ friendship.user1.avatar.url }}" class="rounded-circle me-3" style="width: 30px; height: 30px; object-fit: cover;" alt="Avatar">
-											<div class="text-center flex-grow-1">
-												<a href="{% url 'details' friendship.user1.id %}" class="mb-0 fw-bold text-decoration-none text-dark">
-													{{ friendship.user1.username }}
-												</a>
-											</div>
-											<span class="status-dot {% if friendship.user1.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
-											<form action="{% url 'remove_friend' friendship.user1.id %}" method="POST" class="ms-2">
-												{% csrf_token %}
-												<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
-													<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
-												</button>
-											</form>
-										{% endif %}
+										<img src="{{ info.friend.avatar.url }}" class="rounded-circle me-3" style="width: 30px; height: 30px; object-fit: cover;" alt="Avatar">
+										<div class="text-center flex-grow-1">
+											<a href="{% url 'details' info.friend.id %}" class="mb-0 fw-bold text-decoration-none text-dark">
+												{{ info.friend.username }}
+											</a>
+										</div>
+										<div>
+											{% if info.is_in_game %}
+												<span class="status-dot bg-warning"></span>
+											{% else %}
+												<span class="status-dot {% if info.friend.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
+											{% endif %}
+										</div>
+										<form action="{% url 'remove_friend' info.friend.id %}" method="POST" class="ms-2">
+											{% csrf_token %}
+											<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
+												<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+											</button>
+										</form>
 									</li>
 								{% empty %}
 									<li class="list-group-item d-flex justify-content-center align-items-center p-3">
@@ -218,7 +208,7 @@
 							</a>
 						</div>
 					</div>
-					<div class="card mb-4">
+					<div class="card mb-4"> <!-- Card pour les 5 dernières parties -->
 						<div class="card-body">
 							<h5 class="card-title fw-bold">Last 5 games</h5>
 							<ul class="list-group">
