@@ -31,6 +31,9 @@ def main(request):
         'friends_changed': friends_changed,
         'game_changed': game_changed,
     }
+    if request.user.is_authenticated:
+        request.user.is_in_game = False
+        request.user.save()
     return render(request, 'main.html', context)
 
 def players(request):
@@ -39,6 +42,9 @@ def players(request):
     context = {
         'all_users': all_users,
     }
+    if request.user.is_authenticated:
+        request.user.is_in_game = False
+        request.user.save()
     return HttpResponse(template.render(context, request))
 
 def details(request, id):
@@ -48,6 +54,8 @@ def details(request, id):
     is_pending = False
     latest_games = GameRecord.objects.filter(user=player).order_by('-date')[:5]
     if request.user.is_authenticated:
+        request.user.is_in_game = False
+        request.user.save()
         is_friend = Friendship.objects.filter(
             ((Q(user1=request.user) & Q(user2=player)) |
             (Q(user1=player) & Q(user2=request.user))) &
@@ -148,6 +156,8 @@ def profile(request):
             'friend': friend,
             'is_in_game': friend.is_in_game
         })
+    request.user.is_in_game = False
+    request.user.save()
     if request.method == 'POST':
         pwd_form = ChangePasswordForm(request.user, request.POST)
         avatar_form = ChangeAvatarForm(request.POST, request.FILES, instance=request.user)
@@ -300,6 +310,8 @@ def pong_welcome(request):
     if not request.user.is_authenticated:
         messages.error(request, 'You must be logged in to play Pong')
         return redirect('/login')
+    request.user.is_in_game = False
+    request.user.save()
     context = {
         'user_id': request.user.id,
     }
