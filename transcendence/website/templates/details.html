@@ -69,7 +69,7 @@
 			<!-- Section pour le graphique -->
 			<div class="row">
 				<div class="col-12">
-					<div class="card" style="border-radius: 15px;">
+					<div class="card mb-4 mt-4" style="border-radius: 15px;">
 						<div id="statsCarousel" class="carousel slide" data-bs-interval="false">
 							<div class="carousel-inner">
 								<div class="carousel-item active">
@@ -96,7 +96,7 @@
 														<p style="font-weight: bold;">Average points for :</p>
 													</div>
 													<div class="moyenne-stat">
-														<p style="font-weight: bold;">{{ user_stats.pong_average_for }}</p>
+														<p style="font-weight: bold;">{{ user_stats.pong_average_for|floatformat:2 }}</p>
 													</div>
 												</div>
 												<div class="moyenne-encart">
@@ -104,7 +104,7 @@
 														<p style="font-weight: bold;">Average points against :</p>
 													</div>
 													<div class="moyenne-stat">
-														<p style="font-weight: bold;">{{ user_stats.pong_average_against }}</p>
+														<p style="font-weight: bold;">{{ user_stats.pong_average_against|floatformat:2 }}</p>
 													</div>
 												</div>
 												<div class="moyenne-encart">
@@ -112,7 +112,7 @@
 														<p style="font-weight: bold;">W/L Ratio :</p>
 													</div>
 													<div class="moyenne-stat">
-														<p style="font-weight: bold;">{{ user_stats.pong_wl_ratio }}</p>
+														<p style="font-weight: bold;">{{ user_stats.pong_wl_ratio|floatformat:2 }}</p>
 													</div>
 												</div>
 											</div>
@@ -129,6 +129,39 @@
 							<a class="carousel-control-next" href="#statsCarousel" role="button" data-bs-slide="next" style="color: black;">
 								<span class="carousel-control-next-icon" aria-hidden="true"></span>
 							</a>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title fw-bold">Last 5 games</h5>
+							<ul class="list-group">
+								{% for game in latest_games %}
+									<li class="list-group-item game-info">
+										<div class="game-result">
+											{% if game.game_type == 'PONG' %}
+												{% if game.score_left > game.score_right %}
+													<span class="text-success fw-bold">VICTORY</span>
+												{% else %}
+													<span class="text-danger fw-bold">DEFEAT</span>
+												{% endif %}
+											{% else %}
+												<!-- Logique pour BRICK ou autres jeux -->
+											{% endif %}
+										</div>
+										<div>{{ game.get_game_type_display }}</div>
+										<div>
+											{% if game.game_type == 'PONG' %}
+												{{ game.score_left }} - {{ game.score_right }}
+											{% else %}
+												{{ game.score }}
+											{% endif %}
+										</div>
+										<div>{{ game.date|date:"d/m/Y H:i" }}</div>
+									</li>
+								{% empty %}
+									<li class="list-group-item">No recent games.</li>
+								{% endfor %}
+							</ul>
 						</div>
 					</div>
 				</div>

@@ -150,3 +150,23 @@ welcome {
     justify-content: center; /* Centre verticalement */
     height: 100%; /* Prend toute la hauteur de la colonne */
 }
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-info div {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-result {
+    width: 100px;
+    text-align: left;
+}

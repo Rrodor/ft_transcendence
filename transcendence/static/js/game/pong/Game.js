@@ -177,5 +177,5 @@ function endGame() {
     sendInfosToServer();
     window.setTimeout(() => {
         window.location.href = "/pong/end_game/";
-    }, 1000); // Délai avant la redirection pour permettre l'envoi des données
+    }, 1); // Délai avant la redirection pour permettre l'envoi des données
 }

@@ -1,12 +1,17 @@
-<!DOCTYPE html>
-<html>
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+	FT_TRANSCENDENCE - Pong
+{% endblock %}
+
+{% block content %}
 <head>
 	<meta charset="utf-8">
 	<title>ft_transcendence</title>
 	<style>
 		body { margin: 0; }
 	</style>
-	{% load static %}
 </head>
 <body>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
@@ -25,4 +30,4 @@
 
 </script>
 </body>
-</html>
+{% endblock %}

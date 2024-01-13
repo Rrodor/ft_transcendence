@@ -1,4 +1,4 @@
-from .models import User, Friendship
+from .models import User, Friendship, GameRecord
 from .forms import UserForm, ChangePasswordForm, ChangeAvatarForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -21,6 +21,7 @@ def main(request):
     avatar_changed = 'avatar_changed' in request.GET
     name_changed = 'name_changed' in request.GET
     friends_changed = 'friends_changed' in request.GET
+    game_changed = 'game_changed' in request.GET
     update_session_auth_hash(request, request.user)
     context = {
         'user': request.user,
@@ -28,6 +29,7 @@ def main(request):
         'avatar_changed': avatar_changed,
         'name_changed': name_changed,
         'friends_changed': friends_changed,
+        'game_changed': game_changed,
     }
     return render(request, 'main.html', context)
 
@@ -44,6 +46,7 @@ def details(request, id):
     user_stats = User.objects.get(id=id)
     is_friend = False
     is_pending = False
+    latest_games = GameRecord.objects.filter(user=player).order_by('-date')[:5]
     if request.user.is_authenticated:
         is_friend = Friendship.objects.filter(
             ((Q(user1=request.user) & Q(user2=player)) |
@@ -60,6 +63,7 @@ def details(request, id):
             'is_friend': is_friend,
             'is_pending': is_pending,
             'user_stats': user_stats,
+            'latest_games': latest_games,
     }
     return (HttpResponse(template.render(context, request)))
 
@@ -98,7 +102,7 @@ def login_view(request):
         messages.error(request, 'Ya se ha autentificado')
         return redirect('/')
     elif request.user.is_authenticated and request.user.language == 'fr':
-        messages.error(request, 'Vous etes deja connecte')
+        messages.error(request, 'Vous êtes déjà connecté')
         return redirect('/')
     elif request.user.is_authenticated and request.user.language == 'en':
         messages.error(request, 'You are already logged in')
@@ -134,6 +138,7 @@ def profile(request):
     friends = Friendship.objects.filter((Q(user1=request.user) | Q(user2=request.user)) & Q(is_confirmed=True) & ~Q(is_pending=True)
 ).distinct()[:5]
     pending_friends = Friendship.objects.filter(Q(user2=request.user, is_pending=True)).distinct()[:5]
+    latest_games = GameRecord.objects.filter(user=request.user).order_by('-date')[:5]
     friends_changed = 'friends_changed' in request.GET
     avatar_changed = 'avatar_changed' in request.GET
     if request.method == 'POST':
@@ -193,6 +198,7 @@ def profile(request):
         'pending_friends': pending_friends,
         'friends_changed': friends_changed,
         'avatar_changed': avatar_changed,
+        'latest_games': latest_games,
     }
     return render(request, 'profile.html', context)
 
@@ -315,14 +321,16 @@ def vs_ai(request):
     return render(request, 'pong_two_players.html', context)
 
 def end_game(request):
-	if not request.user.is_authenticated:
-		messages.error(request, 'You must be logged in to play Pong')
-		return redirect('/login')
-	context = {
-		'user_id': request.user.id,
-	}
-	messages.success(request, 'Game ended, see you soon!')
-	return render(request, 'pong_welcome.html', context)
+    game_changed = 'game_changed' in request.GET
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Pong')
+        return redirect('/login')
+    context = {
+        'user_id': request.user.id,
+        'game_changed': game_changed,
+    }
+    messages.success(request, 'Game ended, see you soon!')
+    return redirect('/main?game_changed=true')
 
 
 @csrf_exempt
@@ -346,6 +354,8 @@ def	sendscore(request):
             user.pong_average_for = user.pong_points_for / user.total_pong_games
             user.pong_average_against = user.pong_points_against / user.total_pong_games
             user.save()
+            game_record = GameRecord(user=user, game_type=GameRecord.PONG, score_left=score_left, score_right=score_right)
+            game_record.save()
 
             return JsonResponse({"status": "Score updated successfully"})
         except User.DoesNotExist:

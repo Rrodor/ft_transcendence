@@ -2,6 +2,8 @@ import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.conf import settings
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -67,3 +69,33 @@ class Friendship(models.Model):
 
 	def __str__(self):
 		return f"{self.user1} is friend with {self.user2}"
+	
+class GameRecord(models.Model):
+	PONG = 'PONG'
+	BRICK = 'BRICK'
+	GAME_CHOICES = [
+		(PONG, 'Pong'),
+		(BRICK, 'Brick'),
+	]
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='game_records')
+	game_type = models.CharField(max_length=10, choices=GAME_CHOICES)
+	score_left = models.IntegerField(null=True, blank=True)
+	score_right = models.IntegerField(null=True, blank=True)
+	score = models.IntegerField(null=True, blank=True)
+	date = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"{self.user.username} played {self.get_game_type_display()}"
+	
+	def save(self, *args, **kwargs):
+		if self.game_type == 'PONG':
+			if self.score_left is None or self.score_right is None:
+				raise ValidationError('Pong game must have both scores')
+			self.score = None
+		elif self.game_type == 'BRICK':
+			if self.score is None:
+				raise ValidationError('Brick game must have a score')
+			self.score_left = None
+			self.score_right = None
+
+		super().save(*args, **kwargs)
