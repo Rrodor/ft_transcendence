@@ -175,3 +175,7 @@ welcome {
 	border-top-left-radius: 0.375rem !important;
 	border-bottom-left-radius: 0.375rem !important;
 }
+
+.alert-custom {
+	margin-bottom: auto !important;
+}
