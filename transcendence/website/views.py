@@ -87,7 +87,7 @@ def register(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'Account created successfully')
-                return redirect('/')
+                return redirect('/main?password_changed=true')
             else:
                 messages.error(request, 'Error in user authentication')
         else:
