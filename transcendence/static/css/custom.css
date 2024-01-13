@@ -170,3 +170,8 @@ welcome {
     width: 100px;
     text-align: left;
 }
+
+.btn-custom-rounded {
+	border-top-left-radius: 0.375rem !important;
+	border-bottom-left-radius: 0.375rem !important;
+}
