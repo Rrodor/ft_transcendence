@@ -270,9 +270,9 @@
 											<div class="graphique-conteneur" style="text-align: center;">
 												<p style="font-weight: bold; margin-bottom: 0;">
 													{% if user.is_authenticated and request.user.language == 'fr' %}
-													Number of games played (Pong):<br>
+													Nombre de parties jouees (Pong):<br>
 													{% elif user.is_authenticated and request.user.language == 'sp' %}
-													Número de juegos jugados (Pong):<br>
+													Cantidad de partidas jugadas (Pong):<br>
 													{% else %}
 													Number of games played (Pong):<br>
 													{% endif %}
@@ -284,13 +284,18 @@
 												</div>
 											</div>
 										</div>
-								
 										<!-- Colonne de droite pour les moyennes -->
 										<div class="col-md-6">
 											<div class="moyenne-encart-conteneur">
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
-														<p style="font-weight: bold;">Average points for :</p>
+													{% if user.is_authenticated and request.user.language == 'fr' %}
+														<p style="font-weight: bold;">Points moyen mis:</p>
+													{% elif user.is_authenticated and request.user.language == 'sp' %}
+														<p style="font-weight: bold;">Puntos promedio hechos:</p>
+													{% else %}
+														<p style="font-weight: bold;">Average points taken:</p>
+													{% endif %}
 													</div>
 													<div class="moyenne-stat">
 														<p style="font-weight: bold;">{{ user_stats.pong_average_for|floatformat:2 }}</p>
@@ -298,7 +303,13 @@
 												</div>
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
-														<p style="font-weight: bold;">Average points against :</p>
+														{% if user.is_authenticated and request.user.language == 'fr' %}
+														<p style="font-weight: bold;">Points moyen pris:</p>
+													{% elif user.is_authenticated and request.user.language == 'sp' %}
+														<p style="font-weight: bold;">Puntos promedio recibidos:</p>
+													{% else %}
+														<p style="font-weight: bold;">Average points conceded:</p>
+													{% endif %}
 													</div>
 													<div class="moyenne-stat">
 														<p style="font-weight: bold;">{{ user_stats.pong_average_against|floatformat:2 }}</p>
@@ -306,7 +317,11 @@
 												</div>
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
-														<p style="font-weight: bold;">W/L Ratio :</p>
+													{% if request.user.language == 'fr' or request.user.language == 'sp' %}
+														<p style="font-weight: bold;">Ratio V/D:</p>
+													{% else %}
+														<p style="font-weight: bold;">W/L Ratio:</p>
+													{% endif %}
 													</div>
 													<div class="moyenne-stat">
 														<p style="font-weight: bold;">{{ user_stats.pong_wl_ratio|floatformat:2 }}</p>
@@ -320,7 +335,13 @@
 									<div class="d-flex justify-content-center align-items-center" style="gap: 20px; padding: 20px;">
 										<div style="text-align: center;">
 											<p style="font-weight: bold; margin-bottom: 0;">
-												Number of games played (Jeu 2):<br>
+												{% if user.is_authenticated and request.user.language == 'fr' %}
+												Nombre de parties jouees (Casse briques):<br>
+												{% elif user.is_authenticated and request.user.language == 'sp' %}
+												Cantidad de partidas jugadas (Rompe Lardillos):<br>
+												{% else %}
+												Number of games played (Brick Breaker):<br>
+												{% endif %}
 												{{ user_stats.total_pong_games }}
 											</p>
 										</div>
@@ -340,16 +361,34 @@
 					</div>
 					<div class="card mb-4"> <!-- Card pour les 5 dernières parties -->
 						<div class="card-body">
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+							<h5 class="card-title fw-bold">5 dernieres parties</h5>
+							{% elif user.is_authenticated and request.user.language == 'sp' %}
+							<h5 class="card-title fw-bold">5 últimas partidas</h5>
+							{% else %}
 							<h5 class="card-title fw-bold">Last 5 games</h5>
+							{% endif %}
 							<ul class="list-group">
 								{% for game in latest_games %}
 									<li class="list-group-item game-info">
 										<div class="game-result">
 											{% if game.game_type == 'PONG' %}
 												{% if game.score_left > game.score_right %}
+													{% if request.user.language == 'fr' %}
+													<span class="text-success fw-bold">VICTOIRE</span>
+													{% elif request.user.language == 'sp' %}
+													<span class="text-success fw-bold">VICTORIA</span>
+													{% else %}
 													<span class="text-success fw-bold">VICTORY</span>
+													{% endif %}
 												{% else %}
-													<span class="text-danger fw-bold">DEFEAT</span>
+													{% if request.user.language == 'fr' %}
+													<span class="text-alert fw-bold">DEFAITE</span>
+													{% elif request.user.language == 'sp' %}
+													<span class="text-alert fw-bold">DERROTA</span>
+													{% else %}
+													<span class="text-alert fw-bold">DEFEAT</span>
+													{% endif %}
 												{% endif %}
 											{% else %}
 												<!-- Logique pour BRICK ou autres jeux -->
@@ -366,7 +405,13 @@
 										<div>{{ game.date|date:"d/m/Y H:i" }}</div>
 									</li>
 								{% empty %}
-									<li class="list-group-item">No recent games.</li>
+								{% if request.user.language == 'fr' %}
+								<li class="list-group-item">Pas de parties recentes.</li>
+								{% elif request.user.language == 'sp' %}
+								<li class="list-group-item">No partidas recientes</li>
+								{% else %}
+								<li class="list-group-item">No recent games.</li>
+								{% endif %}
 								{% endfor %}
 							</ul>
 						</div>
@@ -378,19 +423,39 @@
 			<div class="modal-dialog">
 			  <div class="modal-content">
 				<div class="modal-header">
-				  <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+					{% if request.user.language == 'fr' %}
+					<h5 class="modal-title" id="changePasswordModalLabel">Changer mot de passe</h5>
+					{% elif request.user.language == 'sp' %}
+					<h5 class="modal-title" id="changePasswordModalLabel">Cambiar contraseña</h5>
+					{% else %}
+					<h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+					{% endif %}
 				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 				  <form method="post" action="{% url 'profile' %}">
 					{% csrf_token %}
 					{{ pwd_form.as_p }}
+					{% if request.user.language == 'fr' %}
+					<button type="submit" name="change_password">Changer mot de passe</button>
+					{% elif request.user.language == 'sp' %}
+					<button type="submit" name="change_password">Cambiar contraseña</button>
+					{% else %}
 					<button type="submit" name="change_password">Change Password</button>
+					{% endif %}
 				</form>
 				</div>
 				<div class="modal-footer">
-				  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				  <button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Save changes</button>
+					{% if request.user.language == 'fr' %}
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+					<button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Sauvegarder</button>
+					{% elif request.user.language == 'sp' %}
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Guardar</button>
+					{% else %}
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Save changes</button>
+					{% endif %}
 				</div>
 			  </div>
 			</div>
