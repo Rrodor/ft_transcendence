@@ -23,21 +23,65 @@
 							<img src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}/media/avatars/default.png{% endif %}" alt="avatar"
 							class="rounded-circle img-fluid" style="width: 150px;">
 							<div></div>
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeAvatarModal">
-								Change Avatar
-							</button>							
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+								<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeAvatarModal">
+									Changer d'avatar
+								</button>
+							{% elif user.is_authenticated and request.user.language == 'sp' %}
+								<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeAvatarModal">
+									Cambiar avatar
+								</button>
+							{% else %}
+								<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeAvatarModal">
+									Change Avatar
+								</button>
+							{% endif %}
 						</div>
 						<p class="lead text-center fw-bold" >{{ request.user.username }}</p>
 					</div>
 					<div class="card mb-4"> <!-- Card pour les demandes d'amitié -->
+						{% if user.is_authenticated and request.user.language == 'fr' %}
+							<div class="card-body">
+								<div class="text-center flex-grow-1">
+									<h5 class="card-title fw-bold">Demandes d'amitié en attente</h5>
+								</div>
+								{% for friendship in pending_friends %}
+								<div class="d-flex justify-content-between align-items-center">
+									<div>
+										<strong>{{ friendship.user1.username }} souhaite être votre ami.</strong>
+									</div>
+									<div class="d-flex align-items-center">
+										<!-- Formulaire pour accepter la demande d'amitié -->
+										<form action="{% url 'accept_friend_request' friendship.user1.id %}" method="POST" class="me-1">
+											{% csrf_token %}
+											<button type="submit" class="btn btn-outline-success d-flex align-items-center align-button">
+												<img src="{{ IMGS_URL }}/imgs/check.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+											</button>
+										</form>
+										<!-- Formulaire pour refuser la demande d'amitié -->
+										<form action="{% url 'decline_friend_request' friendship.user1.id %}" method="POST">
+											{% csrf_token %}
+											<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
+												<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+											</button>
+										</form>
+									</div>
+								</div>
+								{% empty %}
+								<div class="text-center flex-grow-1">
+									<p class="text-muted fw-bold">Pas de demandes d'amitié en attente.</p>
+								</div>
+								{% endfor %}
+							</div>
+					{% elif user.is_authenticated and request.user.language == 'sp' %}
 						<div class="card-body">
 							<div class="text-center flex-grow-1">
-								<h5 class="card-title fw-bold">Demandes d'amitié en attente</h5>
+								<h5 class="card-title fw-bold">Solicitudes de amistad pendientes</h5>
 							</div>
 							{% for friendship in pending_friends %}
 							<div class="d-flex justify-content-between align-items-center">
 								<div>
-									<strong>{{ friendship.user1.username }} souhaite être votre ami.</strong>
+									<strong>{{ friendship.user1.username }} quiere ser tu amigo.</strong>
 								</div>
 								<div class="d-flex align-items-center">
 									<!-- Formulaire pour accepter la demande d'amitié -->
@@ -58,10 +102,44 @@
 							</div>
 							{% empty %}
 							<div class="text-center flex-grow-1">
-								<p class="text-muted fw-bold">Pas de demandes d'amitié en attente.</p>
+								<p class="text-muted fw-bold">No hay solicitudes de amistad pendientes.</p>
 							</div>
 							{% endfor %}
 						</div>
+					{% else %}
+						<div class="card-body">
+							<div class="text-center flex-grow-1">
+								<h5 class="card-title fw-bold">Friend requests pending.</h5>
+							</div>
+							{% for friendship in pending_friends %}
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+									<strong>{{ friendship.user1.username }} wants to be your friend.</strong>
+								</div>
+								<div class="d-flex align-items-center">
+									<!-- Formulaire pour accepter la demande d'amitié -->
+									<form action="{% url 'accept_friend_request' friendship.user1.id %}" method="POST" class="me-1">
+										{% csrf_token %}
+										<button type="submit" class="btn btn-outline-success d-flex align-items-center align-button">
+											<img src="{{ IMGS_URL }}/imgs/check.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+										</button>
+									</form>
+									<!-- Formulaire pour refuser la demande d'amitié -->
+									<form action="{% url 'decline_friend_request' friendship.user1.id %}" method="POST">
+										{% csrf_token %}
+										<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
+											<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+										</button>
+									</form>
+								</div>
+							</div>
+							{% empty %}
+							<div class="text-center flex-grow-1">
+								<p class="text-muted fw-bold">No friend requests pending.</p>
+							</div>
+							{% endfor %}
+						</div>
+					{% endif %}
 					</div>
 					<div class="card mb-4 mb-lg-0"> <!-- Card pour les amis -->
 						<div class="card-body p-0">
@@ -75,7 +153,9 @@
 											</a>
 										</div>
 										<div>
-											{% if info.is_in_game %}
+											{% if info.is_in_game %}	<li class="list-group-item d-flex justify-content-center align-items-center p-3">
+												<p class="mb-0 fw-bold">No hay amigos confirmados.</p>
+											</li>
 												<span class="status-dot bg-warning"></span>
 											{% else %}
 												<span class="status-dot {% if info.friend.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
@@ -89,9 +169,19 @@
 										</form>
 									</li>
 								{% empty %}
+								{% if user.is_authenticated and request.user.language == 'fr' %}
 									<li class="list-group-item d-flex justify-content-center align-items-center p-3">
 										<p class="mb-0 fw-bold">Pas d'amis confirmés.</p>
 									</li>
+								{% elif user.is_authenticated and request.user.language == 'sp' %}
+									<li class="list-group-item d-flex justify-content-center align-items-center p-3">
+										<p class="mb-0 fw-bold">No hay amigos confirmados.</p>
+									</li>
+								{% else %}
+									<li class="list-group-item d-flex justify-content-center align-items-center p-3">
+										<p class="mb-0 fw-bold">No hay amigos confirmados.</p>
+									</li>
+								{% endif %}
 								{% endfor %}
 							</ul>
 						</div>
@@ -102,13 +192,29 @@
 						<div class="card-body">
 							<div class="row">
 								<div class="col-sm-3">
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+							<p class="mb-0">Nom complet</p>
+							{% elif user.is_authenticated and request.user.language == 'sp' %}
+							<p class="mb-0">Nombre completo</p>
+							{% else %}
 							<p class="mb-0">Full Name</p>
+							{% endif %}
 							</div>
 							<div class="col-sm-9">
 								{% if request.user.first_name == "" and request.user.last_name == "" %}
+								{% if user.is_authenticated and request.user.language == 'fr' %}
 									<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changeNameModal">
-										Set Name
+										Renseigner son nom
 									</button>
+								{% elif user.is_authenticated and request.user.language == 'sp' %}
+									<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changeNameModal">
+										Introduzca su nombre
+									</button>
+								{% else %}
+									<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changeNameModal">
+										Set name
+									</button>
+								{% endif %}
 								{% else %}
 									<p class="text-muted mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</p>
 								{% endif %}
@@ -117,7 +223,13 @@
 						<hr>
 						<div class="row">
 							<div class="col-sm-3">
+								{% if user.is_authenticated and request.user.language == 'fr' %}
+								<p class="mb-0">Courriel</p>
+								{% elif user.is_authenticated and request.user.language == 'sp' %}
+								<p class="mb-0">Correo electrónico</p>
+								{% else %}
 								<p class="mb-0">Email</p>
+								{% endif %}
 							</div>
 							<div class="col-sm-9">
 								<p class="text-muted mb-0">{{ request.user.email }}</p>
@@ -126,11 +238,23 @@
 						<hr>
 						<div class="row">
 							<div class="col-sm-3">
+								{% if user.is_authenticated and request.user.language == 'fr' %}
+								<p class="mb-0">Mot de passe</p>
+								{% elif user.is_authenticated and request.user.language == 'sp' %}
+								<p class="mb-0">Contraseña</p>
+								{% else %}
 								<p class="mb-0">Password</p>
+								{% endif %}
 							</div>
 							<div class="col-sm-9">
 								<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-							Change Password
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+							Changer de mot de passe
+							{% elif user.is_authenticated and request.user.language == 'sp' %}
+							Cambiar contraseña
+							{% else %}
+							Change password
+							{% endif %}
 							</button>
 							</div>
 						</div>
@@ -145,7 +269,13 @@
 										<div class="col-md-6">
 											<div class="graphique-conteneur" style="text-align: center;">
 												<p style="font-weight: bold; margin-bottom: 0;">
+													{% if user.is_authenticated and request.user.language == 'fr' %}
+													Nombre de parties jouees (Pong):<br>
+													{% elif user.is_authenticated and request.user.language == 'sp' %}
+													Cantidad de partidas jugadas (Pong):<br>
+													{% else %}
 													Number of games played (Pong):<br>
+													{% endif %}
 													{{ user_stats.total_pong_games }}
 												</p>
 												<div>
@@ -154,13 +284,18 @@
 												</div>
 											</div>
 										</div>
-								
 										<!-- Colonne de droite pour les moyennes -->
 										<div class="col-md-6">
 											<div class="moyenne-encart-conteneur">
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
-														<p style="font-weight: bold;">Average points for :</p>
+													{% if user.is_authenticated and request.user.language == 'fr' %}
+														<p style="font-weight: bold;">Points moyen mis:</p>
+													{% elif user.is_authenticated and request.user.language == 'sp' %}
+														<p style="font-weight: bold;">Puntos promedio hechos:</p>
+													{% else %}
+														<p style="font-weight: bold;">Average points taken:</p>
+													{% endif %}
 													</div>
 													<div class="moyenne-stat">
 														<p style="font-weight: bold;">{{ user_stats.pong_average_for|floatformat:2 }}</p>
@@ -168,7 +303,13 @@
 												</div>
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
-														<p style="font-weight: bold;">Average points against :</p>
+														{% if user.is_authenticated and request.user.language == 'fr' %}
+														<p style="font-weight: bold;">Points moyen pris:</p>
+													{% elif user.is_authenticated and request.user.language == 'sp' %}
+														<p style="font-weight: bold;">Puntos promedio recibidos:</p>
+													{% else %}
+														<p style="font-weight: bold;">Average points conceded:</p>
+													{% endif %}
 													</div>
 													<div class="moyenne-stat">
 														<p style="font-weight: bold;">{{ user_stats.pong_average_against|floatformat:2 }}</p>
@@ -176,7 +317,11 @@
 												</div>
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
-														<p style="font-weight: bold;">W/L Ratio :</p>
+													{% if request.user.language == 'fr' or request.user.language == 'sp' %}
+														<p style="font-weight: bold;">Ratio V/D:</p>
+													{% else %}
+														<p style="font-weight: bold;">W/L Ratio:</p>
+													{% endif %}
 													</div>
 													<div class="moyenne-stat">
 														<p style="font-weight: bold;">{{ user_stats.pong_wl_ratio|floatformat:2 }}</p>
@@ -190,7 +335,13 @@
 									<div class="d-flex justify-content-center align-items-center" style="gap: 20px; padding: 20px;">
 										<div style="text-align: center;">
 											<p style="font-weight: bold; margin-bottom: 0;">
-												Number of games played (Jeu 2):<br>
+												{% if user.is_authenticated and request.user.language == 'fr' %}
+												Nombre de parties jouees (Casse briques):<br>
+												{% elif user.is_authenticated and request.user.language == 'sp' %}
+												Cantidad de partidas jugadas (Rompe Lardillos):<br>
+												{% else %}
+												Number of games played (Brick Breaker):<br>
+												{% endif %}
 												{{ user_stats.total_pong_games }}
 											</p>
 										</div>
@@ -210,16 +361,34 @@
 					</div>
 					<div class="card mb-4"> <!-- Card pour les 5 dernières parties -->
 						<div class="card-body">
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+							<h5 class="card-title fw-bold">5 dernieres parties</h5>
+							{% elif user.is_authenticated and request.user.language == 'sp' %}
+							<h5 class="card-title fw-bold">5 últimas partidas</h5>
+							{% else %}
 							<h5 class="card-title fw-bold">Last 5 games</h5>
+							{% endif %}
 							<ul class="list-group">
 								{% for game in latest_games %}
 									<li class="list-group-item game-info">
 										<div class="game-result">
 											{% if game.game_type == 'PONG' %}
 												{% if game.score_left > game.score_right %}
+													{% if request.user.language == 'fr' %}
+													<span class="text-success fw-bold">VICTOIRE</span>
+													{% elif request.user.language == 'sp' %}
+													<span class="text-success fw-bold">VICTORIA</span>
+													{% else %}
 													<span class="text-success fw-bold">VICTORY</span>
+													{% endif %}
 												{% else %}
-													<span class="text-danger fw-bold">DEFEAT</span>
+													{% if request.user.language == 'fr' %}
+													<span class="text-alert fw-bold">DEFAITE</span>
+													{% elif request.user.language == 'sp' %}
+													<span class="text-alert fw-bold">DERROTA</span>
+													{% else %}
+													<span class="text-alert fw-bold">DEFEAT</span>
+													{% endif %}
 												{% endif %}
 											{% else %}
 												<!-- Logique pour BRICK ou autres jeux -->
@@ -236,7 +405,13 @@
 										<div>{{ game.date|date:"d/m/Y H:i" }}</div>
 									</li>
 								{% empty %}
-									<li class="list-group-item">No recent games.</li>
+								{% if request.user.language == 'fr' %}
+								<li class="list-group-item">Pas de parties recentes.</li>
+								{% elif request.user.language == 'sp' %}
+								<li class="list-group-item">No partidas recientes</li>
+								{% else %}
+								<li class="list-group-item">No recent games.</li>
+								{% endif %}
 								{% endfor %}
 							</ul>
 						</div>
@@ -248,19 +423,39 @@
 			<div class="modal-dialog">
 			  <div class="modal-content">
 				<div class="modal-header">
-				  <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+					{% if request.user.language == 'fr' %}
+					<h5 class="modal-title" id="changePasswordModalLabel">Changer mot de passe</h5>
+					{% elif request.user.language == 'sp' %}
+					<h5 class="modal-title" id="changePasswordModalLabel">Cambiar contraseña</h5>
+					{% else %}
+					<h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+					{% endif %}
 				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 				  <form method="post" action="{% url 'profile' %}">
 					{% csrf_token %}
 					{{ pwd_form.as_p }}
+					{% if request.user.language == 'fr' %}
+					<button type="submit" name="change_password">Changer mot de passe</button>
+					{% elif request.user.language == 'sp' %}
+					<button type="submit" name="change_password">Cambiar contraseña</button>
+					{% else %}
 					<button type="submit" name="change_password">Change Password</button>
+					{% endif %}
 				</form>
 				</div>
 				<div class="modal-footer">
-				  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				  <button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Save changes</button>
+					{% if request.user.language == 'fr' %}
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+					<button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Sauvegarder</button>
+					{% elif request.user.language == 'sp' %}
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Guardar</button>
+					{% else %}
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Save changes</button>
+					{% endif %}
 				</div>
 			  </div>
 			</div>
