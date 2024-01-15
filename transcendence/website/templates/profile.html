@@ -432,50 +432,61 @@
 					{% endif %}
 				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
+		<form method="post" action="{% url 'profile' %}">
 				<div class="modal-body">
-				  <form method="post" action="{% url 'profile' %}">
 					{% csrf_token %}
 					{{ pwd_form.as_p }}
-					{% if request.user.language == 'fr' %}
-					<button type="submit" name="change_password">Changer mot de passe</button>
-					{% elif request.user.language == 'sp' %}
-					<button type="submit" name="change_password">Cambiar contraseña</button>
-					{% else %}
-					<button type="submit" name="change_password">Change Password</button>
-					{% endif %}
-				</form>
 				</div>
 				<div class="modal-footer">
 					{% if request.user.language == 'fr' %}
+					<button type="submit" name="change_password" class="btn btn-primary">Changer mot de passe</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-					<button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Sauvegarder</button>
 					{% elif request.user.language == 'sp' %}
+					<button type="submit" name="change_password" class="btn btn-primary">Cambiar contraseña</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-					<button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Guardar</button>
 					{% else %}
+					<button type="submit" name="change_password" class="btn btn-primary">Change Password</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button id="change-pass" type="submit" form="passwordChangeForm" name="change_password" class="btn btn-primary">Save changes</button>
 					{% endif %}
 				</div>
-			  </div>
 			</div>
+		</div>
+		</form>
 		</div>
 		<div class="modal fade" id="changeAvatarModal" tabindex="-1" aria-labelledby="changeAvatarModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="changeAvatarModalLabel">Change Avatar</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						{% if request.user.language == 'en' %}
+							<h5 class="modal-title" id="changeAvatarModalLabel">Change Avatar</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						{% elif request.user.language == 'fr' %}
+							<h5 class="modal-title" id="changeAvatarModalLabel">Changer d'avatar</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						{% elif request.user.language == 'sp' %}
+							<h5 class="modal-title" id="changeAvatarModalLabel">Cambiar avatar</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						{% endif %}
 					</div>
-					<div class="modal-body">
-						<!-- Formulaire pour changer l'avatar -->
-						<form method="post" action="{% url 'profile' %}" enctype="multipart/form-data">
+					<form method="post" action="{% url 'profile' %}" enctype="multipart/form-data">
+						<div class="modal-body">
+							<!-- Formulaire pour changer l'avatar -->
 							{% csrf_token %}
 							{{ avatar_form.avatar }}
-							{{ avatar_form.errors }}
-							<button type="submit" name="change_avatar">Change Avatar</button>
-						</form>						
-					</div>
+						</div>
+						<div class="modal-footer">
+							{% if request.user.language == 'en' %}
+								<button type="submit" name="change_avatar" class="btn btn-primary">Change Avatar</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							{% elif request.user.language == 'fr' %}
+								<button type="submit" name="change_avatar" class="btn btn-primary">Changer d'avatar</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+							{% elif request.user.language == 'sp' %}
+								<button type="submit" name="change_avatar" class="btn btn-primary">Cambiar avatar</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+							{% endif %}
+						</div>
+					</form>						
 				</div>
 			</div>
 		</div>

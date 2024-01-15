@@ -179,3 +179,16 @@ welcome {
 .alert-custom {
 	margin-bottom: auto !important;
 }
+
+.text-success {
+    color: green; /* or any color you prefer for success messages */
+}
+
+.text-alert {
+    color: red; /* or any color you prefer for alert messages */
+}
+
+.pass-line {
+	display: block;
+	margin-top: 10px;
+}

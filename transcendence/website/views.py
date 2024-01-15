@@ -1,5 +1,5 @@
 from .models import User, Friendship, GameRecord
-from .forms import UserForm, ChangePasswordForm, ChangeAvatarForm
+from .forms import UserForm, ChangePasswordFormEn, ChangePasswordFormFr, ChangePasswordFormSp, ChangeAvatarFormEn, ChangeAvatarFormFr, ChangeAvatarFormSp
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.db.models import Q
@@ -159,8 +159,15 @@ def profile(request):
     request.user.is_in_game = False
     request.user.save()
     if request.method == 'POST':
-        pwd_form = ChangePasswordForm(request.user, request.POST)
-        avatar_form = ChangeAvatarForm(request.POST, request.FILES, instance=request.user)
+        if request.user.language == 'en':
+            pwd_form = ChangePasswordFormEn(request.user, request.POST)
+            avatar_form = ChangeAvatarFormEn(request.POST, request.FILES, instance=request.user)
+        elif request.user.language == 'fr':
+            pwd_form = ChangePasswordFormFr(request.user, request.POST)
+            avatar_form = ChangeAvatarFormFr(request.POST, request.FILES, instance=request.user)
+        elif request.user.language == 'sp':
+            pwd_form = ChangePasswordFormSp(request.user, request.POST)
+            avatar_form = ChangeAvatarFormSp(request.POST, request.FILES, instance=request.user)
         if 'change_password' in request.POST:
             if pwd_form.is_valid():
                 pwd_form.save()
@@ -174,7 +181,6 @@ def profile(request):
             # Handle avatar change form submission
             if avatar_form.is_valid():
                 new_avatar = avatar_form.save(commit=False)
-                print(f"New Avatar before deletion: {new_avatar.avatar.name}")
                 if old_avatar and not old_avatar.name.endswith('default.png') and old_avatar.name != new_avatar.avatar.name:
                     default_storage.delete(old_avatar.name)
                 avatar_form.save()
@@ -205,8 +211,15 @@ def profile(request):
             else:
                 messages.error(request, 'Error in avatar change form submission')
     else:
-        pwd_form = ChangePasswordForm(request.user)
-        avatar_form = ChangeAvatarForm(instance=request.user)
+        if request.user.language == 'en':
+            pwd_form = ChangePasswordFormEn(request.user)
+            avatar_form = ChangeAvatarFormEn(instance=request.user)
+        elif request.user.language == 'fr':
+            pwd_form = ChangePasswordFormFr(request.user)
+            avatar_form = ChangeAvatarFormFr(instance=request.user)
+        elif request.user.language == 'sp':
+            pwd_form = ChangePasswordFormSp(request.user)
+            avatar_form = ChangeAvatarFormSp(instance=request.user)
     context = {
         'pwd_form': pwd_form,
         'avatar_form': avatar_form,

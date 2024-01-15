@@ -1,0 +1,4 @@
+{% if widget.is_initial %}
+    <div>Avatar actual: <a href="{{ widget.value.url }}">{{ widget.value }}</a></div>
+{% endif %}
+<input type="file" name="avatar" id="id_avatar" accept="image/*">
