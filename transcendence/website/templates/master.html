@@ -47,15 +47,16 @@
 									{% csrf_token %}
 									<input type="hidden" name="language_code" id="language-input">
 								</form>
-								<button type="button" class="btn btn-primary dropdown-toggle btn-custom-rounded" data-bs-toggle="dropdown" aria-expanded="false">
 									{% if user.is_authenticated and request.user.language == 'fr' %}
-									Langue
+									<button type="button" class="btn btn-primary dropdown-toggle btn-custom-rounded" data-bs-toggle="dropdown" aria-expanded="false">Langue</button>
 									{% elif user.is_authenticated and request.user.language == 'sp' %}
-									Idioma
+									<button type="button" class="btn btn-primary dropdown-toggle btn-custom-rounded" data-bs-toggle="dropdown" aria-expanded="false">Idioma</button>
+									
 									{% else %}
-									Language
+									<button type="button" class="btn btn-primary dropdown-toggle btn-custom-rounded" data-bs-toggle="dropdown" aria-expanded="false">Language</button>
+									
 									{% endif %}
-								</button>
+								
 								<ul class="dropdown-menu">
 									<li><a class="dropdown-item" href="#" onclick="changeLanguage('fr')"><img src="{% static 'fr.png' %}" style="margin-right: 3px;"> Français</a></li>
 									<li><a class="dropdown-item" href="#" onclick="changeLanguage('en')"><img src="{% static 'uk.png' %}" style="margin-right: 3px;"> English</a></li>
