@@ -23,14 +23,34 @@
 								<p class="text-muted mb-4" style="text-align: center;">Id: {{ player.id }}</p>
 							{% endif %}
 							<hr>
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+							Pong - {{ player.total_pong_games }} parties
+							<div class="col-12 d-flex justify-content-between text-end small">
+								<span>Victoires: {{ player.pong_victories }}</span>
+								<span>Defaites: {{ player.pong_defeats }}</span>
+							</div>
+							{% elif user.is_authenticated and request.user.language == 'sp' %}
+							Pong - {{ player.total_pong_games }} partidas
+							<div class="col-12 d-flex justify-content-between text-end small">
+								<span>Victorias: {{ player.pong_victories }}</span>
+								<span>Derrotas: {{ player.pong_defeats }}</span>
+							</div>
+							{% else %}
 							Pong - {{ player.total_pong_games }} games
 							<div class="col-12 d-flex justify-content-between text-end small">
 								<span>Wins: {{ player.pong_victories }}</span>
 								<span>Loses: {{ player.pong_defeats }}</span>
-							</div>  
+							</div>
+							{% endif %}
 							{% if player.pong_defeats == 0 and player.pong_victories == 0 %}
 								<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+									{% if user.is_authenticated and request.user.language == 'fr' %}
+									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">Aucune partie jouee
+									{% elif user.is_authenticated and request.user.language == 'sp' %}
+									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">No partidas jugadas
+									{% else %}
 									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">No matches played yet
+									{% endif %}
 									</div>
 								</div>
 							{% else %}
@@ -52,13 +72,25 @@
 									{% if not is_pending %}
 										<form action="{% url 'add_friend' player.id %}" method="POST">
 											{% csrf_token %}
+											{% if request.user.language == 'fr' %}
+											<button type="submit" class="btn btn-primary btn-rounded btn-lg">Ajouter un ami</button>
+											{% elif request.user.language == 'sp' %}
+											<button type="submit" class="btn btn-primary btn-rounded btn-lg">Agregar amigo</button>
+											{% else %}
 											<button type="submit" class="btn btn-primary btn-rounded btn-lg">Add friend</button>
+											{% endif %}
 										</form>
 									{% endif %}
 								{% else %}
 									<form action="{% url 'remove_friend' player.id %}" method="POST">
 										{% csrf_token %}
+										{% if request.user.language == 'fr' %}
+										<button type="submit" class="btn btn-danger btn-rounded btn-lg">Supprimer l'ami</button>
+										{% elif request.user.language == 'sp' %}
+										<button type="submit" class="btn btn-danger btn-rounded btn-lg">Eliminar al amigo</button>
+										{% else %}
 										<button type="submit" class="btn btn-danger btn-rounded btn-lg">Remove friend</button>
+										{% endif %}
 									</form>
 						</div>
 						<div class="overlay"></div>
@@ -78,7 +110,13 @@
 										<div class="col-md-6">
 											<div class="graphique-conteneur" style="text-align: center;">
 												<p style="font-weight: bold; margin-bottom: 0;">
+													{% if user.is_authenticated and request.user.language == 'fr' %}
+													Nombre de parties jouees (Pong):<br>
+													{% elif user.is_authenticated and request.user.language == 'sp' %}
+													Cantidad de partidas jugadas (Pong):<br>
+													{% else %}
 													Number of games played (Pong):<br>
+													{% endif %}
 													{{ user_stats.total_pong_games }}
 												</p>
 												<div>
@@ -93,7 +131,13 @@
 											<div class="moyenne-encart-conteneur">
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
-														<p style="font-weight: bold;">Average points for :</p>
+														{% if user.is_authenticated and request.user.language == 'fr' %}
+														<p style="font-weight: bold;">Points moyen mis:</p>
+														{% elif user.is_authenticated and request.user.language == 'sp' %}
+														<p style="font-weight: bold;">Puntos promedio hechos:</p>
+														{% else %}
+														<p style="font-weight: bold;">Average points taken:</p>
+														{% endif %}
 													</div>
 													<div class="moyenne-stat">
 														<p style="font-weight: bold;">{{ user_stats.pong_average_for|floatformat:2 }}</p>
@@ -101,7 +145,13 @@
 												</div>
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
-														<p style="font-weight: bold;">Average points against :</p>
+														{% if user.is_authenticated and request.user.language == 'fr' %}
+														<p style="font-weight: bold;">Points moyen pris:</p>
+														{% elif user.is_authenticated and request.user.language == 'sp' %}
+														<p style="font-weight: bold;">Puntos promedio recibidos:</p>
+														{% else %}
+														<p style="font-weight: bold;">Average points conceded:</p>
+														{% endif %}
 													</div>
 													<div class="moyenne-stat">
 														<p style="font-weight: bold;">{{ user_stats.pong_average_against|floatformat:2 }}</p>
@@ -109,7 +159,11 @@
 												</div>
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
-														<p style="font-weight: bold;">W/L Ratio :</p>
+														{% if request.user.language == 'fr' or request.user.language == 'sp' %}
+														<p style="font-weight: bold;">Ratio V/D:</p>
+														{% else %}
+														<p style="font-weight: bold;">W/L Ratio:</p>
+														{% endif %}
 													</div>
 													<div class="moyenne-stat">
 														<p style="font-weight: bold;">{{ user_stats.pong_wl_ratio|floatformat:2 }}</p>
@@ -173,16 +227,34 @@
 					</div>
 					<div class="card">
 						<div class="card-body">
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+							<h5 class="card-title fw-bold">5 dernieres parties</h5>
+							{% elif user.is_authenticated and request.user.language == 'sp' %}
+							<h5 class="card-title fw-bold">5 últimas partidas</h5>
+							{% else %}
 							<h5 class="card-title fw-bold">Last 5 games</h5>
+							{% endif %}
 							<ul class="list-group">
 								{% for game in latest_games %}
 									<li class="list-group-item game-info">
 										<div class="game-result">
 											{% if game.game_type == 'PONG' %}
 												{% if game.score_left > game.score_right %}
+													{% if request.user.language == 'fr' %}
+													<span class="text-success fw-bold">VICTOIRE</span>
+													{% elif request.user.language == 'sp' %}
+													<span class="text-success fw-bold">VICTORIA</span>
+													{% else %}
 													<span class="text-success fw-bold">VICTORY</span>
+													{% endif %}
 												{% else %}
+													{% if request.user.language == 'fr' %}
+													<span class="text-danger fw-bold">DEFAITE</span>
+													{% elif request.user.language == 'sp' %}
+													<span class="text-danger fw-bold">DERROTA</span>
+													{% else %}
 													<span class="text-danger fw-bold">DEFEAT</span>
+													{% endif %}
 												{% endif %}
 											{% else %}
 												<span class="text-score fw-bold">SCORE</span>
@@ -199,7 +271,13 @@
 										<div>{{ game.date|date:"d/m/Y H:i" }}</div>
 									</li>
 								{% empty %}
-									<li class="list-group-item">No recent games.</li>
+								{% if request.user.language == 'fr' %}
+								<li class="list-group-item">Pas de parties recentes.</li>
+								{% elif request.user.language == 'sp' %}
+								<li class="list-group-item">No partidas recientes</li>
+								{% else %}
+								<li class="list-group-item">No recent games.</li>
+								{% endif %}
 								{% endfor %}
 							</ul>
 						</div>
