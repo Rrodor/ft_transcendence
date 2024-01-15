@@ -41,7 +41,7 @@ function initBallVelocity(ball)
 	const degToRad = (degrees) => degrees * (Math.PI / 180);
 
 	// Define the angle ranges
-	const angleClamp = 80;
+	const angleClamp = 120;
 	const minRightAngle = degToRad(0 + angleClamp);
 	const maxRightAngle = degToRad(180 - angleClamp);
 	const minLeftAngle = degToRad(180 + angleClamp);
@@ -72,10 +72,12 @@ export function move(ball)
 	ball.position.add(ball.velocity);
 }
 
-export function resetBall(ball)
+export function resetBall(ball, savedVelocity)
 {
 	ball.position.set(0, 0, 0);
 	ball.velocity = initBallVelocity(ball);
+	savedVelocity = ball.velocity;
+	return savedVelocity;
 }
 
 export { ballBoundingBox }

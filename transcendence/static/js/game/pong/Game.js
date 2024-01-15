@@ -14,6 +14,8 @@ let paddleLeft = null;
 let paddleRight = null;
 let paddleSpeed = 20;
 
+let savedVelocity = null;
+
 let inputs = null;
 
 let environmentBoundingBoxes = null;
@@ -52,8 +54,8 @@ export function init(scene, envBoundingBoxes, is_ai)
 
 	inputs = initInputs();
 
-	scoreLeftSprite = initScoreSprites(scene, new THREE.Vector3(-2, 10, -6.5), new THREE.Vector3(1.75, 1.75, 1.75));
-	scoreRightSprite = initScoreSprites(scene, new THREE.Vector3(2, 10, -6.5), new THREE.Vector3(1.75, 1.75, 1.75));
+	scoreLeftSprite = initScoreSprites(scene, new THREE.Vector3(-2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
+	scoreRightSprite = initScoreSprites(scene, new THREE.Vector3(2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
 }
 
 export function update(scene, deltaTime)
@@ -79,12 +81,12 @@ function checkBallPosition(ball)
 	if (ball.position.x < paddleLeft.position.x - 1)
 	{
 		scoreRight++;
-		Ball.resetBall(ball);
+		savedVelocity = Ball.resetBall(ball, savedVelocity);
 	}
 	if (ball.position.x > paddleRight.position.x + 1)
 	{
 		scoreLeft++;
-		Ball.resetBall(ball);
+		savedVelocity = Ball.resetBall(ball, savedVelocity);
 	}
 }
 
@@ -162,7 +164,18 @@ function adjustBallVelocity(ball, paddle)
 	ball.velocity.z = Math.tan(angle) * Math.abs(ball.velocity.x);
 
 	// Normalize the velocity to maintain consistent speed
-	ball.velocity.normalize().multiplyScalar(0.1); // Adjust the 0.1 speed value as needed
+	//ball.velocity.normalize().multiplyScalar(0.1); // Adjust the 0.1 speed value as needed
+
+	if (ball.velocity.length() < 0.1)
+	{
+		ball.velocity
+		if (savedVelocity && savedVelocity.length() > 0.1)
+			ball.velocity = savedVelocity;
+		while (ball.velocity.length() < 0.1)
+			ball.velocity.multiplyScalar(1.2);
+	}
+	ball.velocity.multiplyScalar(1.2);
+	savedVelocity = ball.velocity;
 }
 
 function sendInfosToServer()

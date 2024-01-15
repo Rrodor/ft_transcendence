@@ -10,8 +10,8 @@ export function initScene()
 
 	// Setup the camera
 	const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-	camera.rotation.x = -Math.PI / 2;
-	camera.position.set(0, 20, 0);
+	camera.rotation.x = -Math.PI / 2.5;
+	camera.position.set(0, 20, 10);
 
 	// Setup the renderer
 	const renderer = new THREE.WebGLRenderer({ antialias: true });
