@@ -408,11 +408,11 @@
 													{% endif %}
 												{% else %}
 													{% if request.user.language == 'fr' %}
-													<span class="text-alert fw-bold">DEFAITE</span>
+													<span class="text-danger fw-bold">DEFAITE</span>
 													{% elif request.user.language == 'sp' %}
-													<span class="text-alert fw-bold">DERROTA</span>
+													<span class="text-danger fw-bold">DERROTA</span>
 													{% else %}
-													<span class="text-alert fw-bold">DEFEAT</span>
+													<span class="text-danger fw-bold">DEFEAT</span>
 													{% endif %}
 												{% endif %}
 											{% else %}
