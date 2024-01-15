@@ -1,0 +1,610 @@
+[33mcommit fa11169545291eeb9b6a29c09d070af004b159f2[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: c79fef0 0032d81
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Mon Jan 15 23:02:48 2024 +0100
+
+    Merge pull request #7 from Rrodor/trad
+    
+    Trad
+
+[33mcommit 0032d81137fca3e854447cd4e271c93c13141fb6[m[33m ([m[1;31morigin/trad[m[33m)[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Mon Jan 15 19:05:56 2024 +0100
+
+    Translation done/Block language change when in game
+
+[33mcommit c79fef0602ef83f820f2ba010acd979ff05003bb[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Mon Jan 15 18:09:44 2024 +0100
+
+    update pong game: camera, slow ball bug
+
+[33mcommit 77bde1b2963ad0ff8a7627c57af63dbe35a1e2b3[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Mon Jan 15 16:28:56 2024 +0100
+
+    Details page translated
+
+[33mcommit 1faa7314387141a0ab2bd01a8f76f680b627551c[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Jan 15 15:15:01 2024 +0100
+
+    dashboard for brick done on profile and details. Trans v1.0 almost here
+
+[33mcommit 2e24687bed0668651f5d0d27a7b4b6b6b8b13caf[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Jan 15 12:56:33 2024 +0100
+
+    link with DB and brick done
+
+[33mcommit 691b92bee09a87b2d8e5942b706d2e0bdbb10b20[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Jan 15 12:04:28 2024 +0100
+
+    trad on profile done
+
+[33mcommit 9374aecd952847ee3b34dabdb9e91010f11d9503[m
+Author: aramon@student.42perpignan.fr <rhony@anthonys-macbook-pro.home>
+Date:   Mon Jan 15 03:39:34 2024 +0100
+
+    Adding the brick breaker game
+
+[33mcommit b684260de668d119e57742dfc1005db2e784bc07[m
+Author: aramon@student.42perpignan.fr <rhony@anthonys-macbook-pro.home>
+Date:   Mon Jan 15 03:37:39 2024 +0100
+
+    Deleting old stuff
+
+[33mcommit 73db94e3d9bb6354b53112eb41ac952ff4970646[m
+Merge: 5c1d113 26839c0
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Sun Jan 14 18:17:30 2024 +0100
+
+    Merge pull request #6 from Rrodor/trad
+    
+    Trad
+
+[33mcommit 26839c08e05721e78bb61f3963e064731c3ab302[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Sat Jan 13 19:31:40 2024 +0100
+
+    Profile translation done
+
+[33mcommit 5c1d1136a50e7665b3c23ed43aef237003a4447a[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sat Jan 13 17:41:55 2024 +0100
+
+    cache
+
+[33mcommit 209ae685b7f11afc312bc3b679db4312166747f4[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Sat Jan 13 17:37:10 2024 +0100
+
+    Trad
+
+[33mcommit 304917f39831e0a1d6749e5d80bd3ad7bb74d8ee[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sat Jan 13 16:53:16 2024 +0100
+
+    fix alert in menu
+
+[33mcommit 5af5ac36d03ab44c3320182c33bf680fb46ee822[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sat Jan 13 16:46:04 2024 +0100
+
+    fix ugly menu with languages selector
+
+[33mcommit 43098db405ffbce2a2ffd7848c49811904031dac[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sat Jan 13 15:48:49 2024 +0100
+
+    fix user still in_game if quit pong unexpectedly
+
+[33mcommit ff55e28c7c8ecd39132748658b12fbf5fec797ca[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sat Jan 13 13:08:59 2024 +0100
+
+    add is_in_game status in profile
+
+[33mcommit f17c2762834572acacfda8f240957aa0f4b493f1[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sat Jan 13 12:43:37 2024 +0100
+
+    correct default avatar
+
+[33mcommit 4718cda42ffd8f929cd0cef3c5e48f6a81b0f7bd[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sat Jan 13 12:34:12 2024 +0100
+
+    add history for games in profile and details
+
+[33mcommit 49fb770303334c26e71d49df94b9e2c7d41519ef[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Fri Jan 12 15:32:19 2024 +0100
+
+    AI is working
+
+[33mcommit 5fb9a5872e5af3b932a12a24a4d6c40b2e8b5dc3[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Fri Jan 12 15:06:16 2024 +0100
+
+    Start multilanguage
+
+[33mcommit b8408f348795486210d6370fdb980f0d9e24be89[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Thu Jan 11 17:49:26 2024 +0100
+
+    add 1VSAI
+
+[33mcommit e7ec4fda83bad84b0de0b56e45711d1d13399f7b[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Thu Jan 11 17:37:16 2024 +0100
+
+    Add game ended to pong
+
+[33mcommit 0eea10d3539e078b4afdc68cb15b3934c4263629[m
+Merge: 2f15535 c266d2e
+Author: Romeo Rodor <117399255+Rrodor@users.noreply.github.com>
+Date:   Thu Jan 11 11:14:07 2024 -0500
+
+    Merge pull request #5 from Rrodor/AI
+    
+    AI
+
+[33mcommit c266d2ef0f85f902c197090a3422fc616efeeed1[m[33m ([m[1;31morigin/AI[m[33m)[m
+Merge: 73f38ae 2f15535
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Thu Jan 11 17:13:30 2024 +0100
+
+    Merge branch AI into main
+
+[33mcommit 73f38aed49d58ed5917c96578d79a0fadf52b132[m
+Merge: d72e155 0016148
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Thu Jan 11 17:06:15 2024 +0100
+
+    Merge branch 'main' into AI
+
+[33mcommit d72e15564063cfdb415d1d5e237219e4d26cf927[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Thu Jan 11 17:03:47 2024 +0100
+
+    add AI V3.0
+
+[33mcommit 2f15535fe0e5ffe924b1f7fc6b99ba35be13be2e[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Thu Jan 11 16:58:07 2024 +0100
+
+    add intermediate pong page, and fix error on access pong not logged in
+
+[33mcommit d24771e9dcd8b3c3a9a9fbd0853938cf45411d65[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Thu Jan 11 16:01:09 2024 +0100
+
+    modify dashboard script
+
+[33mcommit 2f5670a64ccfbe73894d8e769bbffec78b20399a[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Thu Jan 11 15:27:42 2024 +0100
+
+    front update on details
+
+[33mcommit a0a45941307e8633c2b254317243d75c11a4b9ee[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Thu Jan 11 13:13:37 2024 +0100
+
+    finsh pong dashboard on profile and friends details
+
+[33mcommit 6a0cc5f7792b1db1480d0d4c02bc12f120d32e75[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Wed Jan 10 18:16:11 2024 +0100
+
+    first link with pong and backend done, need end for pong game to avoid 177 wins :)
+
+[33mcommit 3dbd07e5cdc11b9bf31bf5cc18d4798ce3f6dffd[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Wed Jan 10 16:15:34 2024 +0100
+
+    front update on main
+
+[33mcommit 72053483e2af2d79a7540a0c1b5a10ace65ca7ef[m
+Author: Anthony Ramon <rhony@Anthonys-MacBook-Pro.local>
+Date:   Wed Jan 10 15:39:49 2024 +0100
+
+    Static issues resolved. Brick added, pong added aswell.
+
+[33mcommit 750d6d004670c07fd69f2150bd9f34211ca71e00[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Wed Jan 10 15:12:58 2024 +0100
+
+    Finish friends, modify docker arch. Issue if problem with ur code
+
+[33mcommit 8ff58977f640d85b2a8c8bb6459f1272af8e446f[m
+Author: Anthony Ramon <rhony@anthonys-macbook-pro.home>
+Date:   Tue Jan 9 23:06:32 2024 +0100
+
+    Issues on static. Cannot access pong.html nor brique.html
+
+[33mcommit 962a339bfa0e4784134398eaf0df0fce0c2c2a3b[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Tue Jan 9 14:37:24 2024 +0100
+
+    add AI v2.1
+
+[33mcommit 30cf26ccf10678e1cb5e4828b86eb304619c92b5[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Jan 8 17:56:09 2024 +0100
+
+    Add list of friends in profile, last_activity and login status for badge in profile
+
+[33mcommit 276bcd326fb92fe08dfffd78948a29f44ec876a6[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Jan 8 16:22:20 2024 +0100
+
+    Correct docker arch and add friends feature
+
+[33mcommit ad1c1cb8f70d336f4d74e07fb5d4fd80c2267022[m
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Mon Jan 8 14:46:25 2024 +0100
+
+    Update LICENSE.TXT
+
+[33mcommit 2c585942cc39a26f1b5bc32c73b40aa159a2a5e2[m
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Mon Jan 8 14:45:49 2024 +0100
+
+    Update README.md
+
+[33mcommit f0110aaba2d09c9b224120a0beafaeb3b376d283[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Jan 8 14:45:08 2024 +0100
+
+    Correct license
+
+[33mcommit 47dbcec251370ef5cd9fd65015bc4b9a145b09a1[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Jan 8 14:44:15 2024 +0100
+
+    correct license
+
+[33mcommit d28f558e08a9e1010091289742c1bb0ec898cb19[m
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Mon Jan 8 14:26:30 2024 +0100
+
+    Update README.md
+
+[33mcommit 30955a1ef06c29e1eba67f21fa1b6fbab8ee71ba[m
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Mon Jan 8 14:26:06 2024 +0100
+
+    Update LICENCE.txt
+
+[33mcommit 477894985a31b33882f503c69ea5a5bb82dd821b[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Jan 8 14:25:09 2024 +0100
+
+    Update readme.md and add Licence
+
+[33mcommit 486a2bf855941d5056922fccf4b66bcc8ce7a14c[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Jan 8 13:47:05 2024 +0100
+
+    Docker good, nginx https too. Create prod and dev env, all runable by the script. Launch with 0 args to help
+
+[33mcommit 069495ad1e0d4b3eacf192887dd345cadf4a1abd[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sun Jan 7 16:03:11 2024 +0100
+
+    add nginx and docker arch, need prod environnement for https, but it's implemented
+
+[33mcommit 15546f8fcdafa16a80f535ae23b340a123288270[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sun Jan 7 13:57:32 2024 +0100
+
+    correct nav messages to prevent stay login
+
+[33mcommit 476a833b2c971bb57567456be1e3f60ff4d1bf92[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sun Jan 7 13:15:23 2024 +0100
+
+    correct profile after merge
+
+[33mcommit 3bb152816b2bb0caf5e9568ed50a9f98f40f8b51[m
+Merge: c9a6f43 8a4bedc
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Sun Jan 7 13:02:39 2024 +0100
+
+    Merge pull request #4 from Rrodor/stats
+    
+    add stats and correct lots of bugs, add features
+
+[33mcommit 8a4bedc50ddf6909f783b7d17be26011c2bb0e45[m
+Merge: 6d12ff9 c9a6f43
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Sun Jan 7 13:02:23 2024 +0100
+
+    Merge branch 'main' into stats
+
+[33mcommit caf45e4312a90db0bd6c4a1ae6626eb79e8f1814[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Sat Jan 6 19:16:44 2024 +0100
+
+    add AI v3.O: too strong at current speed
+
+[33mcommit c9a6f43534ffaf3825d7cb2beb78707e646b5d8a[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Sat Jan 6 14:15:48 2024 +0100
+
+    Remove irelevent folder
+
+[33mcommit c84993143cc9aa2e1a3ab3b04c4827c8fb704040[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Sat Jan 6 14:06:58 2024 +0100
+
+    Change avatar done
+
+[33mcommit f32211650295c2c84ca460be4280daf3df4d599e[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Fri Jan 5 21:09:32 2024 +0100
+
+    add AI v2.0
+
+[33mcommit 6d12ff96f55c11cda7877c62b0d2aa86adea96e0[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Fri Jan 5 18:08:34 2024 +0100
+
+    add stats and coorect lots of bugs
+
+[33mcommit 2a187fb82ebc6c3499ddc5e8d3bb9537e0a391be[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Thu Jan 4 18:15:39 2024 +0100
+
+    AI v1.0
+
+[33mcommit 001614843af1ad38732507771a01ffaf54f3653a[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Thu Jan 4 17:55:10 2024 +0100
+
+    Fix profile
+
+[33mcommit d6ecf8e83887d51b5bad39495ab9e9cabc4714cd[m
+Author: Anthony Ramon <rhony@Anthonys-MacBook-Pro.local>
+Date:   Thu Jan 4 15:33:36 2024 +0100
+
+    Added link for ball position between front and back
+
+[33mcommit 3fd51e0990fac206ac9b5b7833822559df657fff[m
+Author: Anthony Ramon <rhony@Anthonys-MacBook-Pro.local>
+Date:   Thu Jan 4 14:57:08 2024 +0100
+
+    Most of the functionalities completed. Still at plaecholder state for future graphics integration. Cleanup is needed on the pong.html page.
+
+[33mcommit 8bf2639d5dd9dc7d0ea4d364321c04b7831fd296[m
+Author: Anthony Ramon <rhony@Anthonys-MacBook-Pro.local>
+Date:   Wed Jan 3 18:28:21 2024 +0100
+
+    modifying html files to integrate pong
+
+[33mcommit ea1dbc26af3a9fff3e575e8880fb2560ffb2deb8[m
+Author: Anthony Ramon <rhony@Anthonys-MacBook-Pro.local>
+Date:   Wed Jan 3 18:22:59 2024 +0100
+
+    Modifying some python code
+
+[33mcommit a418ffc7f76d801d9c752385deecde6e7d695ed9[m
+Author: Anthony Ramon <rhony@Anthonys-MacBook-Pro.local>
+Date:   Wed Jan 3 18:19:07 2024 +0100
+
+    game
+
+[33mcommit a0e2d68a5b93f405e1befd8f67417a13337d6202[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Tue Jan 2 16:29:43 2024 +0100
+
+    Start of block urls if connected/disconnected
+
+[33mcommit 6129267aeec43fa75044c112617f07c81a22253d[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Sat Dec 30 01:19:30 2023 +0100
+
+    Default avatar set, change avatar feature working
+
+[33mcommit cdca0a3a465110dd15db66dda8024fe86e3f9319[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Thu Dec 28 18:03:19 2023 +0100
+
+    Avatar set, change avatar tool in progress
+
+[33mcommit 4e1554d80648859efed63f288a9a055b8133b018[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Thu Dec 28 12:10:59 2023 +0100
+
+    details on profile
+
+[33mcommit 2ca025406511b7008a173b9f3c30ea4efaf6cd7e[m
+Merge: 8269702 c649ad3
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Thu Dec 28 11:39:31 2023 +0100
+
+    Merge pull request #2 from Rrodor/cparras
+    
+    Cparras
+
+[33mcommit c649ad392e2cef7c44a8f5af0cf7d2996650a664[m
+Merge: c052547 8269702
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Thu Dec 28 11:39:13 2023 +0100
+
+    Merge branch 'main' into cparras
+
+[33mcommit c0525474111b8ba038107df8535d532d729dcae6[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Wed Dec 27 23:41:32 2023 +0100
+
+    Add feature wich block diplay of own profile if connected
+
+[33mcommit 9a7e39200fbd51952e97f9055df8c555f76ae89c[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Wed Dec 27 23:15:42 2023 +0100
+
+    Add icon, details/ improvements
+
+[33mcommit 9be292a434f7d3629c014fa7ff86e5be22a9a5d9[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Wed Dec 27 22:54:34 2023 +0100
+
+    Add icon, details/ improvements
+
+[33mcommit 8269702e9da625070c95bce9f2a664b37e6a534e[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Wed Dec 27 20:14:49 2023 +0100
+
+    details
+
+[33mcommit 32d0983f2baab1f1de8d58853d37dc4fabad8f88[m
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Wed Dec 27 20:04:39 2023 +0100
+
+    Update README.md
+
+[33mcommit 2912fba047bbc2b97a67ffb55649041cbedc288a[m
+Merge: 74b3cb9 945aa48
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Wed Dec 27 20:04:20 2023 +0100
+
+    Merge pull request #1 from Rrodor/dev-pass
+    
+    password change good in profile
+
+[33mcommit 945aa48a93b08669028b70846d149a2933997eea[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Wed Dec 27 20:04:08 2023 +0100
+
+    merge
+
+[33mcommit 8242685da7f5270aaffddff986e36d496973085c[m
+Merge: 2f6127b 74b3cb9
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Wed Dec 27 20:02:41 2023 +0100
+
+    Merge branch 'main' into dev-pass
+
+[33mcommit 2f6127b14ad98c766f3862d69b84401aeaa37a0d[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Wed Dec 27 19:57:56 2023 +0100
+
+    password change good in profile
+
+[33mcommit 74b3cb9dfe4d43dd136ff4c5b1e18cbd7e49ecb5[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Wed Dec 27 18:10:01 2023 +0100
+
+    /players and /details update
+
+[33mcommit 3c32b98119cdeeeaa6a25635ab9bf16d9029ee01[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Wed Dec 27 17:15:23 2023 +0100
+
+    404 page done, Debug must be set as False if we want to see it
+
+[33mcommit 619846ca744b1624d5a15814996c0ad60d195dfb[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Wed Dec 27 16:49:46 2023 +0100
+
+    Profile redirect when not logged
+
+[33mcommit 43cd7e4b0b2e148823118213b72ecef41759a28a[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Tue Dec 26 17:58:14 2023 +0100
+
+    Pages turned black & starting of profile page
+
+[33mcommit a34f50333acc4e60668ac585e315ce5139c85867[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Tue Dec 26 12:53:24 2023 +0100
+
+    correct syntax error
+
+[33mcommit f5e6593ae7b6bc9ec28c2a384510a78f14b83b30[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Fri Dec 22 21:15:11 2023 +0100
+
+    front update
+
+[33mcommit e31535005e71f5437cafe1d5df2244b494cca681[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Fri Dec 22 18:39:17 2023 +0100
+
+    Sessions (login, register, logout) ok
+
+[33mcommit 14277a7a8d1d661d37f4b1c26e7bc49d74d961aa[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Thu Dec 21 17:03:38 2023 +0100
+
+    rework django structure
+
+[33mcommit ddee0c47dfaabb9f054970ab83495ea4eedb35da[m
+Author: cparras <cyril.parras@gmail.com>
+Date:   Mon Dec 18 21:27:52 2023 +0100
+
+    Starting of registration form
+
+[33mcommit 73ac0323e241fb5d075df4a02b18bf669950e5c6[m
+Author: Baptiste Breton <124448529+BaBreton@users.noreply.github.com>
+Date:   Mon Dec 18 19:49:56 2023 +0100
+
+    Update settings.py
+
+[33mcommit 0e014e8b3818b874267597f6eb02a45b84481ee7[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Dec 18 19:46:10 2023 +0100
+
+    add front and bootstrap
+
+[33mcommit 486b9380f292592e4779e754126081c0c9c64a28[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Mon Dec 18 19:37:46 2023 +0100
+
+    change model in database
+
+[33mcommit 0d7955515a6369a13ddb339c6d91479b29149a71[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Mon Dec 18 16:07:32 2023 +0100
+
+    rm old app
+
+[33mcommit 805c8350f19e6988f771377a7fbe0f7811d15b9d[m
+Author: BaBreton <baptiste.br@icloud.com>
+Date:   Mon Dec 18 15:36:35 2023 +0100
+
+    add server db
+
+[33mcommit 88d843f22e031fb3449e0625513b62d400ede75c[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Mon Dec 18 14:24:41 2023 +0100
+
+    add postgresql
+
+[33mcommit 8c8a807cc0d6673aa0b3a38e10fdc4de5a745126[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Fri Dec 8 21:12:00 2023 +0100
+
+    add test css front
+
+[33mcommit fca782f94a5b66d8bc838e5e94de61ad6cf8d5c7[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Sun Dec 3 18:08:22 2023 +0100
+
+    add archi p2
+
+[33mcommit 8427943e006dde1164a8eba565000d06edb1ec6b[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Sun Dec 3 16:06:46 2023 +0100
+
+    base archi
+
+[33mcommit d3c1c44f6b5191b3c0bdc53c8bb9f1df4e6af7d9[m
+Author: Rrodor <romeo.rodor@gmail.com>
+Date:   Wed Nov 22 13:29:50 2023 +0100
+
+    start project

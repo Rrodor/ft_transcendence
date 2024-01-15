@@ -278,6 +278,23 @@
 													{{ user_stats.total_pong_games }}
 												</p>
 												<div>
+													<script type="text/javascript">
+														var userLanguage = "{{ request.user.language }}";
+														var labelVictories, labelDefeats, labelPlayerStats;
+														if (userLanguage == 'fr') {
+															labelVictories = 'Victoires';
+															labelDefeats = 'Défaites';
+															labelPlayerStats = 'Statistiques du joueur';
+														} else if (userLanguage == 'sp') {
+															labelVictories = 'Victorias';
+															labelDefeats = 'Derrotas';
+															labelPlayerStats = 'Estadísticas del jugador';
+														} else {
+															labelVictories = 'Victories';
+															labelDefeats = 'Defeats';
+															labelPlayerStats = 'Player stats';
+														}
+													</script>
 													<div id="chart-data" data-pong-victories="{{ user_stats.pong_victories }}" data-pong-defeats="{{ user_stats.pong_defeats }}"></div>
 													<canvas id="myChart1"></canvas>
 												</div>
@@ -346,6 +363,15 @@
 												<div>
 													<script type="text/javascript">
 														window.brickScores = {{ latest_brick_score|safe }};
+														var userLanguage = "{{ request.user.language }}";
+														var labelPoints;
+														if (userLanguage == 'fr') {
+															labelPoints = 'Points';
+														} else if (userLanguage == 'sp') {
+															labelPoints = 'Puntos';
+														} else {
+															labelPoints = 'Points';
+														}
 													</script>
 													<canvas id="myChart2"></canvas>
 												</div>
@@ -524,22 +550,22 @@
 					</div>
 					<div class="modal-body">
 						<!-- Formulaire pour changer le nom -->
-						<form method="post" action="{% url 'profile' %}">
+					<form method="post" action="{% url 'profile' %}">
 							{% csrf_token %}
 							<div class="mb-3">
-								<label for="first_name" class="form-label">First Name</label>
+								<label for="first_name" class="form-label">{% if request.user.language == 'en' %}First Name{% elif request.user.language == 'fr' %}Prénom{% elif request.user.language == 'sp' %}Nombre{% endif %}</label>
 								<input type="text" class="form-control" id="first_name" name="first_name">
 							</div>
 							<div class="mb-3">
-								<label for="last_name" class="form-label">Last Name</label>
+								<label for="last_name" class="form-label">{% if request.user.language == 'en' %}Last Name{% elif request.user.language == 'fr' %}Nom de famille{% elif request.user.language == 'sp' %}Apellido{% endif %}</label>
 								<input type="text" class="form-control" id="last_name" name="last_name">
 							</div>
-							<button type="submit" name="change_name" class="btn btn-primary">Save Name</button>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					</div>
+						</div>
+						<div class="modal-footer">
+							<button type="submit" name="change_name" class="btn btn-primary">{% if request.user.language == 'en' %}Save{% elif request.user.language == 'fr' %}Sauvegarder{% elif request.user.language == 'sp' %}Guardar nombre{% endif %}</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% if request.user.language == 'en' %}Close{% elif request.user.language == 'fr' %}Fermer{% elif request.user.language == 'sp' %}Cerrar{% endif %}</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

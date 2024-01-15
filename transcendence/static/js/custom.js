@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var myChart1 = new Chart(ctx1, {
             type: 'doughnut',
 			data: {
-				labels: ['Victories', 'Defeats'],
+				labels: [labelVictories, labelDefeats],
 				datasets: [{
-					label: 'Statistiques du Joueur',
+					label: labelPlayerStats,
 					data: [pongVictories, pongDefeats],
 					backgroundColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
 					borderColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
             data: {
                 labels: brickScores.map((_, index) => `Game ${index + 1}`),
                 datasets: [{
-                    label: 'Points',
+                    label: labelPoints,
                     data: brickScores,
                     backgroundColor: 'rgb(21, 87, 36)',
                     borderColor: 'rgb(21, 87, 36)',
@@ -71,5 +71,4 @@ document.addEventListener('DOMContentLoaded', function () {
 function changeLanguage(languageCode) {
     document.getElementById('language-input').value = languageCode;
     document.getElementById('language-form').submit();
-    location.reload(true);
 }

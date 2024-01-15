@@ -1,4 +1,5 @@
 {% extends "master.html" %}
+{% load static %}
 
 {% block title %}
 	Details about {{ player.username }}
@@ -60,8 +61,8 @@
 							</div>
 						{% else %}
 							<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-								<div class="progress-bar bg-success" style="width: {{ player.pong_victories_percentage }}%;" aria-valuenow="{{ player.pong_victories_percentage }}"></div>
-								<div class="progress-bar bg-danger" style="width: {{ player.pong_defeats_percentage }}%;" aria-valuenow="{{ player.pong_defeats_percentage }}"></div>
+								<div class="progress-bar bg-success" style="width: {{ player.pong_victories_percentage|floatformat:0 }}%;" aria-valuenow="{{ player.pong_victories_percentage|floatformat:0 }}"></div>
+								<div class="progress-bar bg-danger" style="width: {{ player.pong_defeats_percentage|floatformat:0 }}%;" aria-valuenow="{{ player.pong_defeats_percentage|floatformat:0 }}"></div>
 							</div>
 						{% endif %}
 							<hr>    
@@ -125,6 +126,23 @@
 													{{ user_stats.total_pong_games }}
 												</p>
 												<div>
+													<script type="text/javascript">
+														var userLanguage = "{{ request.user.language }}";
+														var labelVictories, labelDefeats, labelPlayerStats;
+														if (userLanguage == 'fr') {
+															labelVictories = 'Victoires';
+															labelDefeats = 'Défaites';
+															labelPlayerStats = 'Statistiques du joueur';
+														} else if (userLanguage == 'sp') {
+															labelVictories = 'Victorias';
+															labelDefeats = 'Derrotas';
+															labelPlayerStats = 'Estadísticas del jugador';
+														} else {
+															labelVictories = 'Victories';
+															labelDefeats = 'Defeats';
+															labelPlayerStats = 'Player stats';
+														}
+													</script>
 													<div id="chart-data" data-pong-victories="{{ user_stats.pong_victories }}" data-pong-defeats="{{ user_stats.pong_defeats }}"></div>
 													<canvas id="myChart1"></canvas>
 												</div>
@@ -195,6 +213,15 @@
 												<div>
 													<script type="text/javascript">
 														window.brickScores = {{ latest_brick_score|safe }};
+														var userLanguage = "{{ request.user.language }}";
+														var labelPoints;
+														if (userLanguage == 'fr') {
+															labelPoints = 'Points';
+														} else if (userLanguage == 'sp') {
+															labelPoints = 'Puntos';
+														} else {
+															labelPoints = 'Points';
+														}
 													</script>
 													<canvas id="myChart2"></canvas>
 												</div>
