@@ -62,7 +62,7 @@ class CustomClearableFileInputSp(ClearableFileInput):
     template_name = 'custom_clearable_file_inputSp.html'
 
 class ChangeAvatarFormEn(forms.ModelForm):
-    avatar = forms.ImageField(label='Your Avatar', required=True, widget=CustomClearableFileInputEn(attrs={'class': 'form-control'}), )
+    avatar = forms.ImageField(label='Your Avatar', required=True, widget=CustomClearableFileInputEn(attrs={'class': 'form-control'}))
     class Meta:
         model = User
         fields = ['avatar']
