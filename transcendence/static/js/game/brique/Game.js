@@ -1,6 +1,7 @@
 //Game.js
 import * as Paddle from './Paddle.js';
 import * as Ball from './Ball.js';
+import * as Network from './Network.js';
 import { initInputs } from './Inputs.js';
 import { ballBoundingBox } from './Ball.js';
 import { initBrick } from './Environment.js';
@@ -16,9 +17,11 @@ let scoreSprite;
 let score = 0;
 let lifeLeft = 5;
 let bricks = [];
+let gameEnded = false;
 
 export function init(scene, envBoundingBoxes)
 {
+	console.log("user_id: " + userId);
 	const result = Paddle.initPaddle(scene, new THREE.Vector3(0, 0, 10));
 	paddle = result.paddle;
 	paddleBoundingBox = result.paddleBoundingBox;
@@ -89,7 +92,7 @@ function checkBallPosition(ball, paddle)
 		lifeLeft--;
 		if (lifeLeft == 0)
 		{
-			console.log("Game Over");
+			endGame();
 		}
 	}
 }
@@ -164,3 +167,16 @@ function adjustBallVelocity(ball, paddle)
 	ball.velocity.normalize().multiplyScalar(0.1);
 }
 
+function sendInfosToServer() {
+	Network.sendScore(score, userId);
+}
+
+function endGame() {
+    if (gameEnded) return; // Empêche les appels multiples
+    gameEnded = true;
+
+    sendInfosToServer();
+    window.setTimeout(() => {
+        window.location.href = "/brique/end_game/";
+    }, 1); // Délai avant la redirection pour permettre l'envoi des données
+}

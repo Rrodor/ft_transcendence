@@ -31,7 +31,7 @@ let rightPlayerIsAI = false;
 let scoreLeft = 0;
 let scoreRight = 0;
 let scoreAI = 0;
-let scoreMax = 2;
+let scoreMax = 11;
 
 let gameEnded = false;
 

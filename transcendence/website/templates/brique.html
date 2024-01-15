@@ -10,6 +10,9 @@
 <body>
 	{% load static %}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+	<script type="text/javascript">
+		var userId = "{{ user_id}}";
+	</script>
 	<script type="module">
 
 		import { initScene, animateGame } from "{% static '/js/game/brique/Scene.js' %}";

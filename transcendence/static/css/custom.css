@@ -188,6 +188,10 @@ welcome {
     color: red; /* or any color you prefer for alert messages */
 }
 
+.text-score {
+	color: orange;
+}
+
 .pass-line {
 	display: block;
 	margin-top: 10px;

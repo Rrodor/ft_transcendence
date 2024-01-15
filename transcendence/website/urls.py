@@ -34,6 +34,8 @@ urlpatterns = [
 		path('pong/vs_ai/', views.vs_ai, name='vs_ai'),
 		path('pong/end_game/', views.end_game, name='end_game'),
 		path('change_language/', change_language, name='change_language'),
+		path('brique/sendscore/', views.sendscore_brique, name='sendscore_brique'),
+		path('brique/end_game/', views.end_game, name='end_game'),
 ]
 
 handler404 = 'website.views.handler404'

@@ -406,8 +406,31 @@ def brique(request):
     if not request.user.is_authenticated:
         messages.error(request, 'You must be logged in to play Casse-Brique')
         return redirect('/login')
+    context = {
+        'user_id': request.user.id,
+    }
+    request.user.is_in_game = True
+    request.user.save()
     # Your view logic here
-    return render(request, 'brique.html')
+    return render(request, 'brique.html', context)
+
+@csrf_exempt
+def sendscore_brique(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_id = data['userId']
+        score = data['score']
+        try:
+            user = User.objects.get(id=user_id)
+            user.brick_games += 1
+            user.brick_points += score
+            user.brick_average = user.brick_points / user.brick_games
+            user.save()
+            game_record = GameRecord(user=user, game_type=GameRecord.BRICK, score=score)
+            game_record.save()
+            return JsonResponse({"status": "Score updated successfully"})
+        except User.DoesNotExist:
+            return JsonResponse({"status": "User not found"}, status=404)
 
 def test(request):
     avatar_name = request.user.avatar.name if request.user.avatar else "No avatar uploaded"
