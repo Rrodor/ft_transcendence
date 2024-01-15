@@ -43,22 +43,27 @@
 							</div>
 							{% endif %}
 							{% if player.pong_defeats == 0 and player.pong_victories == 0 %}
-								<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-									{% if user.is_authenticated and request.user.language == 'fr' %}
-									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">Aucune partie jouee
-									{% elif user.is_authenticated and request.user.language == 'sp' %}
-									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">No partidas jugadas
-									{% else %}
-									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">No matches played yet
-									{% endif %}
+							<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+								{% if user.is_authenticated and request.user.language == 'fr' %}
+									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">
+										Aucune partie jouee
 									</div>
-								</div>
-							{% else %}
-								<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-									<div class="progress-bar bg-success" style="width: {{ player.pong_victories_percentage }}%;" aria-valuenow="{{ player.pong_victories_percentage }}"></div>
-									<div class="progress-bar bg-danger" style="width: {{ player.pong_defeats_percentage }}%;" aria-valuenow="{{ player.pong_defeats_percentage }}"></div>
-								</div>
-							{% endif %}
+								{% elif user.is_authenticated and request.user.language == 'sp' %}
+									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">
+										No partidas jugadas
+									</div>
+								{% else %}
+									<div class="progress-bar bg-secondary" style="width: 100%;" aria-valuenow="100">
+										No matches played yet
+									</div>
+								{% endif %}
+							</div>
+						{% else %}
+							<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+								<div class="progress-bar bg-success" style="width: {{ player.pong_victories_percentage }}%;" aria-valuenow="{{ player.pong_victories_percentage }}"></div>
+								<div class="progress-bar bg-danger" style="width: {{ player.pong_defeats_percentage }}%;" aria-valuenow="{{ player.pong_defeats_percentage }}"></div>
+							</div>
+						{% endif %}
 							<hr>    
 							Hexa-Race:
 							3 V | 7 L
