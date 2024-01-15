@@ -263,9 +263,8 @@
 					<div class="card mb-4"> <!-- Card pour les statistiques -->
 						<div id="statsCarousel" class="carousel slide" data-bs-interval="false">
 							<div class="carousel-inner">
-								<div class="carousel-item active">
+								<div class="carousel-item active"> <!-- Item pour le graphique et le nombre de parties -->
 									<div class="row">
-										<!-- Colonne de gauche pour le graphique et le nombre de parties -->
 										<div class="col-md-6">
 											<div class="graphique-conteneur" style="text-align: center;">
 												<p style="font-weight: bold; margin-bottom: 0;">
@@ -284,8 +283,7 @@
 												</div>
 											</div>
 										</div>
-										<!-- Colonne de droite pour les moyennes -->
-										<div class="col-md-6">
+										<div class="col-md-6"> <!-- Colonne de droite pour les moyennes-->
 											<div class="moyenne-encart-conteneur">
 												<div class="moyenne-encart">
 													<div class="moyenne-texte">
@@ -331,22 +329,49 @@
 										</div>
 									</div>
 								</div>
-								<div class="carousel-item">
-									<div class="d-flex justify-content-center align-items-center" style="gap: 20px; padding: 20px;">
-										<div style="text-align: center;">
-											<p style="font-weight: bold; margin-bottom: 0;">
-												{% if user.is_authenticated and request.user.language == 'fr' %}
-												Nombre de parties jouees (Casse briques):<br>
-												{% elif user.is_authenticated and request.user.language == 'sp' %}
-												Cantidad de partidas jugadas (Rompe Lardillos):<br>
-												{% else %}
-												Number of games played (Brick Breaker):<br>
-												{% endif %}
-												{{ user_stats.total_pong_games }}
-											</p>
+								<div class="carousel-item"> <!-- Item pour le graphique et le nombre de parties -->
+									<div class="row">
+										<!-- Colonne de gauche pour l'histogramme et le nombre de parties -->
+										<div class="col-md-6">
+											<div class="graphique-conteneur" style="text-align: center;">
+												<p style="font-weight: bold; margin-bottom: 0;">
+													{% if user.is_authenticated and request.user.language == 'fr' %}
+													Nombre de parties jouees (Casse briques):
+													{% elif user.is_authenticated and request.user.language == 'sp' %}
+													Cantidad de partidas jugadas (Rompe Lardillos):
+													{% else %}
+													Number of games played (Brick Breaker):
+													{% endif %}
+													{{ user_stats.brick_games }}</p>
+												<div>
+													<script type="text/javascript">
+														window.brickScores = {{ latest_brick_score|safe }};
+													</script>
+													<canvas id="myChart2"></canvas>
+												</div>
+											</div>
 										</div>
-										<div>
-											<canvas id="myChart2"></canvas>
+													<!-- Colonne de droite pour les moyennes -->
+													
+										<div class="col-md-6">
+											<div class="moyenne-encart-conteneur">
+												<!-- Ici, vous pouvez ajouter les moyennes et autres statistiques pour le jeu Brick Breaker -->
+												<div class="moyenne-encart">
+													<div class="moyenne-texte">
+														{% if user.is_authenticated and request.user.language == 'fr' %}
+															<p style="font-weight: bold;">Score moyen:</p>
+														{% elif user.is_authenticated and request.user.language == 'sp' %}
+															<p style="font-weight: bold;">Puntuación media:</p>
+														{% else %}
+															<p style="font-weight: bold;">Average Score:</p>
+														{% endif %}
+													</div>
+													<div class="moyenne-stat">
+														<p style="font-weight: bold;">{{ user_stats.brick_average|floatformat:2 }}</p>
+													</div>
+												</div>
+												<!-- Ajoutez d'autres encarts de moyenne si nécessaire -->
+											</div>
 										</div>
 									</div>
 								</div>

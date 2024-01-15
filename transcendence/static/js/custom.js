@@ -40,24 +40,28 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
     }
 
-    if (chartData && document.getElementById('myChart2')) {
+    if (brickScores && document.getElementById('myChart2')) {
         var ctx2 = document.getElementById('myChart2').getContext('2d');
         
         var myChart2 = new Chart(ctx2, {
-            type: 'doughnut',
+            type: 'bar',
             data: {
-                labels: ['Victories', 'Defeats'],
+                labels: brickScores.map((_, index) => `Game ${index + 1}`),
                 datasets: [{
-                    label: 'Statistiques du Joueur',
-                    data: [pongVictories, pongDefeats], // Utilisez les mêmes variables pour myChart2
-                    backgroundColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
-                    borderColor: ['rgb(21, 87, 36)', 'rgb(205, 32, 44)'],
+                    label: 'Points',
+                    data: brickScores,
+                    backgroundColor: 'rgb(21, 87, 36)',
+                    borderColor: 'rgb(21, 87, 36)',
                     borderWidth: 1
                 }]
             },
             options: {
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				},
                 responsive: true,
-                cutoutPercentage: 40,
                 maintainAspectRatio: true
             }
         });

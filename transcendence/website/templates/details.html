@@ -120,7 +120,47 @@
 									</div>
 								</div>
 								<div class="carousel-item">
-									<!-- Contenu pour le deuxième élément de carrousel si nécessaire -->
+									<div class="row">
+										<!-- Colonne de gauche pour l'histogramme et le nombre de parties -->
+										<div class="col-md-6">
+											<div class="graphique-conteneur" style="text-align: center;">
+												<p style="font-weight: bold; margin-bottom: 0;">
+													{% if user.is_authenticated and request.user.language == 'fr' %}
+													Nombre de parties jouees (Casse briques):
+													{% elif user.is_authenticated and request.user.language == 'sp' %}
+													Cantidad de partidas jugadas (Rompe Lardillos):
+													{% else %}
+													Number of games played (Brick Breaker):
+													{% endif %}
+													{{ user_stats.brick_games }}</p>
+												<div>
+													<script type="text/javascript">
+														window.brickScores = {{ latest_brick_score|safe }};
+													</script>
+													<canvas id="myChart2"></canvas>
+												</div>
+											</div>
+										</div>													
+										<div class="col-md-6">
+											<div class="moyenne-encart-conteneur">
+												<!-- Ici, vous pouvez ajouter les moyennes et autres statistiques pour le jeu Brick Breaker -->
+												<div class="moyenne-encart">
+													<div class="moyenne-texte">
+														{% if user.is_authenticated and request.user.language == 'fr' %}
+															<p style="font-weight: bold;">Score moyen:</p>
+														{% elif user.is_authenticated and request.user.language == 'sp' %}
+															<p style="font-weight: bold;">Puntuación media:</p>
+														{% else %}
+															<p style="font-weight: bold;">Average Score:</p>
+														{% endif %}
+													</div>
+													<div class="moyenne-stat">
+														<p style="font-weight: bold;">{{ user_stats.brick_average|floatformat:2 }}</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<a class="carousel-control-prev" href="#statsCarousel" role="button" data-bs-slide="prev" style="color: black; left: -25px;">
@@ -145,7 +185,7 @@
 													<span class="text-danger fw-bold">DEFEAT</span>
 												{% endif %}
 											{% else %}
-												<!-- Logique pour BRICK ou autres jeux -->
+												<span class="text-score fw-bold">SCORE</span>
 											{% endif %}
 										</div>
 										<div>{{ game.get_game_type_display }}</div>

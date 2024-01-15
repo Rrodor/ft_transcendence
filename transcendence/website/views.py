@@ -53,6 +53,7 @@ def details(request, id):
     is_friend = False
     is_pending = False
     latest_games = GameRecord.objects.filter(user=player).order_by('-date')[:5]
+    latest_brick_score = list(GameRecord.objects.filter(user=player, game_type=GameRecord.BRICK).order_by('-date').values_list('score', flat=True)[:5])
     if request.user.is_authenticated:
         request.user.is_in_game = False
         request.user.save()
@@ -72,6 +73,7 @@ def details(request, id):
             'is_pending': is_pending,
             'user_stats': user_stats,
             'latest_games': latest_games,
+            'latest_brick_score': latest_brick_score,
     }
     return (HttpResponse(template.render(context, request)))
 
@@ -147,6 +149,7 @@ def profile(request):
 ).distinct()[:5]
     pending_friends = Friendship.objects.filter(Q(user2=request.user, is_pending=True)).distinct()[:5]
     latest_games = GameRecord.objects.filter(user=request.user).order_by('-date')[:5]
+    latest_brick_score = list(GameRecord.objects.filter(user=request.user, game_type=GameRecord.BRICK).order_by('-date').values_list('score', flat=True)[:5])
     friends_changed = 'friends_changed' in request.GET
     avatar_changed = 'avatar_changed' in request.GET
     friends_info = []
@@ -230,6 +233,7 @@ def profile(request):
         'avatar_changed': avatar_changed,
         'latest_games': latest_games,
         'friends_info': friends_info,
+        'latest_brick_score': latest_brick_score,
     }
     return render(request, 'profile.html', context)
 
