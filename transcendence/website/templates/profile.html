@@ -441,16 +441,20 @@
 													<span class="text-danger fw-bold">DEFEAT</span>
 													{% endif %}
 												{% endif %}
-											{% else %}
+											{% elif game.game_type == 'BRICK' %}
 												<span class="text-score fw-bold">SCORE</span>
+											{% else %}
+												<span class="text-score fw-bold">PONG WARRIOR GOAT</span>
 											{% endif %}
 										</div>
 										<div>{{ game.get_game_type_display }}</div>
 										<div>
 											{% if game.game_type == 'PONG' %}
 												{{ game.score_left }} - {{ game.score_right }}
-											{% else %}
+											{% elif game.game_type == 'BRICK' %}
 												{{ game.score }}
+											{% else %}
+												{{ game.score_left }} - {{ game.score_right }}
 											{% endif %}
 										</div>
 										<div>{{ game.date|date:"d/m/Y H:i" }}</div>
@@ -472,37 +476,37 @@
 		</div>
 		<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
-			  <div class="modal-content">
-				<div class="modal-header">
-					{% if request.user.language == 'fr' %}
-					<h5 class="modal-title" id="changePasswordModalLabel">Changer mot de passe</h5>
-					{% elif request.user.language == 'sp' %}
-					<h5 class="modal-title" id="changePasswordModalLabel">Cambiar contraseña</h5>
-					{% else %}
-					<h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
-					{% endif %}
-				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-		<form method="post" action="{% url 'profile' %}">
-				<div class="modal-body">
-					{% csrf_token %}
-					{{ pwd_form.as_p }}
-				</div>
-				<div class="modal-footer">
-					{% if request.user.language == 'fr' %}
-					<button type="submit" name="change_password" class="btn btn-primary">Changer mot de passe</button>
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-					{% elif request.user.language == 'sp' %}
-					<button type="submit" name="change_password" class="btn btn-primary">Cambiar contraseña</button>
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-					{% else %}
-					<button type="submit" name="change_password" class="btn btn-primary">Change Password</button>
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					{% endif %}
+				<div class="modal-content">
+							<div class="modal-header">
+								{% if request.user.language == 'fr' %}
+								<h5 class="modal-title" id="changePasswordModalLabel">Changer mot de passe</h5>
+								{% elif request.user.language == 'sp' %}
+								<h5 class="modal-title" id="changePasswordModalLabel">Cambiar contraseña</h5>
+								{% else %}
+								<h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+								{% endif %}
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+					<form method="post" action="{% url 'profile' %}">
+							<div class="modal-body">
+								{% csrf_token %}
+								{{ pwd_form.as_p }}
+							</div>
+							<div class="modal-footer">
+								{% if request.user.language == 'fr' %}
+								<button type="submit" name="change_password" class="btn btn-primary">Changer mot de passe</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+								{% elif request.user.language == 'sp' %}
+								<button type="submit" name="change_password" class="btn btn-primary">Cambiar contraseña</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+								{% else %}
+								<button type="submit" name="change_password" class="btn btn-primary">Change Password</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								{% endif %}
+							</div>
+					</form>
 				</div>
 			</div>
-		</div>
-		</form>
 		</div>
 		<div class="modal fade" id="changeAvatarModal" tabindex="-1" aria-labelledby="changeAvatarModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -548,9 +552,9 @@
 						<h5 class="modal-title" id="changeNameModalLabel">Set Name</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<div class="modal-body">
-						<!-- Formulaire pour changer le nom -->
 					<form method="post" action="{% url 'profile' %}">
+						<div class="modal-body">
+							<!-- Formulaire pour changer le nom -->
 							{% csrf_token %}
 							<div class="mb-3">
 								<label for="first_name" class="form-label">{% if request.user.language == 'en' %}First Name{% elif request.user.language == 'fr' %}Prénom{% elif request.user.language == 'sp' %}Nombre{% endif %}</label>

@@ -40,6 +40,11 @@ urlpatterns = [
 		path('create_tournament/', views.create_tournament, name='create_tournament'),
 		path('join_tournament/', views.join_tournament, name='join_tournament'),
 		path('leave_tournament/', views.leave_tournament, name='leave_tournament'),
+		path('play_match/<int:match_id>/', views.play_match, name='play_match'),
+		path('verify_password/', views.verify_password, name='verify_password'),
+		path('pong/sendmatchscore/', views.sendmatchscore, name='sendmatchscore'),
+		path('pong/force_create/', views.force_create, name='force_create'),
+		path('pong/generate/', views.generate, name='generate'),
 ]
 
 handler404 = 'website.views.handler404'

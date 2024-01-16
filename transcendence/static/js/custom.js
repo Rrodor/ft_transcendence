@@ -66,6 +66,41 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+	var currentMatchId;
+	var currentOpponentId
+
+	document.querySelectorAll('.play-match-link').forEach(function(link) {
+		link.onclick = function(e) {
+			e.preventDefault();
+			currentMatchId = this.getAttribute('data-match-id');
+			currentOpponentId = this.getAttribute('data-opponent-id');
+			var passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+			passwordModal.show();
+		}
+	});
+	document.getElementById('passwordForm').onsubmit = function(e) {
+		e.preventDefault();
+		var password = document.getElementById('password').value;
+		$.ajax({
+			url: '/verify_password/',
+			type: 'post',
+			data: {
+				'password': password,
+				'match_id': currentMatchId,
+				'opponent_id': currentOpponentId,
+				'csrfmiddlewaretoken': '{{ csrf_token }}'
+			},
+			success: function(response) {
+				if (response.success) {
+					// Le mot de passe est correct, redirigez vers la page du match
+					window.location.href = "/play_match/" + currentMatchId + "/";
+				} else {
+					// Le mot de passe est incorrect, affichez un message d'erreur
+					alert('Incorrect password');
+				}
+			}
+		});
+	}
 });
 
 function changeLanguage(languageCode) {

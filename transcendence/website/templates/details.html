@@ -288,16 +288,20 @@
 													<span class="text-danger fw-bold">DEFEAT</span>
 													{% endif %}
 												{% endif %}
-											{% else %}
+											{% elif game.game_type == 'BRICK' %}
 												<span class="text-score fw-bold">SCORE</span>
+											{% else %}
+												<span class="text-score fw-bold">PONG WARRIOR GOAT</span>
 											{% endif %}
 										</div>
 										<div>{{ game.get_game_type_display }}</div>
 										<div>
 											{% if game.game_type == 'PONG' %}
 												{{ game.score_left }} - {{ game.score_right }}
-											{% else %}
+											{% elif game.game_type == 'BRICK' %}
 												{{ game.score }}
+											{% else %}
+												{{ game.score_left }} - {{ game.score_right }}
 											{% endif %}
 										</div>
 										<div>{{ game.date|date:"d/m/Y H:i" }}</div>

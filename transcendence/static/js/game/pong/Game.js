@@ -28,12 +28,16 @@ if (is_ai === 1)
 	console.log("AI is enabled");
 else
 	console.log("AI is disabled");
+if (match !== 0)
+	console.log("Match id: " + match_id);
+else
+	console.log("Match id: null");
 let rightPlayerIsAI = false;
 
 let scoreLeft = 0;
 let scoreRight = 0;
 let scoreAI = 0;
-let scoreMax = 11;
+let scoreMax = 2;
 
 let gameEnded = false;
 
@@ -178,6 +182,11 @@ function adjustBallVelocity(ball, paddle)
 	savedVelocity = ball.velocity;
 }
 
+function sendMatchInfosToServer()
+{
+	Network.sendMatchScore(scoreLeft, scoreRight, match_id);
+}
+
 function sendInfosToServer()
 {
 	Network.sendScore(scoreLeft, scoreRight, userId);
@@ -187,8 +196,16 @@ function endGame() {
     if (gameEnded) return; // Empêche les appels multiples
     gameEnded = true;
 
+	if (match !== 0) {
+		sendMatchInfosToServer();
+		window.setTimeout(() => {
+			window.location.href = "/pong/end_game/";
+		}, 1);
+		return;
+	}
+
     sendInfosToServer();
     window.setTimeout(() => {
         window.location.href = "/pong/end_game/";
-    }, 1); // Délai avant la redirection pour permettre l'envoi des données
+    }, 1);
 }

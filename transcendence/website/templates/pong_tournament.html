@@ -40,6 +40,7 @@
 			<div class="bracket disable-image">
 			  <div class="column one">
 				{% for match in matches %}
+				{% if match.round == 1 %}
 				<div class="match winner-top">
 					<div class="match-top team">
 						<span class="seed">{{ match.participant1.seed }}</span>
@@ -47,10 +48,12 @@
 							<img src="{{ match.participant1.user.avatar.url }}" alt="{{ match.participant1.user.username }}'s avatar" style="width: 25px; height: 25px;">
 							{{ match.participant1.user.username }}
 						</span>
-						{% if match.participant1_score == None and request.user == match.participant1.user %}
-							<p style="margin-left: 40px; transform: translateY(7px);">Play game</p>
+						{% if match.score_participant1 == None and request.user == match.participant1.user %}
+						<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant2.user.id }}">
+							<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+						</a>
 						{% else %}
-							<span class="score">{{ match.participant1_score }}</span>
+							<span class="score">{{ match.score_participant1 }}</span>
 						{% endif %}
 					</div>
 					<div class="match-bottom team">
@@ -59,10 +62,12 @@
 							<img src="{{ match.participant2.user.avatar.url }}" alt="{{ match.participant2.user.username }}'s avatar" style="width: 25px; height: 25px;">
 							{{ match.participant2.user.username }}
 						</span>
-						{% if match.participant2_score == None and request.user == match.participant2.user %}
+						{% if match.score_participant2 == None and request.user == match.participant2.user %}
+						<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant1.user.id }}">
 							<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+						</a>
 						{% else %}
-							<span class="score">{{ match.participant2_score }}</span>
+							<span class="score">{{ match.score_participant2 }}</span>
 						{% endif %}
 					</div>
 					<div class="match-lines">
@@ -73,70 +78,158 @@
 						<div class="line one"></div>
 					</div>
 				</div>
+				{% endif %}
 				{% endfor %}
 			  </div>
 			  <div class="column two">
-				<div class="match winner-bottom">
-				  <div class="match-top team">
-					<span class="seed">1</span>
-					<span class="name">Orlando Jetsetters</span>
-					<span class="score">1</span>
-				  </div>
-				  <div class="match-bottom team">
-					<span class="seed">5</span>
-					<span class="name">West Virginia Runners</span>
-					<span class="score">2</span>
-				  </div>
-				  <div class="match-lines">
-					<div class="line one"></div>
-					<div class="line two"></div>
-				  </div>
-				  <div class="match-lines alt">
-					<div class="line one"></div>
-				  </div>
-				</div>
-				<div class="match winner-bottom">
-				  <div class="match-top team">
-					<span class="seed">2</span>
-					<span class="name">Denver Demon Horses</span>
-					<span class="score">1</span>
-				  </div>
-				  <div class="match-bottom team">
-					<span class="seed">3</span>
-					<span class="name">San Francisco Porters</span>
-					<span class="score">2</span>
-				  </div>
-				  <div class="match-lines">
-					<div class="line one"></div>
-					<div class="line two"></div>
-				  </div>
-				  <div class="match-lines alt">
-					<div class="line one"></div>
-				  </div>
-				</div>
-			  </div>
-			  <div class="column three">
-				<div class="match winner-top">
-				  <div class="match-top team">
-					<span class="seed">5</span>
-					<span class="name">West Virginia Runners</span>
-					<span class="score">3</span>
-				  </div>
-				  <div class="match-bottom team">
-					<span class="seed">3</span>
-					<span class="name">San Francisco Porters</span>
-					<span class="score">2</span>
-				  </div>
-				  <div class="match-lines">
-					<div class="line one"></div>
-					<div class="line two"></div>
-				  </div>
-				  <div class="match-lines alt">
-					<div class="line one"></div>
-				  </div>
-				</div>        
-			  </div>
+				{% for match in matches %}
+					{% if match.round == 2 %}
+						<div class="match winner-bottom">
+							{% if match.participant1 == None and match.participant2 == None %}
+								<div class="match-top team">
+									<span class="seed">0</span>
+									<span class="name">TBD</span>
+									<span class="score">0</span>
+								</div>
+								<div class="match-bottom team">
+									<span class="seed">0</span>
+									<span class="name">TBD</span>
+									<span class="score">0</span>
+								</div>
+							{% else %}
+							<div class="match-top team">
+								<span class="seed">{{ match.participant1.seed }}</span>
+								<span class="name">
+									<img src="{{ match.participant1.user.avatar.url }}" alt="{{ match.participant1.user.username }}'s avatar" style="width: 25px; height: 25px;">
+									{{ match.participant1.user.username }}
+								</span>
+								{% if match.score_participant1 == None and request.user == match.participant1.user %}
+								<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant2.user.id }}">
+									<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+								</a>
+								{% else %}
+									<span class="score">{{ match.score_participant1 }}</span>
+								{% endif %}
+							</div>
+							<div class="match-bottom team">
+								<span class="seed">{{ match.participant2.seed }}</span>
+								<span class="name">
+									<img src="{{ match.participant2.user.avatar.url }}" alt="{{ match.participant2.user.username }}'s avatar" style="width: 25px; height: 25px;">
+									{{ match.participant2.user.username }}
+								</span>
+								{% if match.score_participant2 == None and request.user == match.participant2.user %}
+								<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant1.user.id }}">
+									<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+								</a>
+								{% else %}
+									<span class="score">{{ match.score_participant2 }}</span>
+								{% endif %}
+							</div>
+							{% endif %}
+							<div class="match-lines">
+								<div class="line one"></div>
+								<div class="line two"></div>
+							</div>
+							<div class="match-lines alt">
+								<div class="line one"></div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<div class="column three">
+				{% for match in matches %}
+					{% if match.round == 3 %}
+						<div class="match winner-top">
+							{% if match.participant1 == None and match.participant2 == None %}
+								<div class="match-top team">
+									<span class="seed">0</span>
+									<span class="name">TBD</span>
+									<span class="score">0</span>
+								</div>
+								<div class="match-bottom team">
+									<span class="seed">0</span>
+									<span class="name">TBD</span>
+									<span class="score">0</span>
+								</div>
+							{% else %}
+								<div class="match-top team">
+									<span class="seed">{{ match.participant1.seed }}</span>
+									<span class="name">
+										<img src="{{ match.participant1.user.avatar.url }}" alt="{{ match.participant1.user.username }}'s avatar" style="width: 25px; height: 25px;">
+										{{ match.participant1.user.username }}
+									</span>
+									{% if match.score_participant1 == None and request.user == match.participant1.user %}
+									<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant2.user.id }}">
+										<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+									</a>
+									{% else %}
+										<span class="score">{{ match.score_participant1 }}</span>
+									{% endif %}
+								</div>
+								<div class="match-bottom team">
+									<span class="seed">{{ match.participant2.seed }}</span>
+									<span class="name">
+										{% if match.round == 3 and match.participant2 is not None %}
+											<img src="{{ match.participant2.user.avatar.url }}" alt="{{ match.participant2.user.username }}'s avatar" style="width: 25px; height: 25px;">
+											{{ match.participant2.user.username }}
+										{% endif %}
+									</span>
+									{% if match.score_participant2 == None and request.user == match.participant2.user %}
+									<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant1.user.id }}">
+										<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+									</a>
+									{% else %}
+										<span class="score">{{ match.score_participant2 }}</span>
+									{% endif %}
+								</div>
+							{% endif %}
+							<div class="match-lines">
+								<div class="line one"></div>
+								<div class="line two"></div>
+							</div>
+							<div class="match-lines alt">
+								<div class="line one"></div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
 			</div>
 		  </div>
+		  <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						{% if request.user.language == 'en' %}
+							<h5 class="modal-title" id="passwordModalLabel">Enter Opponent's Password</h5>
+						{% elif request.user.language == 'fr' %}
+							<h5 class="modal-title" id="passwordModalLabel">Entrez le mot de passe de l'adversaire</h5>
+						{% elif request.user.language == 'sp' %}
+							<h5 class="modal-title" id="passwordModalLabel">Introduzca la contraseña del oponente</h5>
+						{% endif %}
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<form id="passwordForm" method="post">
+						<div class="modal-body">
+							<div class="mb-3">
+								<label for="password" class="form-label">
+									{% if request.user.language == 'en' %}Password{% elif request.user.language == 'fr' %}Mot de passe{% elif request.user.language == 'sp' %}Contraseña{% endif %}
+								</label>
+								<input type="password" class="form-control" id="password" name="password" required>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">
+								{% if request.user.language == 'en' %}Submit{% elif request.user.language == 'fr' %}Soumettre{% elif request.user.language == 'sp' %}Enviar{% endif %}
+							</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+								{% if request.user.language == 'en' %}Close{% elif request.user.language == 'fr' %}Fermer{% elif request.user.language == 'sp' %}Cerrar{% endif %}
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 </body>
 {% endblock %}

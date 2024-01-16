@@ -30,14 +30,14 @@ export function sendScore(scoreLeft, scoreRight, userId)
 	});
 }
 
-export function sendScoreAI(score)
+export function sendMatchScore(scoreLeft, scoreRight, match_id)
 {
-	fetch('/pong/send_score_ai', {
+	fetch('/pong/sendmatchscore/', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ score }),
+		body: JSON.stringify({ scoreLeft: scoreLeft, scoreRight: scoreRight, match_id: match_id }),
 	})
 	.then(response => response.json())
 	.then(data => console.log(data))

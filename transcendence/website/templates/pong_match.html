@@ -20,6 +20,12 @@
 		var userId = "{{ user_id}}";
 		var is_ai = {{ is_ai }};
 		var match = 0;
+		{% if match == 1 %}
+			var match = 1;
+			var match_id = {{ match_id }};
+			var player1_id = {{ player1_id }};
+			var player2_id = {{ player2_id }};
+		{% endif %}
 	</script>
 	<script type="module">
 

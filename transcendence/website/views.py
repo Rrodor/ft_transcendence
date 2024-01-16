@@ -1,17 +1,21 @@
-from .models import User, Friendship, GameRecord, Tournament, Participant
+from .models import User, Friendship, GameRecord, Tournament, Participant, Match
 from .forms import UserForm, ChangePasswordFormEn, ChangePasswordFormFr, ChangePasswordFormSp, ChangeAvatarFormEn, ChangeAvatarFormFr, ChangeAvatarFormSp
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
+from django.test import RequestFactory
 from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import activate
+from django.views.decorators.http import require_POST
+from django.contrib.auth.hashers import check_password
+from django.db import connection
 
 import json
 
@@ -342,6 +346,7 @@ def two_players(request):
     context = {
         'user_id': request.user.id,
         'is_ai': 0,
+        'match': 0,
     }
     request.user.is_in_game = True
     request.user.save()
@@ -355,6 +360,7 @@ def vs_ai(request):
     context = {
         'user_id': request.user.id,
         'is_ai': 1,
+        'match': 0,
     }
     request.user.is_in_game = True
     request.user.save()
@@ -375,6 +381,26 @@ def end_game(request):
     messages.success(request, 'Game ended, see you soon!')
     return redirect('/main?game_changed=true')
 
+@csrf_exempt
+def adjustPlayerPongScores(user_id, score_left, score_right):
+    try:
+        user = User.objects.get(id=user_id)
+        user.total_pong_games += 1
+        if score_left > score_right:
+            user.pong_victories += 1
+        else:
+            user.pong_defeats += 1
+        user.pong_wl_ratio = user.pong_victories / user.pong_defeats if user.pong_defeats > 0 else user.pong_victories
+        user.pong_points_for += score_left
+        user.pong_points_against += score_right
+        user.pong_points_ratio = user.pong_points_for / user.pong_points_against if user.pong_points_against > 0 else user.pong_points_for
+        user.pong_average_for = user.pong_points_for / user.total_pong_games
+        user.pong_average_against = user.pong_points_against / user.total_pong_games
+        user.save()
+        game_record = GameRecord(user=user, game_type=GameRecord.PONG, score_left=score_left, score_right=score_right)
+        game_record.save()
+    except User.DoesNotExist:
+        return JsonResponse({"status": "User not found"}, status=404)
 
 @csrf_exempt
 def	sendscore(request):
@@ -384,22 +410,7 @@ def	sendscore(request):
         score_left = data['scoreLeft']
         score_right = data['scoreRight']
         try:
-            user = User.objects.get(id=user_id)
-            user.total_pong_games += 1
-            if score_left > score_right:
-                user.pong_victories += 1
-            else:
-                user.pong_defeats += 1
-            user.pong_wl_ratio = user.pong_victories / user.pong_defeats if user.pong_defeats > 0 else user.pong_victories
-            user.pong_points_for += score_left
-            user.pong_points_against += score_right
-            user.pong_points_ratio = user.pong_points_for / user.pong_points_against if user.pong_points_against > 0 else user.pong_points_for
-            user.pong_average_for = user.pong_points_for / user.total_pong_games
-            user.pong_average_against = user.pong_points_against / user.total_pong_games
-            user.save()
-            game_record = GameRecord(user=user, game_type=GameRecord.PONG, score_left=score_left, score_right=score_right)
-            game_record.save()
-
+            adjustPlayerPongScores(user_id, score_left, score_right)
             return JsonResponse({"status": "Score updated successfully"})
         except User.DoesNotExist:
             return JsonResponse({"status": "User not found"}, status=404)
@@ -480,7 +491,25 @@ def tournament(request):
         if request.user in tournament.players.all():
             is_in_tournament = True
         matches = tournament.matches.all()
-        tournament.list_matches()
+        tournament.participants.all().order_by('seed')
+        print("nb_players: ", tournament.nb_players)
+        for participant in tournament.participants.all():
+            print(participant.user.username, participant.seed)
+        round_1_matches = tournament.get_matches_by_round(1)
+        for match in round_1_matches:
+            participant1_username = match.participant1.user.username if match.participant1 else 'TBD'
+            participant2_username = match.participant2.user.username if match.participant2 else 'TBD'
+            print(f"R1 : {participant1_username} vs {participant2_username}")
+        round_2_matches = tournament.get_matches_by_round(2)
+        for match in round_2_matches:
+            participant1_username = match.participant1.user.username if match.participant1 else 'TBD'
+            participant2_username = match.participant2.user.username if match.participant2 else 'TBD'
+            print(f"R2 : {participant1_username} vs {participant2_username}")
+        round_3_matches = tournament.get_matches_by_round(3)
+        for match in round_3_matches:
+            participant1_username = match.participant1.user.username if match.participant1 else 'TBD'
+            participant2_username = match.participant2.user.username if match.participant2 else 'TBD'
+            print(f"R3 : {participant1_username} vs {participant2_username}")
 
     context = {
         'user_id': request.user.id,
@@ -516,7 +545,6 @@ def join_tournament(request):
         return redirect('/pong/tournament')
     tournament.add_participant(request.user)
     tournament.save()
-    print(tournament.players.all())
     return redirect('/pong/tournament')
 
 def leave_tournament(request):
@@ -534,4 +562,112 @@ def leave_tournament(request):
     tournament.save()
     if tournament.nb_players == 0:
         tournament.delete()
+    return redirect('/pong/tournament')
+
+def play_match(request, match_id):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Pong')
+        return redirect('/login')
+    match = get_object_or_404(Match, id=match_id)
+    if request.user not in [match.participant1.user, match.participant2.user]:
+        messages.error(request, 'You are not in the match')
+        return redirect('/pong/tournament')
+    player1_id = match.participant1.user.id
+    player2_id = match.participant2.user.id
+    context = {
+        'user_id': request.user.id,
+        'is_ai': 0,
+        'player1_id': player1_id,
+        'player2_id': player2_id,
+        'match_id': match_id,
+        'match': 1,
+    }
+    match.participant1.user.is_in_game = True
+    match.participant1.user.save()
+    match.participant2.user.is_in_game = True
+    match.participant2.user.save()
+    return render(request, 'pong_match.html', context)
+
+
+@csrf_exempt
+@require_POST
+def verify_password(request):
+    password = request.POST.get('password')
+    match_id = request.POST.get('match_id')
+    opponent_id = request.POST.get('opponent_id')
+    User = get_user_model()
+
+    try:
+        opponent = User.objects.get(id=opponent_id)
+    except User.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Opponent not found'})
+
+    try:
+        match = Match.objects.get(id=match_id)
+    except Match.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Match not found'})
+
+    if check_password(password, opponent.password):
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'message': 'Incorrect password'})
+
+@csrf_exempt
+def sendmatchscore(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        match_id = data['match_id']
+        score_left = data['scoreLeft']
+        score_right = data['scoreRight']
+        try:
+            match = Match.objects.get(id=match_id)
+        except Match.DoesNotExist:
+            return JsonResponse({"status": "Match not found"}, status=404)
+        User = get_user_model()
+        player_left = User.objects.get(id=match.participant1.user.id)
+        player_right = User.objects.get(id=match.participant2.user.id)
+        try:
+            adjustPlayerPongScores(player_left.id, score_left, score_right)
+            adjustPlayerPongScores(player_right.id, score_right, score_left)
+            match.score_participant1 = score_left
+            match.score_participant2 = score_right
+            match.save()
+            if match.round == 3:
+                if score_left > score_right:
+                    messages.success(request, f"{player_left.username} won the tournament!")
+                    game_record = GameRecord(user=player_left, game_type=GameRecord.PONGT, score_left=100, score_right=0)
+                else:
+                    messages.success(request, f"{player_right.username} won the tournament!")
+                    game_record = GameRecord(user=player_right, game_type=GameRecord.PONGT, score_left=100, score_right=0)
+                game_record.save()
+                tournament = Tournament.objects.get_user_tournament(request.user)
+                tournament.delete_tournament()
+            return JsonResponse({"status": "Score updated successfully"})
+        except User.DoesNotExist:
+            return JsonResponse({"status": "User not found"}, status=404)
+
+
+def force_create(request):
+    Tournament.objects.all().delete()
+    Match.objects.all().delete()
+    create_tournament(request)
+    factory = RequestFactory()
+    request = factory.get('/')
+    name = {
+        'test01': 'test01',
+        'test03': 'test03',
+        'test02': 'test02',
+        'rrodor': 'rrodor',
+        'aramon': 'aramon',
+        'test00': 'test00',
+    }
+    for username in name:
+        request.user = User.objects.get(username=username)
+        join_tournament(request)
+    return redirect('/pong/tournament')
+
+def generate(request):
+    tournament = Tournament.objects.get_user_tournament(request.user)
+    tournament.create_initial_matches()
+    tournament.generate_matches()
     return redirect('/pong/tournament')
