@@ -1,0 +1,142 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+    FT_TRANSCENDENCE - Pong Tournament
+{% endblock %}
+
+{% block content %}
+<body style="background-color: black;">
+    <link rel="stylesheet" href="{% static 'css/tournament.css' %}?v=2">
+	<div class="container text-center" style="margin-top: 50px; color: #ffffff;">
+		<h1 class="mb-5" style="color: white;">Welcome to the <span class="fancy" style="color: white;">Pong Tournament</span>!</h1> 
+		{% if not active %}
+			<!-- Si aucun tournoi n'est actif, afficher un bouton pour créer un tournoi -->
+			<form action="{% url 'create_tournament' %}" method="post">
+				{% csrf_token %}
+				<button type="submit" class="btn btn-primary">Créer un Tournoi</button>
+			</form>
+		{% else %}
+			<!-- Si un tournoi est actif, afficher un bouton pour rejoindre le tournoi et le nombre de participants -->
+			{% if not is_in_tournament %}
+				<form action="{% url 'join_tournament' %}" method="post">
+					{% csrf_token %}
+					<button type="submit" class="btn btn-primary">Rejoindre le Tournoi</button>
+				</form>
+			{% else %}
+				<form action="{% url 'leave_tournament' %}" method="post">
+					{% csrf_token %}
+					<button type="submit" class="btn btn-danger">Quitter le Tournoi</button>
+				</form>
+			{% endif %}
+			{% if nb_players == 8 %}
+				<p class="text-center">Le tournoi est complet !</p>
+			{% endif %}
+			<p class="text-center">Nombre de participants actuels : {{ tournament.nb_players }}/8</p>
+		{% endif %}
+	</div>
+        <!-- Arbre de tournoi pour 8 personnes -->
+		<div class="theme theme-dark">
+			<div class="bracket disable-image">
+			  <div class="column one">
+				{% for match in matches %}
+				<div class="match winner-top">
+					<div class="match-top team">
+						<span class="seed">{{ match.participant1.seed }}</span>
+						<span class="name">
+							<img src="{{ match.participant1.user.avatar.url }}" alt="{{ match.participant1.user.username }}'s avatar" style="width: 25px; height: 25px;">
+							{{ match.participant1.user.username }}
+						</span>
+						{% if match.participant1_score == None and request.user == match.participant1.user %}
+							<p style="margin-left: 40px; transform: translateY(7px);">Play game</p>
+						{% else %}
+							<span class="score">{{ match.participant1_score }}</span>
+						{% endif %}
+					</div>
+					<div class="match-bottom team">
+						<span class="seed">{{ match.participant2.seed }}</span>
+						<span class="name">
+							<img src="{{ match.participant2.user.avatar.url }}" alt="{{ match.participant2.user.username }}'s avatar" style="width: 25px; height: 25px;">
+							{{ match.participant2.user.username }}
+						</span>
+						{% if match.participant2_score == None and request.user == match.participant2.user %}
+							<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+						{% else %}
+							<span class="score">{{ match.participant2_score }}</span>
+						{% endif %}
+					</div>
+					<div class="match-lines">
+						<div class="line one"></div>
+						<div class="line two"></div>
+					</div>
+					<div class="match-lines alt">
+						<div class="line one"></div>
+					</div>
+				</div>
+				{% endfor %}
+			  </div>
+			  <div class="column two">
+				<div class="match winner-bottom">
+				  <div class="match-top team">
+					<span class="seed">1</span>
+					<span class="name">Orlando Jetsetters</span>
+					<span class="score">1</span>
+				  </div>
+				  <div class="match-bottom team">
+					<span class="seed">5</span>
+					<span class="name">West Virginia Runners</span>
+					<span class="score">2</span>
+				  </div>
+				  <div class="match-lines">
+					<div class="line one"></div>
+					<div class="line two"></div>
+				  </div>
+				  <div class="match-lines alt">
+					<div class="line one"></div>
+				  </div>
+				</div>
+				<div class="match winner-bottom">
+				  <div class="match-top team">
+					<span class="seed">2</span>
+					<span class="name">Denver Demon Horses</span>
+					<span class="score">1</span>
+				  </div>
+				  <div class="match-bottom team">
+					<span class="seed">3</span>
+					<span class="name">San Francisco Porters</span>
+					<span class="score">2</span>
+				  </div>
+				  <div class="match-lines">
+					<div class="line one"></div>
+					<div class="line two"></div>
+				  </div>
+				  <div class="match-lines alt">
+					<div class="line one"></div>
+				  </div>
+				</div>
+			  </div>
+			  <div class="column three">
+				<div class="match winner-top">
+				  <div class="match-top team">
+					<span class="seed">5</span>
+					<span class="name">West Virginia Runners</span>
+					<span class="score">3</span>
+				  </div>
+				  <div class="match-bottom team">
+					<span class="seed">3</span>
+					<span class="name">San Francisco Porters</span>
+					<span class="score">2</span>
+				  </div>
+				  <div class="match-lines">
+					<div class="line one"></div>
+					<div class="line two"></div>
+				  </div>
+				  <div class="match-lines alt">
+					<div class="line one"></div>
+				  </div>
+				</div>        
+			  </div>
+			</div>
+		  </div>
+</body>
+{% endblock %}

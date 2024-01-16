@@ -1,4 +1,4 @@
-from .models import User, Friendship, GameRecord
+from .models import User, Friendship, GameRecord, Tournament, Participant
 from .forms import UserForm, ChangePasswordFormEn, ChangePasswordFormFr, ChangePasswordFormSp, ChangeAvatarFormEn, ChangeAvatarFormFr, ChangeAvatarFormSp
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -461,3 +461,77 @@ def change_language(request):
         request.user.save()
         return redirect(request.META.get('HTTP_REFERER', '/'))
     return render(request, 'error_page.html', {'error_message': 'Invalid request.'})
+
+def tournament(request):
+    is_in_tournament = False
+    nb_players = 0
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Pong')
+        return redirect('/login')
+    tournament = Tournament.objects.get_user_tournament(request.user)
+    if not tournament:
+        tournament = Tournament.objects.get_tournament_with_most_players()
+    if not tournament:
+        active = False
+        matches = []
+    else:
+        active = True
+        nb_players = tournament.nb_players
+        if request.user in tournament.players.all():
+            is_in_tournament = True
+        matches = tournament.matches.all()
+        tournament.list_matches()
+
+    context = {
+        'user_id': request.user.id,
+        'active': active,
+        'tournament': tournament,
+        'is_in_tournament': is_in_tournament,
+        'nb_players': nb_players,
+        'matches': matches,
+    }
+    # Your view logic here
+    return render(request, 'pong_tournament.html', context)
+
+def create_tournament(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Pong')
+        return redirect('/login')
+    tournament = Tournament.objects.get_tournament_with_most_players()
+    if tournament is None:
+        tournament = Tournament.objects.create()
+    tournament.is_active = True
+    tournament.add_participant(request.user)
+    tournament.save()
+    print(tournament.players.all())
+    return redirect('/pong/tournament')
+
+def join_tournament(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Pong')
+        return redirect('/login')
+    tournament = Tournament.objects.get_tournament_with_most_players()
+    if tournament is None or tournament.nb_players == 8:
+        messages.error(request, 'No tournament available')
+        return redirect('/pong/tournament')
+    tournament.add_participant(request.user)
+    tournament.save()
+    print(tournament.players.all())
+    return redirect('/pong/tournament')
+
+def leave_tournament(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must be logged in to play Pong')
+        return redirect('/login')
+    tournament = Tournament.objects.get_user_tournament(request.user)
+    if tournament is None:
+        messages.error(request, 'No tournament available')
+        return redirect('/pong/tournament')
+    if request.user not in tournament.players.all():
+        messages.error(request, 'You are not in the tournament')
+        return redirect('/pong/tournament')
+    tournament.remove_participant(request.user)
+    tournament.save()
+    if tournament.nb_players == 0:
+        tournament.delete()
+    return redirect('/pong/tournament')

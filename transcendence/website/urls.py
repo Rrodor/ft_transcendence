@@ -36,6 +36,10 @@ urlpatterns = [
 		path('change_language/', change_language, name='change_language'),
 		path('brique/sendscore/', views.sendscore_brique, name='sendscore_brique'),
 		path('brique/end_game/', views.end_game, name='end_game'),
+		path('pong/tournament/', views.tournament, name='tournament'),
+		path('create_tournament/', views.create_tournament, name='create_tournament'),
+		path('join_tournament/', views.join_tournament, name='join_tournament'),
+		path('leave_tournament/', views.leave_tournament, name='leave_tournament'),
 ]
 
 handler404 = 'website.views.handler404'

@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
     }
 
-    if (brickScores && document.getElementById('myChart2')) {
+    if (document.getElementById('myChart2')) {
         var ctx2 = document.getElementById('myChart2').getContext('2d');
         
         var myChart2 = new Chart(ctx2, {
