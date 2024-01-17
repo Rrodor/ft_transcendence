@@ -1,0 +1,49 @@
+<div class="match winner-top">
+	<div class="match-top team">
+		{% if match.participant1 %}
+			<span class="seed">{{ match.participant1.seed }}</span>
+			<span class="name">
+				<img src="{{ match.participant1.user.avatar.url }}" alt="{{ match.participant1.user.username }}'s avatar" style="width: 25px; height: 25px;">
+				{{ match.participant1.user.username }}
+			</span>
+			{% if match.score_participant1 == None and request.user == match.participant1.user %}
+				<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant2.user.id }}">
+					<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+				</a>
+			{% else %}
+				<span class="score">{{ match.score_participant1 }}</span>
+			{% endif %}
+		{% else %}
+			<span class="seed">0</span>
+			<span class="name">TBD</span>
+			<span class="score">0</span>
+		{% endif %}
+	</div>
+	<div class="match-bottom team">
+		{% if match.participant2 %}
+			<span class="seed">{{ match.participant2.seed }}</span>
+			<span class="name">
+				<img src="{{ match.participant2.user.avatar.url }}" alt="{{ match.participant2.user.username }}'s avatar" style="width: 25px; height: 25px;">
+				{{ match.participant2.user.username }}
+			</span>
+			{% if match.score_participant2 == None and request.user == match.participant2.user %}
+				<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant1.user.id }}">
+					<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+				</a>
+			{% else %}
+				<span class="score">{{ match.score_participant2 }}</span>
+			{% endif %}
+		{% else %}
+			<span class="seed">0</span>
+			<span class="name">TBD</span>
+			<span class="score">0</span>
+		{% endif %}
+	</div>
+	<div class="match-lines">
+		<div class="line one"></div>
+		<div class="line two"></div>
+	</div>
+	<div class="match-lines alt">
+		<div class="line one"></div>
+	</div>
+</div>

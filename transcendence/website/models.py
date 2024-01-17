@@ -116,10 +116,24 @@ class TournamentManager(Manager):
     
     def get_user_tournament(self, user):
         return self.filter(players=user).first()
+    
+    def get_user_match(self, user):
+        tournaments = self.filter(is_active=True, players=user)
+        for tournament in tournaments:
+            # Récupérer les matchs de l'utilisateur dans le tournoi
+            matches = tournament.matches.filter(
+                models.Q(participant1__user=user) | models.Q(participant2__user=user),
+                score_participant1__isnull=True,
+                score_participant2__isnull=True
+            )
+            if matches.exists():
+                return matches.first()
+        return None
 
 class Tournament(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=False)
+    is_started = models.BooleanField(default=False)
     nb_players = models.IntegerField(default=0)
     players = models.ManyToManyField(User, through='Participant', related_name='tournaments')
     quarters = models.JSONField(default=list)
@@ -134,7 +148,7 @@ class Tournament(models.Model):
         if not self.pk:
             raise ValueError("Tournament must be saved before creating matches")
 
-        quarter_final_matches = [Match(tournament=self, round=1) for _ in range(4)]
+        quarter_final_matches = [Match(tournament=self, round=1, pos='top' if i < 2 else 'bottom') for i in range(4)]
         semi_final_matches = [Match(tournament=self, round=2) for _ in range(2)]
         final_match = [Match(tournament=self, round=3)]
 
@@ -148,6 +162,8 @@ class Tournament(models.Model):
         Participant.objects.create(user=user, tournament=self, seed=seed)
         self.nb_players += 1
         self.save()
+        if self.nb_players == 8:
+            self.generate_matches()
     
     def remove_participant(self, user):
         participant = Participant.objects.get(user=user, tournament=self)
@@ -159,10 +175,7 @@ class Tournament(models.Model):
         if self.nb_players != 8:
             raise ValidationError('Tournament must have 8 players')
 
-        # Supprimer tous les matchs existants pour ce tournoi
         self.matches.all().delete()
-
-        # Créer de nouveaux matchs
         self.create_initial_matches()
 
         # Récupérer les matchs vides et ajouter les participants
@@ -173,6 +186,7 @@ class Tournament(models.Model):
         for match, participant_pair in zip(quarters_matches, zip(participants[::2], participants[1::2])):
             match.participant1, match.participant2 = participant_pair
             match.save()
+        self.is_started = True
 
     def get_matches_by_round(self, round_number):
         return self.matches.filter(round=round_number)
@@ -195,6 +209,11 @@ class Match(models.Model):
     score_participant2 = models.IntegerField(null=True, blank=True)
     winner = models.ForeignKey(Participant, on_delete=models.SET_NULL, null=True, blank=True, related_name='won_matches')
     round = models.IntegerField(default=1)
+    POS_CHOICES = [
+        ('top', 'Top'),
+        ('bottom', 'Bottom'),
+    ]
+    pos = models.CharField(max_length=6, choices=POS_CHOICES, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         updating_winner = self.pk is not None and (self.score_participant1 is not None and self.score_participant2 is not None)
@@ -202,16 +221,37 @@ class Match(models.Model):
 
         if updating_winner:
             self.winner = self.participant1 if self.score_participant1 > self.score_participant2 else self.participant2
-        super().save(*args, **kwargs)
+            print("winner :")
+            print(self.winner.user.username)
+            super().save(*args, **kwargs)
 
-        next_round = self.round + 1
-        next_matches = Match.objects.filter(tournament=self.tournament, round=next_round)
-        for next_match in next_matches:
-            if not next_match.participant1:
-                next_match.participant1 = self.winner
-                next_match.save()
-                break
-            elif not next_match.participant2:
-                next_match.participant2 = self.winner
-                next_match.save()
-                break
+            if self.round == 1:  # Match de quart de finale
+                next_round = self.round + 1
+                next_matches = Match.objects.filter(tournament=self.tournament, round=next_round)
+                
+                for next_match in next_matches:
+                    if next_match.pos is None:
+                        next_match.pos = self.pos
+                        next_match.save()
+                    if not next_match.participant1:
+                        next_match.participant1 = self.winner
+                        next_match.save()
+                        break
+                    elif not next_match.participant2:
+                        next_match.participant2 = self.winner
+                        next_match.save()
+                        break
+
+            else:
+                next_round = self.round + 1
+                next_matches = Match.objects.filter(tournament=self.tournament, round=next_round)
+                for next_match in next_matches:
+                    if not next_match.participant1:
+                        next_match.participant1 = self.winner
+                        next_match.save()
+                        break
+                    elif not next_match.participant2:
+                        next_match.participant2 = self.winner
+                        next_match.save()
+                        break
+                

@@ -44,7 +44,6 @@ urlpatterns = [
 		path('verify_password/', views.verify_password, name='verify_password'),
 		path('pong/sendmatchscore/', views.sendmatchscore, name='sendmatchscore'),
 		path('pong/force_create/', views.force_create, name='force_create'),
-		path('pong/generate/', views.generate, name='generate'),
 ]
 
 handler404 = 'website.views.handler404'

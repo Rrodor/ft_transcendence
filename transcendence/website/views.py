@@ -476,9 +476,19 @@ def change_language(request):
 def tournament(request):
     is_in_tournament = False
     nb_players = 0
+    top_matches = []
+    bottom_matches = []
+    round1_top = []
+    round1_bottom = []
+    round2 = []
+    round_2_top = []
+    round_2_bottom = []
+    round3 = []
+    is_full = False
     if not request.user.is_authenticated:
         messages.error(request, 'You must be logged in to play Pong')
         return redirect('/login')
+    request.user.is_in_game = False
     tournament = Tournament.objects.get_user_tournament(request.user)
     if not tournament:
         tournament = Tournament.objects.get_tournament_with_most_players()
@@ -491,25 +501,14 @@ def tournament(request):
         if request.user in tournament.players.all():
             is_in_tournament = True
         matches = tournament.matches.all()
-        tournament.participants.all().order_by('seed')
-        print("nb_players: ", tournament.nb_players)
-        for participant in tournament.participants.all():
-            print(participant.user.username, participant.seed)
-        round_1_matches = tournament.get_matches_by_round(1)
-        for match in round_1_matches:
-            participant1_username = match.participant1.user.username if match.participant1 else 'TBD'
-            participant2_username = match.participant2.user.username if match.participant2 else 'TBD'
-            print(f"R1 : {participant1_username} vs {participant2_username}")
-        round_2_matches = tournament.get_matches_by_round(2)
-        for match in round_2_matches:
-            participant1_username = match.participant1.user.username if match.participant1 else 'TBD'
-            participant2_username = match.participant2.user.username if match.participant2 else 'TBD'
-            print(f"R2 : {participant1_username} vs {participant2_username}")
-        round_3_matches = tournament.get_matches_by_round(3)
-        for match in round_3_matches:
-            participant1_username = match.participant1.user.username if match.participant1 else 'TBD'
-            participant2_username = match.participant2.user.username if match.participant2 else 'TBD'
-            print(f"R3 : {participant1_username} vs {participant2_username}")
+        top_matches = matches.filter(pos="top")
+        bottom_matches = matches.filter(pos="bottom")
+        round1_top = top_matches.filter(round=1)
+        round1_bottom = bottom_matches.filter(round=1)
+        round2 = matches.filter(round=2)
+        round_2_top = top_matches.filter(round=2)
+        round_2_bottom = bottom_matches.filter(round=2)
+        round3 = matches.filter(round=3)
 
     context = {
         'user_id': request.user.id,
@@ -518,6 +517,14 @@ def tournament(request):
         'is_in_tournament': is_in_tournament,
         'nb_players': nb_players,
         'matches': matches,
+        'top_matches': top_matches,
+        'bottom_matches': bottom_matches,
+        'round1_top': round1_top,
+        'round1_bottom': round1_bottom,
+        'round2': round2,
+        'round2_top': round_2_top,
+        'round2_bottom': round_2_bottom,
+        'round3': round3,
     }
     # Your view logic here
     return render(request, 'pong_tournament.html', context)
@@ -558,10 +565,14 @@ def leave_tournament(request):
     if request.user not in tournament.players.all():
         messages.error(request, 'You are not in the tournament')
         return redirect('/pong/tournament')
+    if tournament.is_started:
+        messages.error(request, 'You cannot leave a tournament that has already started')
+        return redirect('/pong/tournament')
     tournament.remove_participant(request.user)
     tournament.save()
     if tournament.nb_players == 0:
         tournament.delete()
+        
     return redirect('/pong/tournament')
 
 def play_match(request, match_id):
@@ -664,10 +675,4 @@ def force_create(request):
     for username in name:
         request.user = User.objects.get(username=username)
         join_tournament(request)
-    return redirect('/pong/tournament')
-
-def generate(request):
-    tournament = Tournament.objects.get_user_tournament(request.user)
-    tournament.create_initial_matches()
-    tournament.generate_matches()
     return redirect('/pong/tournament')
