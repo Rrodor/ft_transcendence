@@ -179,11 +179,20 @@ def profile(request):
             if pwd_form.is_valid():
                 pwd_form.save()
                 update_session_auth_hash(request, request.user)
-                messages.success(request, 'Password changed successfully')
+                if request.user.language == 'fr':
+                    messages.success(request, 'Mot de passe change avec succes')
+                elif request.user.language == 'sp':
+                    messages.success(request, 'Contraseña cambiada exitosamente')
+                else:
+                    messages.success(request, 'Password changed successfully')
                 return redirect('/main?password_changed=true')
             else:
-                messages.error(request, 'Error in password change form submission')
-
+                if request.user.language == 'fr':
+                    messages.error(request, 'Erreur lors de la validation du formulaire de changement de mot de passe')
+                elif request.user.language == 'sp':
+                    messages.error(request, 'Error al validar el formulario de cambio de contraseña')
+                else:
+                    messages.error(request, 'Error in password change form submission')
         elif 'change_avatar' in request.POST:
             # Handle avatar change form submission
             if avatar_form.is_valid():
@@ -192,7 +201,12 @@ def profile(request):
                     default_storage.delete(old_avatar.name)
                 avatar_form.save()
                 update_session_auth_hash(request, request.user)
-                messages.success(request, 'Avatar changed successfully')
+                if request.user.language == 'fr':
+                    messages.success(request, 'Avatar change avec succes')
+                elif request.user.language == 'sp':
+                    messages.success(request, 'Avatar cambiado exitosamente')
+                else:
+                    messages.success(request, 'Avatar changed successfully')
                 return redirect('/profile?avatar_changed=true')
             else:
                 print(f"Form errors: {avatar_form.errors}")
@@ -202,10 +216,20 @@ def profile(request):
             request.user.last_name = request.POST['last_name']
             request.user.save()
             update_session_auth_hash(request, request.user)
-            messages.success(request, 'Name changed successfully')
+            if request.user.language == 'fr':
+                messages.success(request, 'Nom change avec succes')
+            elif request.user.language == 'sp':
+                messages.success(request, 'Nombre cambiado exitosamente')
+            else:
+                messages.success(request, 'Name changed successfully')
             return redirect('/profile?name_changed=true')
         else:
-            messages.error(request, 'Invalid form submission')
+            if request.user.language == 'fr':
+                messages.success(request, 'Erreur lors de la soumission du formulaire')
+            elif request.user.language == 'sp':
+                messages.success(request, 'Error al enviar el formulario')
+            else:
+                messages.success(request, 'Error during form submition')
             if avatar_form.is_valid():
                 old_avatar = request.user.avatar
                 if old_avatar and not old_avatar.name.endswith('default.png'):
@@ -213,10 +237,20 @@ def profile(request):
                 request.user.avatar = request.FILES['avatar']
                 request.user.save()
                 update_session_auth_hash(request, request.user)
-                messages.success(request, 'Avatar changed successfully')
+                if request.user.language == 'fr':
+                    messages.success(request, 'Avatar change avec succes')
+                elif request.user.language == 'sp':
+                    messages.success(request, 'Avatar cambiado exitosamente')
+                else:
+                    messages.success(request, 'Avatar changed successfully')
                 return redirect('/profile?avatar_changed=true')
             else:
-                messages.error(request, 'Error in avatar change form submission')
+                if request.user.language == 'fr':
+                    messages.success(request, 'Erreur lors de la soumission du formulaire de changement d\'avatar')
+                elif request.user.language == 'sp':
+                    messages.success(request, 'Error al validar el formulario de cambio de avatar')
+                else:
+                    messages.success(request, 'Error in avatar change form submission')
     else:
         if request.user.language == 'en':
             pwd_form = ChangePasswordFormEn(request.user)
@@ -249,9 +283,19 @@ def add_friend(request, id):
             friendship = Friendship(user1=request.user, user2=friend, is_confirmed=False, is_pending=False)
             friendship.is_pending = True
             friendship.save()
-            messages.success(request, f"Friend request sent to {friend.username}.")
+            if request.user.language == 'fr':
+                messages.success(request, f"Demande d\'ami envoyee a {friend.username}.")
+            elif request.user.language == 'sp':
+                messages.success(request, f"Solicitud de amistad enviada a {friend.username}.")
+            else:
+                messages.success(request, f"Friend request sent to {friend.username}.")
         else:
-            messages.info(request, "Friend request already sent or you are already friends.")
+            if request.user.language == 'fr':
+                messages.info(request, "Demande d\'ami deja envoyee ou deja ami avec cette personne.")
+            elif request.user.language == 'sp':
+                messages.info(request, "Solicitud de amistad ya enviada o ya son amigos")
+            else:
+                messages.info(request, "Friend request already sent or you are already friends.")
         return redirect('/main?friends_changed=true', id=id)
 
 @login_required
@@ -261,7 +305,12 @@ def accept_friend_request(request, id):
         friendship.is_confirmed = True
         friendship.is_pending = False
         friendship.save()
-        messages.success(request, f"You are now friends with {friendship.user1.username}.")
+        if request.user.language == 'fr':
+            messages.success(request, f"Vous etes deja ami avec {friendship.user1.username}.")
+        elif request.user.language == 'sp':
+            messages.success(request, f"Ya eres amigo de {friendship.user1.username}.")
+        else:
+            messages.success(request, f"You are now friends with {friendship.user1.username}.")
         return redirect('/profile?friends_changed=true', id=id)
 
 @login_required
@@ -269,7 +318,12 @@ def decline_friend_request(request, id):
     if request.method == 'POST':
         friendship = get_object_or_404(Friendship, user1_id=id, user2=request.user, is_confirmed=False)
         friendship.delete()
-        messages.success(request, f"You declined {friendship.user1.username}'s friend request.")
+        if request.user.language == 'fr':
+            messages.success(request, f"Vous avez decline la demande d'ami de {friendship.user1.username}.")
+        elif request.user.language == 'sp':
+            messages.success(request, f"Has rechazado la solicitud de amistad de {friendship.user1.username}.")
+        else:
+            messages.success(request, f"You declined {friendship.user1.username}'s friend request.")
         return redirect('/profile?friends_changed=true', id=id)
 
 @login_required
@@ -280,9 +334,19 @@ def remove_friend(request, id):
         if Friendship.objects.filter(user1=request.user, user2=friend).exists() or Friendship.objects.filter(user1=friend, user2=request.user).exists():
             Friendship.objects.filter(user1=request.user, user2=friend).delete()
             Friendship.objects.filter(user1=friend, user2=request.user).delete()
-            messages.success(request, f"You and {friend.username} are no longer friends.")
+            if request.user.language == 'fr':
+                messages.success(request, f"Vous n'etes plus ami avec {friend.username}.")
+            elif request.user.language == 'sp':
+                messages.success(request, f"Ya no eres amigo de {friend.username}.")
+            else:
+                messages.success(request, f"You and {friend.username} are no longer friends.")
         else:
-            messages.info(request, "You are not friends.")
+            if request.user.language == 'fr':
+                messages.success(request, f"Vous n'etes pas amis.")
+            elif request.user.language == 'sp':
+                messages.success(request, f"No son amigos")
+            else:
+                messages.success(request, f"You are not friends.")
         return redirect('/profile?friends_changed=true', id=id)
 
 def handler404(request, exception):
@@ -378,7 +442,12 @@ def end_game(request):
     }
     request.user.is_in_game = False
     request.user.save()
-    messages.success(request, 'Game ended, see you soon!')
+    if request.user.language == 'fr':
+        messages.success(request, 'Partie terminee, a bientot !')
+    elif request.user.language == 'sp':
+        messages.success(request, 'Partida terminada, ¡hasta pronto!')
+    else:
+        messages.success(request, 'Game ended, see you soon!')
     return redirect('/main?game_changed=true')
 
 @csrf_exempt
@@ -548,7 +617,12 @@ def join_tournament(request):
         return redirect('/login')
     tournament = Tournament.objects.get_tournament_with_most_players()
     if tournament is None or tournament.nb_players == 8:
-        messages.error(request, 'No tournament available')
+        if request.user.language == 'fr ':
+            messages.error(request, 'Pas de tournoi disponible')
+        elif request.user.language == 'sp':
+            messages.error(request, 'No hay torneos disponibles')
+        else:
+            messages.error(request, 'No tournament available')
         return redirect('/pong/tournament')
     tournament.add_participant(request.user)
     tournament.save()
@@ -560,7 +634,12 @@ def leave_tournament(request):
         return redirect('/login')
     tournament = Tournament.objects.get_user_tournament(request.user)
     if tournament is None:
-        messages.error(request, 'No tournament available')
+        if request.user.language == 'fr ':
+            messages.error(request, 'Pas de tournoi disponible')
+        elif request.user.language == 'sp':
+            messages.error(request, 'No hay torneos disponibles')
+        else:
+            messages.error(request, 'No tournament available')
         return redirect('/pong/tournament')
     if request.user not in tournament.players.all():
         messages.error(request, 'You are not in the tournament')
@@ -581,7 +660,12 @@ def play_match(request, match_id):
         return redirect('/login')
     match = get_object_or_404(Match, id=match_id)
     if request.user not in [match.participant1.user, match.participant2.user]:
-        messages.error(request, 'You are not in the match')
+        if request.user.language == 'fr ':
+            messages.error(request, 'Vous n\'etes pas dans le tournoi')
+        elif request.user.language == 'sp':
+            messages.error(request, 'No estás en el torneo')
+        else:
+            messages.error(request, 'You are not in the tournament')
         return redirect('/pong/tournament')
     player1_id = match.participant1.user.id
     player2_id = match.participant2.user.id
@@ -611,17 +695,32 @@ def verify_password(request):
     try:
         opponent = User.objects.get(id=opponent_id)
     except User.DoesNotExist:
-        return JsonResponse({'success': False, 'message': 'Opponent not found'})
+        if request.user.language == 'fr':
+            return JsonResponse({'success': False, 'message': 'Adversaire non trouve'})
+        elif request.user.language == 'sp':
+            return JsonResponse({'success': False, 'message': 'Oponente no encontrado'})
+        else:
+            return JsonResponse({'success': False, 'message': 'Opponent not found'})
 
     try:
         match = Match.objects.get(id=match_id)
     except Match.DoesNotExist:
-        return JsonResponse({'success': False, 'message': 'Match not found'})
+        if request.user.language == 'fr':
+            return JsonResponse({'success': False, 'message': 'Partie non trouvee'})
+        elif request.user.language == 'sp':
+            return JsonResponse({'success': False, 'message': 'Partida no encontrada'})
+        else:
+            return JsonResponse({'success': False, 'message': 'Match not found'})
 
     if check_password(password, opponent.password):
         return JsonResponse({'success': True})
     else:
-        return JsonResponse({'success': False, 'message': 'Incorrect password'})
+        if request.user.language == 'fr':
+            return JsonResponse({'success': False, 'message': 'Mauvais mot de passe'})
+        elif request.user.language == 'sp':
+            return JsonResponse({'success': False, 'message': 'Contraseña incorrecta'})
+        else:
+            return JsonResponse({'success': False, 'message': 'Incorrect password'})
 
 @csrf_exempt
 def sendmatchscore(request):
@@ -645,10 +744,20 @@ def sendmatchscore(request):
             match.save()
             if match.round == 3:
                 if score_left > score_right:
-                    messages.success(request, f"{player_left.username} won the tournament!")
+                    if request.user.language == 'fr':
+                        messages.success(request, f"{player_left.username} gagne le tournoi!")
+                    elif request.user.language == 'sp':
+                        messages.success(request, f"¡{player_left.username} ganó el torneo!")
+                    else:
+                        messages.success(request, f"{player_left.username} won the tournament!")
                     game_record = GameRecord(user=player_left, game_type=GameRecord.PONGT, score_left=100, score_right=0)
                 else:
-                    messages.success(request, f"{player_right.username} won the tournament!")
+                    if request.user.language == 'fr':
+                        messages.success(request, f"{player_left.username} gagne le tournoi!")
+                    elif request.user.language == 'sp':
+                        messages.success(request, f"¡{player_left.username} ganó el torneo!")
+                    else:
+                        messages.success(request, f"{player_left.username} won the tournament!")
                     game_record = GameRecord(user=player_right, game_type=GameRecord.PONGT, score_left=100, score_right=0)
                 game_record.save()
                 tournament = Tournament.objects.get_user_tournament(request.user)

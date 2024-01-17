@@ -9,30 +9,66 @@
 <body style="background-color: black;">
     <link rel="stylesheet" href="{% static 'css/tournament.css' %}?v=2">
 	<div class="container text-center" style="margin-top: 50px; color: #ffffff;">
-		<h1 class="mb-5" style="color: white;">Welcome to the <span class="fancy" style="color: white;">Pong Tournament</span>!</h1> 
+		{% if user.is_authenticated and request.user.language == 'fr' %}
+		<h1 class="mb-5" style="color: white;">Bienvenue dans le <span class="fancy" style="color: white;">Tournoi Pong</span>!</h1>
+		{% elif user.is_authenticated and request.user.language == 'sp' %}
+		<h1 class="mb-5" style="color: white;">Bienvenido al <span class="fancy" style="color: white;">Pong Tournament</span>!</h1>
+		{% else %}
+		<h1 class="mb-5" style="color: white;">Welcome to the <span class="fancy" style="color: white;">Pong Torneo</span>!</h1>
+		{% endif %}
 		{% if not active %}
 			<!-- Si aucun tournoi n'est actif, afficher un bouton pour créer un tournoi -->
 			<form action="{% url 'create_tournament' %}" method="post">
 				{% csrf_token %}
+				{% if user.is_authenticated and request.user.language == 'fr' %}
 				<button type="submit" class="btn btn-primary">Créer un Tournoi</button>
+				{% elif user.is_authenticated and request.user.language == 'sp' %}
+				<button type="submit" class="btn btn-primary">Crear un Torneo</button>
+				{% else %}
+				<button type="submit" class="btn btn-primary">Create a Tournament</button>
+				{% endif %}
 			</form>
 		{% else %}
 			<!-- Si un tournoi est actif, afficher un bouton pour rejoindre le tournoi et le nombre de participants -->
 			{% if not is_in_tournament %}
 				<form action="{% url 'join_tournament' %}" method="post">
 					{% csrf_token %}
+					{% if user.is_authenticated and request.user.language == 'fr' %}
 					<button type="submit" class="btn btn-primary">Rejoindre le Tournoi</button>
+					{% elif user.is_authenticated and request.user.language == 'sp' %}
+					<button type="submit" class="btn btn-primary">Unirse al Torneo</button>
+					{% else %}
+					<button type="submit" class="btn btn-primary">Join the Tournament</button>
+					{% endif %}
 				</form>
 			{% else %}
 				<form action="{% url 'leave_tournament' %}" method="post">
 					{% csrf_token %}
+					{% if user.is_authenticated and request.user.language == 'fr' %}
 					<button type="submit" class="btn btn-danger">Quitter le Tournoi</button>
+					{% elif user.is_authenticated and request.user.language == 'sp' %}
+					<button type="submit" class="btn btn-danger">Abandonar el Torneo</button>
+					{% else %}
+					<button type="submit" class="btn btn-danger">Leave the Tournament</button>
+					{% endif %}
 				</form>
 			{% endif %}
 			{% if nb_players == 8 %}
+				{% if user.is_authenticated and request.user.language == 'fr' %}
 				<p class="text-center">Le tournoi est complet !</p>
+				{% elif user.is_authenticated and request.user.language == 'sp' %}
+				<p class="text-center">¡El torneo está completo!</p>
+				{% else %}
+				<p class="text-center">The tournament is full !</p>
+				{% endif %}
 			{% endif %}
-			<p class="text-center">Nombre de participants actuels : {{ tournament.nb_players }}/8</p>
+				{% if request.user.language == 'fr' %}
+				<p class="text-center">Nombre de participants actuels : {{ tournament.nb_players }}/8</p>
+				{% elif request.user.language == 'sp' %}
+				<p class="text-center">Número actual de participantes : {{ tournament.nb_players }}/8</p>
+				{% else %}
+				<p class="text-center">Current number of participants : {{ tournament.nb_players }}/8</p>
+				{% endif %}
 		{% endif %}
 	</div>
         <!-- Arbre de tournoi pour 8 personnes -->
@@ -70,24 +106,41 @@
 							{% if match.participant1 == None and match.participant2 == None %}
 								<div class="match-top team">
 									<span class="seed">0</span>
+									{% if user.is_authenticated and request.user.language == 'fr' %}
+									<span class="name">AD</span>
+									{% elif user.is_authenticated and request.user.language == 'sp' %}
+									<span class="name">AD</span>
+									{% else %}
 									<span class="name">TBD</span>
+									{% endif %}
 									<span class="score">0</span>
 								</div>
 								<div class="match-bottom team">
 									<span class="seed">0</span>
+									{% if user.is_authenticated and request.user.language == 'fr' %}
+									<span class="name">AD</span>
+									{% elif user.is_authenticated and request.user.language == 'sp' %}
+									<span class="name">AD</span>
+									{% else %}
 									<span class="name">TBD</span>
+									{% endif %}
 									<span class="score">0</span>
 								</div>
 							{% else %}
 								<div class="match-top team">
 									<span class="seed">{{ match.participant1.seed }}</span>
 									<span class="name">
-										<img src="{{ match.participant1.user.avatar.url }}" alt="{{ match.participant1.user.username }}'s avatar" style="width: 25px; height: 25px;">
 										{{ match.participant1.user.username }}
 									</span>
 									{% if match.score_participant1 == None and request.user == match.participant1.user %}
 									<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant2.user.id }}">
-										<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+										{% if user.is_authenticated and request.user.language == 'fr' %}
+										<p style="margin-left: 40px; transform: translateY(7px);"><u>Jouer la partie</u></p>
+										{% elif user.is_authenticated and request.user.language == 'sp' %}
+										<p style="margin-left: 40px; transform: translateY(7px);"><u>Jugar la partida</u></p>
+										{% else %}
+										<p style="margin-left: 40px; transform: translateY(7px);"><u>Play the game</u></p>
+										{% endif %}
 									</a>
 									{% else %}
 										<span class="score">{{ match.score_participant1 }}</span>
@@ -97,13 +150,18 @@
 									<span class="seed">{{ match.participant2.seed }}</span>
 									<span class="name">
 										{% if match.round == 3 and match.participant2 is not None %}
-											<img src="{{ match.participant2.user.avatar.url }}" alt="{{ match.participant2.user.username }}'s avatar" style="width: 25px; height: 25px;">
 											{{ match.participant2.user.username }}
 										{% endif %}
 									</span>
 									{% if match.score_participant2 == None and request.user == match.participant2.user %}
 									<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant1.user.id }}">
-										<p style="margin-left: 40px; transform: translateY(7px);"><u>Play game</u></p>
+										{% if user.is_authenticated and request.user.language == 'fr' %}
+										<p style="margin-left: 40px; transform: translateY(7px);"><u>Jouer la partie</u></p>
+										{% elif user.is_authenticated and request.user.language == 'sp' %}
+										<p style="margin-left: 40px; transform: translateY(7px);"><u>Jugar la partida</u></p>
+										{% else %}
+										<p style="margin-left: 40px; transform: translateY(7px);"><u>Play the game</u></p>
+										{% endif %}
 									</a>
 									{% else %}
 										<span class="score">{{ match.score_participant2 }}</span>

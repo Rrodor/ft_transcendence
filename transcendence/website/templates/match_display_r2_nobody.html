@@ -1,12 +1,24 @@
 <div class="match winner-top">
 	<div class="match-top team">
 		<span class="seed">0</span>
+		{% if user.is_authenticated and request.user.language == 'fr' %}
+		<span class="name">AD</span>
+		{% elif user.is_authenticated and request.user.language == 'sp' %}
+		<span class="name">AD</span>
+		{% else %}
 		<span class="name">TBD</span>
+		{% endif %}
 		<span class="score">0</span>
 	</div>
 	<div class="match-bottom team">
 		<span class="seed">0</span>
+		{% if user.is_authenticated and request.user.language == 'fr' %}
+		<span class="name">AD</span>
+		{% elif user.is_authenticated and request.user.language == 'sp' %}
+		<span class="name">AD</span>
+		{% else %}
 		<span class="name">TBD</span>
+		{% endif %}
 		<span class="score">0</span>
 	</div>
 	<div class="match-lines">
