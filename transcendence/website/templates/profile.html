@@ -55,14 +55,14 @@
 										<form action="{% url 'accept_friend_request' friendship.user1.id %}" method="POST" class="me-1">
 											{% csrf_token %}
 											<button type="submit" class="btn btn-outline-success d-flex align-items-center align-button">
-												<img src="{{ IMGS_URL }}/imgs/check.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+												<img src="{{ IMGS_URL }}/imgs/check.svg" class="bi bi-x-lg friend-request-icon" alt="Icone X" />
 											</button>
 										</form>
 										<!-- Formulaire pour refuser la demande d'amitié -->
 										<form action="{% url 'decline_friend_request' friendship.user1.id %}" method="POST">
 											{% csrf_token %}
 											<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
-												<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+												<img src="{{ IMGS_URL }}/imgs/x-lg.svg" class="bi bi-x-lg friend-request-icon" alt="Icone X" />
 											</button>
 										</form>
 									</div>
@@ -88,14 +88,14 @@
 									<form action="{% url 'accept_friend_request' friendship.user1.id %}" method="POST" class="me-1">
 										{% csrf_token %}
 										<button type="submit" class="btn btn-outline-success d-flex align-items-center align-button">
-											<img src="{{ IMGS_URL }}/imgs/check.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+											<img src="{{ IMGS_URL }}/imgs/check.svg" class="bi bi-x-lg friend-request-icon" alt="Icone X" />
 										</button>
 									</form>
 									<!-- Formulaire pour refuser la demande d'amitié -->
 									<form action="{% url 'decline_friend_request' friendship.user1.id %}" method="POST">
 										{% csrf_token %}
 										<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
-											<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+											<img src="{{ IMGS_URL }}/imgs/x-lg.svg" class="bi bi-x-lg friend-request-icon" alt="Icone X" />
 										</button>
 									</form>
 								</div>
@@ -121,14 +121,14 @@
 									<form action="{% url 'accept_friend_request' friendship.user1.id %}" method="POST" class="me-1">
 										{% csrf_token %}
 										<button type="submit" class="btn btn-outline-success d-flex align-items-center align-button">
-											<img src="{{ IMGS_URL }}/imgs/check.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+											<img src="{{ IMGS_URL }}/imgs/check.svg" class="bi bi-x-lg friend-request-icon" alt="Icone X" />
 										</button>
 									</form>
 									<!-- Formulaire pour refuser la demande d'amitié -->
 									<form action="{% url 'decline_friend_request' friendship.user1.id %}" method="POST">
 										{% csrf_token %}
 										<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
-											<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+											<img src="{{ IMGS_URL }}/imgs/x-lg.svg" class="bi bi-x-lg friend-request-icon" alt="Icone X" />
 										</button>
 									</form>
 								</div>
@@ -152,19 +152,15 @@
 												{{ info.friend.username }}
 											</a>
 										</div>
-										<div>
-											{% if info.is_in_game %}	<li class="list-group-item d-flex justify-content-center align-items-center p-3">
-												<p class="mb-0 fw-bold">No hay amigos confirmados.</p>
-											</li>
-												<span class="status-dot bg-warning"></span>
-											{% else %}
-												<span class="status-dot {% if info.friend.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
-											{% endif %}
-										</div>
+										{% if info.is_in_game %}
+											<span class="status-dot bg-warning"></span>
+										{% else %}
+											<span class="status-dot {% if info.friend.is_online %}bg-success{% else %}bg-secondary{% endif %}"></span>
+										{% endif %}
 										<form action="{% url 'remove_friend' info.friend.id %}" method="POST" class="ms-2">
 											{% csrf_token %}
 											<button type="submit" class="btn btn-outline-danger d-flex align-items-center align-button">
-												<img src="{{ IMGS_URL }}/imgs/x-lg.svg" fill="currentColor" class="bi bi-x-lg friend-request-icon" viewBox="0 0 16 16" alt="Icone X"></img>
+												<img src="{{ IMGS_URL }}/imgs/x-lg.svg" class="bi bi-x-lg friend-request-icon" alt="Icone X" />
 											</button>
 										</form>
 									</li>
@@ -479,11 +475,11 @@
 				<div class="modal-content">
 							<div class="modal-header">
 								{% if request.user.language == 'fr' %}
-								<h5 class="modal-title" id="changePasswordModalLabel">Changer mot de passe</h5>
+									<h5 class="modal-title" id="changePasswordModalLabel">Changer mot de passe</h5>
 								{% elif request.user.language == 'sp' %}
-								<h5 class="modal-title" id="changePasswordModalLabel">Cambiar contraseña</h5>
+									<h5 class="modal-title" id="changePasswordModalLabel">Cambiar contraseña</h5>
 								{% else %}
-								<h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+									<h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
 								{% endif %}
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
@@ -494,14 +490,14 @@
 							</div>
 							<div class="modal-footer">
 								{% if request.user.language == 'fr' %}
-								<button type="submit" name="change_password" class="btn btn-primary">Changer mot de passe</button>
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+									<button type="submit" name="change_password" class="btn btn-primary">Changer mot de passe</button>
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
 								{% elif request.user.language == 'sp' %}
-								<button type="submit" name="change_password" class="btn btn-primary">Cambiar contraseña</button>
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+									<button type="submit" name="change_password" class="btn btn-primary">Cambiar contraseña</button>
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 								{% else %}
-								<button type="submit" name="change_password" class="btn btn-primary">Change Password</button>
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+									<button type="submit" name="change_password" class="btn btn-primary">Change Password</button>
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 								{% endif %}
 							</div>
 					</form>
