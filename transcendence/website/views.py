@@ -669,6 +669,8 @@ def play_match(request, match_id):
         return redirect('/pong/tournament')
     player1_id = match.participant1.user.id
     player2_id = match.participant2.user.id
+    player1_name = match.participant1.user.username
+    player2_name = match.participant2.user.username
     context = {
         'user_id': request.user.id,
         'is_ai': 0,
@@ -676,6 +678,8 @@ def play_match(request, match_id):
         'player2_id': player2_id,
         'match_id': match_id,
         'match': 1,
+		'player1_name': player1_name,
+		'player2_name': player2_name,
     }
     match.participant1.user.is_in_game = True
     match.participant1.user.save()

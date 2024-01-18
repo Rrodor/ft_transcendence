@@ -3,6 +3,11 @@ import * as Envi from './Environment.js';
 import * as Time from './Time.js';
 import * as Game from './Game.js';
 
+if (match === 1)
+{
+	console.log(player1_name + " vs " + player2_name);
+}
+
 export function initScene()
 {
 	// Setup the scene
