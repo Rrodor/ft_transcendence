@@ -4,7 +4,7 @@ import * as Ball from './Ball.js';
 import * as Network from './Network.js';
 import { initInputs } from './Inputs.js';
 import { ballBoundingBox } from './Ball.js';
-import { initScoreSprites, updateScoreSprite } from "./UserInterface.js";
+import { initSprite, updateSprite } from "./UserInterface.js";
 import { AImove } from './AI.js';
 //import assetManager from './AssetManager.js';
 
@@ -22,7 +22,7 @@ let environmentBoundingBoxes = null;
 let paddleLeftBoundingBox = null;
 let paddleRightBoundingBox = null;
 
-let scoreLeftSprite, scoreRightSprite;
+let scoreLeftSprite, scoreRightSprite, lifeSprite;
 
 if (is_ai === 1)
 	console.log("AI is enabled");
@@ -58,8 +58,8 @@ export function init(scene, envBoundingBoxes, is_ai)
 
 	inputs = initInputs();
 
-	scoreLeftSprite = initScoreSprites(scene, new THREE.Vector3(-2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
-	scoreRightSprite = initScoreSprites(scene, new THREE.Vector3(2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
+	scoreLeftSprite = initSprite(scene, new THREE.Vector3(-2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
+	scoreRightSprite = initSprite(scene, new THREE.Vector3(2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
 }
 
 export function update(scene, deltaTime)
@@ -72,8 +72,8 @@ export function update(scene, deltaTime)
 		paddleRight.position.z = AImove(ball, paddleRight.position.z, paddleSpeed, deltaTime, scene);
 	checkCollision(ball, paddleLeft, paddleRight);
 	checkBallPosition(ball);
-	updateScoreSprite(scoreLeftSprite, scoreLeft);
-	updateScoreSprite(scoreRightSprite, scoreRight);
+	updateSprite(scoreLeftSprite, scoreLeft);
+	updateSprite(scoreRightSprite, scoreRight);
 	if (scoreLeft > scoreMax || scoreRight > scoreMax)
 	{
 		endGame();
