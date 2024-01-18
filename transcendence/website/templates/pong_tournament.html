@@ -12,9 +12,9 @@
 		{% if user.is_authenticated and request.user.language == 'fr' %}
 		<h1 class="mb-5" style="color: white;">Bienvenue dans le <span class="fancy" style="color: white;">Tournoi Pong</span>!</h1>
 		{% elif user.is_authenticated and request.user.language == 'sp' %}
-		<h1 class="mb-5" style="color: white;">Bienvenido al <span class="fancy" style="color: white;">Pong Tournament</span>!</h1>
+		<h1 class="mb-5" style="color: white;">Bienvenido al <span class="fancy" style="color: white;">Pong Torneo</span>!</h1>
 		{% else %}
-		<h1 class="mb-5" style="color: white;">Welcome to the <span class="fancy" style="color: white;">Pong Torneo</span>!</h1>
+		<h1 class="mb-5" style="color: white;">Welcome to the <span class="fancy" style="color: white;">Pong Tournament</span>!</h1>
 		{% endif %}
 		{% if not active %}
 			<!-- Si aucun tournoi n'est actif, afficher un bouton pour créer un tournoi -->
@@ -107,22 +107,22 @@
 								<div class="match-top team">
 									<span class="seed">0</span>
 									{% if user.is_authenticated and request.user.language == 'fr' %}
-									<span class="name">AD</span>
+										<span class="name">AD</span>
 									{% elif user.is_authenticated and request.user.language == 'sp' %}
-									<span class="name">AD</span>
+										<span class="name">AD</span>
 									{% else %}
-									<span class="name">TBD</span>
+										<span class="name">TBD</span>
 									{% endif %}
 									<span class="score">0</span>
 								</div>
 								<div class="match-bottom team">
 									<span class="seed">0</span>
 									{% if user.is_authenticated and request.user.language == 'fr' %}
-									<span class="name">AD</span>
+										<span class="name">AD</span>
 									{% elif user.is_authenticated and request.user.language == 'sp' %}
-									<span class="name">AD</span>
+										<span class="name">AD</span>
 									{% else %}
-									<span class="name">TBD</span>
+										<span class="name">TBD</span>
 									{% endif %}
 									<span class="score">0</span>
 								</div>
@@ -135,11 +135,11 @@
 									{% if match.score_participant1 == None and request.user == match.participant1.user %}
 									<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant2.user.id }}">
 										{% if user.is_authenticated and request.user.language == 'fr' %}
-										<p style="margin-left: 40px; transform: translateY(7px);"><u>Jouer la partie</u></p>
+											<p style="margin-left: 40px; transform: translateY(7px);"><u>Jouer la partie</u></p>
 										{% elif user.is_authenticated and request.user.language == 'sp' %}
-										<p style="margin-left: 40px; transform: translateY(7px);"><u>Jugar la partida</u></p>
+											<p style="margin-left: 40px; transform: translateY(7px);"><u>Jugar la partida</u></p>
 										{% else %}
-										<p style="margin-left: 40px; transform: translateY(7px);"><u>Play the game</u></p>
+											<p style="margin-left: 40px; transform: translateY(7px);"><u>Play the game</u></p>
 										{% endif %}
 									</a>
 									{% else %}
@@ -156,11 +156,11 @@
 									{% if match.score_participant2 == None and request.user == match.participant2.user %}
 									<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant1.user.id }}">
 										{% if user.is_authenticated and request.user.language == 'fr' %}
-										<p style="margin-left: 40px; transform: translateY(7px);"><u>Jouer la partie</u></p>
+											<p style="margin-left: 40px; transform: translateY(7px);"><u>Jouer la partie</u></p>
 										{% elif user.is_authenticated and request.user.language == 'sp' %}
-										<p style="margin-left: 40px; transform: translateY(7px);"><u>Jugar la partida</u></p>
+											<p style="margin-left: 40px; transform: translateY(7px);"><u>Jugar la partida</u></p>
 										{% else %}
-										<p style="margin-left: 40px; transform: translateY(7px);"><u>Play the game</u></p>
+											<p style="margin-left: 40px; transform: translateY(7px);"><u>Play the game</u></p>
 										{% endif %}
 									</a>
 									{% else %}

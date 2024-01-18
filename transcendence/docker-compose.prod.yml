@@ -18,6 +18,17 @@ services:
       - media_volume:/app/media
       - imgs_volume:/app/imgs
 
+  static_manager:
+    build:
+      context: .
+      dockerfile: Dockerfile.static_manager.prod
+    volumes:
+      - static_volume:/app/productionfiles
+      - ./static:/app/static
+    depends_on:
+      - django
+    command: bash -c "find /app/productionfiles -mindepth 1 ! -regex '^/app/productionfiles/admin.*' -delete && cp -r /app/static/* /app/productionfiles/"
+
   nginx:
     build:
       context: .
@@ -26,7 +37,7 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - django
+      - static_manager
     volumes:
       - static_volume:/app/productionfiles
       - media_volume:/app/media

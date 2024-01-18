@@ -1,7 +1,9 @@
-Django==4.2.7
+asgiref==3.7.2
+Django==4.2
 psycopg2-binary==2.9.9
 django-widget-tweaks==1.5.0
 whitenoise==6.6.0
 Pillow==10.1.0
 gunicorn==20.0.4
 gevent>=1.4
+setuptools==66.1.1

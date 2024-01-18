@@ -8,11 +8,11 @@
 			{% if match.score_participant1 == None and request.user == match.participant1.user %}
 				<a href="{% url 'play_match' match.id %}" class="play-match-link" data-match-id="{{ match.id }}" data-opponent-id="{{ match.participant2.user.id }}">
 					{% if user.is_authenticated and request.user.language == 'fr' %}
-					<p style="margin-left: 40px; transform: translateY(7px);"><u>Jouer la partie</u></p>
+						<p style="margin-left: 40px; transform: translateY(7px);"><u>Jouer la partie</u></p>
 					{% elif user.is_authenticated and request.user.language == 'sp' %}
-					<p style="margin-left: 40px; transform: translateY(7px);"><u>Jugar la partida</u></p>
+						<p style="margin-left: 40px; transform: translateY(7px);"><u>Jugar la partida</u></p>
 					{% else %}
-					<p style="margin-left: 40px; transform: translateY(7px);"><u>Play the game</u></p>
+						<p style="margin-left: 40px; transform: translateY(7px);"><u>Play the game</u></p>
 					{% endif %}
 				</a>
 			{% else %}

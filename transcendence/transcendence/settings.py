@@ -25,12 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-n)7grw*b8o%m_&8o^33q*h)s--a0#%ev%j##v^*t-=$0&z!%4q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
 	'127.0.0.1',
 	'192.168.1.5',
     '127.0.0.1:8000',
+	'localhost',
 ]
 
 
@@ -127,15 +128,9 @@ LOGIN_REDIRECT_URL = 'main'
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
-STATIC_ROOT = BASE_DIR / 'productionfiles'
-
-STATICFILES_DIRS = [
-	BASE_DIR / 'static'
-]
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'productionfiles')
-CSRF_TRUSTED_ORIGINS = ['https://192.168.1.5', 'https://localhost']
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+STATIC_ROOT = os.path.join(BASE_DIR, 'productionfiles/')
+CSRF_TRUSTED_ORIGINS = ['https://192.168.1.5', 'https://localhost', 'https://127.0.0.1']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
