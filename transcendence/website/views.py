@@ -407,7 +407,11 @@ def two_players(request):
     if not request.user.is_authenticated:
         messages.error(request, 'You must be logged in to play Pong')
         return redirect('/login')
+    player1_id = "player 1"
+    player2_id = "player 2"
     context = {
+        'player1_name': player1_id,
+        'player2_name': player2_id,
         'user_id': request.user.id,
         'is_ai': 0,
         'match': 0,
@@ -421,7 +425,11 @@ def vs_ai(request):
     if not request.user.is_authenticated:
         messages.error(request, 'You must be logged in to play Pong')
         return redirect('/login')
+    player1_id = "player 1"
+    player2_id = "AI"
     context = {
+        'player1_name': player1_id,
+        'player2_name': player2_id,
         'user_id': request.user.id,
         'is_ai': 1,
         'match': 0,
@@ -651,7 +659,7 @@ def leave_tournament(request):
     tournament.save()
     if tournament.nb_players == 0:
         tournament.delete()
-        
+
     return redirect('/pong/tournament')
 
 def play_match(request, match_id):

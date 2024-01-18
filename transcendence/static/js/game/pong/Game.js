@@ -4,7 +4,7 @@ import * as Ball from './Ball.js';
 import * as Network from './Network.js';
 import { initInputs } from './Inputs.js';
 import { ballBoundingBox } from './Ball.js';
-import { initScoreSprites, updateScoreSprite } from "./UserInterface.js";
+import { initScoreSprites, updateScoreSprite , initNameSprites } from "./UserInterface.js";
 import { AImove } from './AI.js';
 //import assetManager from './AssetManager.js';
 
@@ -23,11 +23,13 @@ let paddleLeftBoundingBox = null;
 let paddleRightBoundingBox = null;
 
 let scoreLeftSprite, scoreRightSprite;
+let nameLeftSprite, nameRightSprite;
 
 if (is_ai === 1)
 	console.log("AI is enabled");
 else
 	console.log("AI is disabled");
+
 if (match !== 0)
 	console.log("Match id: " + match_id);
 else
@@ -60,6 +62,8 @@ export function init(scene, envBoundingBoxes, is_ai)
 
 	scoreLeftSprite = initScoreSprites(scene, new THREE.Vector3(-2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
 	scoreRightSprite = initScoreSprites(scene, new THREE.Vector3(2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
+	nameLeftSprite = initNameSprites(scene, new THREE.Vector3(-6, 7.5, -5), new THREE.Vector3(3.75, 1.75, 1.75), player1_name);
+	nameRightSprite = initNameSprites(scene, new THREE.Vector3(6, 7.5, -5), new THREE.Vector3(3.75, 1.75, 1.75), player2_name);
 }
 
 export function update(scene, deltaTime)

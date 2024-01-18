@@ -26,6 +26,8 @@
 		import { initScene, animateGame } from "{% static 'js/game/pong/Scene.js' %}";
 		var	userId = {{ user_id }};
 		var is_ai = {{ is_ai }};
+		var player1_name = "{{ player1_name }}";
+		var player2_name = "{{ player2_name }}";
 		import * as Game from "{% static 'js/game/pong/Game.js' %}";
 		const { renderer, scene, camera, environmentBoundingBoxes } = initScene();
 		Game.init(scene, environmentBoundingBoxes, is_ai);
