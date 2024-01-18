@@ -72,7 +72,7 @@ export function init(scene, envBoundingBoxes)
 	inputs = initInputs();
 
 	scoreSprite = initSprite(scene, new THREE.Vector3(0, 10, -6.5), new THREE.Vector3(1.5, 1.5, 1.5));
-	lifeSprite = initSprite(scene, new THREE.Vector3(-5, 10, -6.5), new THREE.Vector3(1.5, 1.5, 1.5));
+	lifeSprite = initSprite(scene, new THREE.Vector3(-10, 10, -6.5), new THREE.Vector3(1.5, 1.5, 1.5));
 }
 
 export function update(scene, deltaTime)
