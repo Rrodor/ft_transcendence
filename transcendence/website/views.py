@@ -790,12 +790,13 @@ def force_create(request):
     factory = RequestFactory()
     request = factory.get('/')
     name = {
-        'test01': 'test01',
-        'test03': 'test03',
-        'test02': 'test02',
-        'rrodor': 'rrodor',
-        'aramon': 'aramon',
         'test00': 'test00',
+        'test01': 'test01',
+        'test02': 'test02',
+        'test03': 'test03',
+        'test04': 'test04',
+        'test05': 'test05',
+        'test06': 'test06',
     }
     for username in name:
         request.user = User.objects.get(username=username)
