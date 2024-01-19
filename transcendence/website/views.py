@@ -690,8 +690,8 @@ def play_match(request, match_id):
         'player2_id': player2_id,
         'match_id': match_id,
         'match': 1,
-		'player1_name': player1_name,
-		'player2_name': player2_name,
+        'player1_name': player1_name,
+        'player2_name': player2_name,
     }
     match.participant1.user.is_in_game = True
     match.participant1.user.save()
