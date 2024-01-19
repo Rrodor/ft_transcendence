@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-n)7grw*b8o%m_&8o^33q*h)s--a0#%ev%j##v^*t-=$0&z!%4q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
 	'127.0.0.1',
@@ -94,7 +94,7 @@ DATABASES = {
 		'NAME': 'trans',
 		'USER': 'postgres',
 		'PASSWORD': 'docker',
-		'HOST': '82.66.141.48',
+		'HOST': 'postgres',
 		'PORT': '5432',
 	}
 }
@@ -137,7 +137,7 @@ CSRF_TRUSTED_ORIGINS = ['https://192.168.1.5', 'https://localhost', 'https://127
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'medias/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'medias')
 IMGS_URL = 'imgs/'
 IMGS_ROOT = os.path.join(BASE_DIR, 'imgs')

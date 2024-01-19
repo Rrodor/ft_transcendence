@@ -141,6 +141,10 @@ def logout_view(request):
     if not request.user.is_authenticated:
         messages.error(request, 'You are not logged in')
         return redirect('/')
+    request.user.is_in_game = False
+    request.user.language = 'en'
+    activate('en')
+    request.user.save()
     logout(request)
     return redirect('/')
 

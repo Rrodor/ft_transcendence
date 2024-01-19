@@ -2,10 +2,22 @@ version: '3'
 
 volumes:
   static_volume: {}
-  media_volume: {}
+  medias_volume: {}
   imgs_volume: {}
+  postgres_data: {}
 
 services:
+  postgres:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: trans
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+    ports:
+      - "5433:5432"
+
   django:
     build:
       context: .
@@ -15,8 +27,10 @@ services:
       - "8001:8001"
     volumes:
       - static_volume:/app/productionfiles
-      - media_volume:/app/media
+      - medias_volume:/app/medias
       - imgs_volume:/app/imgs
+    depends_on:
+      - postgres
 
   static_manager:
     build:
@@ -40,5 +54,5 @@ services:
       - static_manager
     volumes:
       - static_volume:/app/productionfiles
-      - media_volume:/app/media
+      - medias_volume:/app/medias
       - imgs_volume:/app/imgs
