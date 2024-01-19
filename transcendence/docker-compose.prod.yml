@@ -56,3 +56,10 @@ services:
       - static_volume:/app/productionfiles
       - medias_volume:/app/medias
       - imgs_volume:/app/imgs
+
+  talker:
+    build:
+      context: .
+      dockerfile: Dockerfile.talker.prod
+    depends_on:
+      - nginx

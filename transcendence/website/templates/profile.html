@@ -175,7 +175,7 @@
 									</li>
 								{% else %}
 									<li class="list-group-item d-flex justify-content-center align-items-center p-3">
-										<p class="mb-0 fw-bold">No hay amigos confirmados.</p>
+										<p class="mb-0 fw-bold">No friendhip confirmed.</p>
 									</li>
 								{% endif %}
 								{% endfor %}
@@ -188,13 +188,13 @@
 						<div class="card-body">
 							<div class="row">
 								<div class="col-sm-3">
-							{% if user.is_authenticated and request.user.language == 'fr' %}
-							<p class="mb-0">Nom complet</p>
-							{% elif user.is_authenticated and request.user.language == 'sp' %}
-							<p class="mb-0">Nombre completo</p>
-							{% else %}
-							<p class="mb-0">Full Name</p>
-							{% endif %}
+									{% if user.is_authenticated and request.user.language == 'fr' %}
+									<p class="mb-0">Nom complet</p>
+									{% elif user.is_authenticated and request.user.language == 'sp' %}
+									<p class="mb-0">Nombre completo</p>
+									{% else %}
+									<p class="mb-0">Full Name</p>
+									{% endif %}
 							</div>
 							<div class="col-sm-9">
 								{% if request.user.first_name == "" and request.user.last_name == "" %}
@@ -565,8 +565,16 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="changeNameModalLabel">Set Name</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						{% if request.user.language == 'en' %}
+							<h5 class="modal-title" id="changeNameModalLabel">Set Name</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						{% elif request.user.language == 'fr' %}
+							<h5 class="modal-title" id="changeNameModalLabel">Renseigner son nom</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						{% elif request.user.language == 'sp' %}
+							<h5 class="modal-title" id="changeNameModalLabel">Introduzca su nombre</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						{% endif %}
 					</div>
 					<form method="post" action="{% url 'profile' %}">
 						<div class="modal-body">

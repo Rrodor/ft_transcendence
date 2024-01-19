@@ -1,0 +1,2 @@
+FROM alpine
+CMD echo "Site is started successfully at https://127.0.0.1"
