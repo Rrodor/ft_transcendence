@@ -66,12 +66,41 @@
 							</div>
 						{% endif %}
 							<hr>    
-							Hexa-Race:
-							3 V | 7 L
-							<div class="progress" role="progressbar" aria-label="Victories and Defeats" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-								<div class="progress-bar bg-success" style="width: 30%;" aria-valuenow="30"></div>
-								<div class="progress-bar bg-danger" style="width: 70%;" aria-valuenow="70"></div>
-							</div>
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+							Casse Briques - 
+							{% elif user.is_authenticated and request.user.language == 'sp' %}
+							Rompe Lardillos - 
+							{% else %}
+							Brick Breacker - 
+							{% endif %}
+							{{ request.user.brick_games }}
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+							parties
+							{% elif user.is_authenticated and request.user.language == 'sp' %}
+							partidas
+							{% else %}
+							games.
+							{% endif %}
+							<br>
+							{% if user.is_authenticated and request.user.language == 'fr' %}
+								{% if request.user.brick_games == 0 %}
+								Pas de parties jouees.
+								{% else %}
+								Score moyen: {{ request.user.brick_average }}
+								{% endif %}
+							{% elif user.is_authenticated and language == 'sp' %}
+								{% if request.user.brick_games == 0 %}
+								No partidas jugadas.
+								{% else %}
+								puntuación media: {{ request.user.brick_average }}
+								{% endif %}
+							{% if request.user.brick_games == 0 %}
+								No games played.
+								{% else %}
+								Average points: {{ request.user.brick_average }}
+								{% endif %}
+							{% else %}
+							{% endif %}
 							<hr>
 							{% if user.is_authenticated %}
 								{% if not is_friend %}
@@ -291,7 +320,13 @@
 											{% elif game.game_type == 'BRICK' %}
 												<span class="text-score fw-bold">SCORE</span>
 											{% else %}
+												{% if request.user.language == 'fr' %}
+												<span class="text-score fw-bold">LEGENDE ULTIME DU PONG</span>
+												{% elif request.user.language == 'sp' %}
+												<span class="text-score fw-bold">PONG CONQUISTADOR LEGENDARIO</span>
+												{% else %}
 												<span class="text-score fw-bold">PONG WARRIOR GOAT</span>
+												{% endif %}
 											{% endif %}
 										</div>
 										<div>{{ game.get_game_type_display }}</div>

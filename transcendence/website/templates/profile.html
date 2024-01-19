@@ -213,6 +213,20 @@
 								{% endif %}
 								{% else %}
 									<p class="text-muted mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</p>
+									{% if request.user.language == 'fr' %}
+									<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changeNameModal">
+										Changer son som
+									</button>
+									{% elif request.user.language == 'sp' %}
+									<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changeNameModal">
+										Cambiar su nombre
+									</button>
+									{% else %}
+									<button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#changeNameModal">
+										Change name
+									</button>
+									{%endif%}
+								</p>
 								{% endif %}
 							</div>
 						</div>
@@ -440,7 +454,13 @@
 											{% elif game.game_type == 'BRICK' %}
 												<span class="text-score fw-bold">SCORE</span>
 											{% else %}
-												<span class="text-score fw-bold">PONG WARRIOR GOAT</span>
+													{% if request.user.language == 'fr' %}
+													<span class="text-score fw-bold">LEGENDE ULTIME DU PONG</span>
+													{% elif request.user.language == 'sp' %}
+													<span class="text-score fw-bold">PONG CONQUISTADOR LEGENDARIO</span>
+													{% else %}
+													<span class="text-score fw-bold">PONG WARRIOR GOAT</span>
+													{% endif %}
 											{% endif %}
 										</div>
 										<div>{{ game.get_game_type_display }}</div>
