@@ -21,8 +21,8 @@ server {
 	location /static/ {
         alias /app/productionfiles/;
     }
-	location /media/ {
-		alias /app/media/;
+	location /medias/ {
+		alias /app/medias/;
 	}
 	location /imgs/ {
 		alias /app/imgs/;

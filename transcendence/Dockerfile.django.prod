@@ -5,4 +5,5 @@ RUN pip install --upgrade pip
 RUN pip install -r /app/Docker/requirements.txt
 RUN python manage.py collectstatic --noinput
 EXPOSE 8001
-CMD ["gunicorn", "transcendence.wsgi:application", "--bind", "0.0.0.0:8001"]
+RUN chmod +x /app/Docker/entrypoint.sh
+ENTRYPOINT ["/app/Docker/entrypoint.sh"]
