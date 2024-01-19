@@ -35,7 +35,7 @@ function createBrickTexture(text, fontSize = 100, fontFace = 'Arial', textColor 
 	return new THREE.CanvasTexture(canvas);
 }
 
-function updateScoreSprite(sprite, newScore)
+function updateSprite(sprite, newScore)
 {
 	const newScoreText = newScore.toString();
 	const newTexture = createTextTexture(newScoreText);
@@ -43,7 +43,7 @@ function updateScoreSprite(sprite, newScore)
 	sprite.material.needsUpdate = true;
 }
 
-function initScoreSprites(scene, position, scale)
+function initSprite(scene, position, scale)
 {
 	const scoreSpriteMaterial = new THREE.SpriteMaterial({ map: createTextTexture("0") });
 	const scoreSprite = new THREE.Sprite(scoreSpriteMaterial);
@@ -69,9 +69,4 @@ function initBrickSprite(scene, brickValue, position, scale)
 	return sprite;
 }
 
-export { initScoreSprites, updateScoreSprite, initBrickSprite};
-
-/*
-	scoreSprite.scale.set(1.75, 1.75, 1.75);
-	scoreSprite.position.set(-2, 10, -6.5);
-*/
+export { initSprite, updateSprite, initBrickSprite};

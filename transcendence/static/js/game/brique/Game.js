@@ -5,7 +5,7 @@ import * as Network from './Network.js';
 import { initInputs } from './Inputs.js';
 import { ballBoundingBox } from './Ball.js';
 import { initBrick } from './Environment.js';
-import { initScoreSprites, updateScoreSprite } from "./UserInterface.js";
+import { initSprite, updateSprite } from "./UserInterface.js";
 
 let ball = null;
 let paddle = null;
@@ -14,6 +14,7 @@ let paddleBoundingBox = null;
 let environmentBoundingBoxes = null;
 let inputs = null;
 let scoreSprite;
+let lifeSprite;
 let score = 0;
 let lifeLeft = 5;
 let bricks = [];
@@ -70,7 +71,8 @@ export function init(scene, envBoundingBoxes)
 
 	inputs = initInputs();
 
-	scoreSprite = initScoreSprites(scene, new THREE.Vector3(0, 10, -6.5), new THREE.Vector3(1.5, 1.5, 1.5));
+	scoreSprite = initSprite(scene, new THREE.Vector3(0, 10, -6.5), new THREE.Vector3(1.5, 1.5, 1.5));
+	lifeSprite = initSprite(scene, new THREE.Vector3(-10, 10, -6.5), new THREE.Vector3(1.5, 1.5, 1.5));
 }
 
 export function update(scene, deltaTime)
@@ -81,7 +83,8 @@ export function update(scene, deltaTime)
 	movePaddles(deltaTime);
 	checkCollision(scene, ball, paddle);
 	checkBallPosition(ball, paddle);
-	updateScoreSprite(scoreSprite, score);
+	updateSprite(scoreSprite, score);
+	updateSprite(lifeSprite, lifeLeft);
 }
 
 function checkBallPosition(ball, paddle)

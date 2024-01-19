@@ -15,25 +15,28 @@ function createTextTexture(text, fontSize = 100, fontFace = 'Arial', textColor =
 	return new THREE.CanvasTexture(canvas);
 }
 
-function updateScoreSprite(sprite, newScore) {
-    const newScoreText = newScore.toString();
-    const newTexture = createTextTexture(newScoreText);
-    sprite.material.map = newTexture;
-    sprite.material.needsUpdate = true;
+function updateSprite(sprite, newScore)
+{
+	const newScoreText = newScore.toString();
+	const newTexture = createTextTexture(newScoreText);
+	sprite.material.map = newTexture;
+	sprite.material.needsUpdate = true;
 }
 
-function initScoreSprites(scene, position, scale) {
-    const scoreSpriteMaterial = new THREE.SpriteMaterial({ map: createTextTexture("0") });
-    const scoreSprite = new THREE.Sprite(scoreSpriteMaterial);
+function initSprite(scene, position, scale)
+{
+	const scoreSpriteMaterial = new THREE.SpriteMaterial({ map: createTextTexture("0") });
+	const scoreSprite = new THREE.Sprite(scoreSpriteMaterial);
 
-    scoreSprite.scale.set(scale.x, scale.y, scale.z);
-    scoreSprite.position.set(position.x, position.y, position.z);
+	scoreSprite.scale.set(scale.x, scale.y, scale.z);
+	scoreSprite.position.set(position.x, position.y, position.z);
 
-    scene.add(scoreSprite);
+	scene.add(scoreSprite);
 
-    return scoreSprite; // Return the sprite directly
+	return scoreSprite;
 }
 
+export { initSprite, updateSprite };
 function createNameTexture(text, fontSize = 100, fontFace = 'Arial', textColor = 'white', backgroundColor = 'black')
 {
 	const canvas = document.createElement('canvas');
