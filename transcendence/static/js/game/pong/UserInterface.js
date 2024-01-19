@@ -37,6 +37,7 @@ function initSprite(scene, position, scale)
 }
 
 export { initSprite, updateSprite };
+
 function createNameTexture(text, fontSize = 100, fontFace = 'Arial', textColor = 'white', backgroundColor = 'black')
 {
 	const canvas = document.createElement('canvas');
@@ -53,7 +54,8 @@ function createNameTexture(text, fontSize = 100, fontFace = 'Arial', textColor =
 	return new THREE.CanvasTexture(canvas);
 }
 
-function initNameSprites(scene, position, scale, name) {
+function initNameSprites(scene, position, scale, name)
+{
     const nameSpriteMaterial = new THREE.SpriteMaterial({ map: createTextTexture("0") });
     const nameSprite = new THREE.Sprite(nameSpriteMaterial);
 
@@ -67,7 +69,7 @@ function initNameSprites(scene, position, scale, name) {
     return nameSprite; // Return the sprite directly
 }
 
-export { initScoreSprites, updateScoreSprite, initNameSprites };
+export { initNameSprites };
 
 /*
 	scoreSprite.scale.set(1.75, 1.75, 1.75);

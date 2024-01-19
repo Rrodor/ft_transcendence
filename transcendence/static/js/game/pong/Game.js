@@ -4,7 +4,7 @@ import * as Ball from './Ball.js';
 import * as Network from './Network.js';
 import { initInputs } from './Inputs.js';
 import { ballBoundingBox } from './Ball.js';
-import { initSprite, updateSprite } from "./UserInterface.js";
+import { initSprite, updateSprite, initNameSprites } from "./UserInterface.js";
 import { AImove } from './AI.js';
 //import assetManager from './AssetManager.js';
 
@@ -22,7 +22,7 @@ let environmentBoundingBoxes = null;
 let paddleLeftBoundingBox = null;
 let paddleRightBoundingBox = null;
 
-let scoreLeftSprite, scoreRightSprite, lifeSprite;
+let scoreLeftSprite, scoreRightSprite;
 let nameLeftSprite, nameRightSprite;
 
 if (is_ai === 1)
