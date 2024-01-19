@@ -23,11 +23,13 @@ let paddleLeftBoundingBox = null;
 let paddleRightBoundingBox = null;
 
 let scoreLeftSprite, scoreRightSprite, lifeSprite;
+let nameLeftSprite, nameRightSprite;
 
 if (is_ai === 1)
 	console.log("AI is enabled");
 else
 	console.log("AI is disabled");
+
 if (match !== 0)
 	console.log("Match id: " + match_id);
 else
@@ -60,6 +62,8 @@ export function init(scene, envBoundingBoxes, is_ai)
 
 	scoreLeftSprite = initSprite(scene, new THREE.Vector3(-2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
 	scoreRightSprite = initSprite(scene, new THREE.Vector3(2, 7.5, -5), new THREE.Vector3(1.75, 1.75, 1.75));
+	nameLeftSprite = initNameSprites(scene, new THREE.Vector3(-6, 7.5, -5), new THREE.Vector3(3.75, 1.75, 1.75), player1_name);
+	nameRightSprite = initNameSprites(scene, new THREE.Vector3(6, 7.5, -5), new THREE.Vector3(3.75, 1.75, 1.75), player2_name);
 }
 
 export function update(scene, deltaTime)
